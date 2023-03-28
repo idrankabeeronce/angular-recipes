@@ -1,0 +1,208 @@
+<ng-container *ngIf="foundItem; else notFound">
+    <div id="container" class="container main-container">
+        <div class="main-container__header recipe__header">
+            <nav>
+                <ul class="category">
+                    <li><a class="text-s_l text_prim-color" routerLink="/">Home</a></li>
+                    <ng-container *ngFor="let category of displayingItem.header.categories">
+                        <li><a class="text-s_l text_prim-color" routerLink="/"
+                                [queryParams]="{category: category}">{{category}}</a></li>
+                    </ng-container>
+                </ul>
+            </nav>
+            <h1 class="text-h1_bold">{{displayingItem.header.title}}</h1>
+            <div class="recipe-header__info">
+                <div class="recipe-header__info-group">
+                    <img class="icon" src="assets/icons/dish.svg" alt="portions">
+                    <span>
+                        <ng-container
+                            *ngIf="displayingItem.header.portionsDefault > 1; else portion">{{displayingItem.header.portionsDefault}}
+                            portions</ng-container>
+                        <ng-template #portion>{{displayingItem.header.portionsDefault}} portion</ng-template>
+                    </span>
+                    <img class="icon" src="assets/icons/time.svg" alt="time">
+                    <span *ngIf="displayingItem.header.timeToDo.hours !== 0">{{displayingItem.header.timeToDo.hours}}
+                        <ng-container *ngIf="displayingItem.header.timeToDo.hours > 1; else hour"> hours</ng-container>
+                        <ng-template #hour>hour</ng-template>
+                    </span>
+                    <span
+                        *ngIf="displayingItem.header.timeToDo.minutes !== 0">{{displayingItem.header.timeToDo.minutes}}
+                        minutes</span>
+                </div>
+                <div class="recipe-header__info-group">
+                    <button class="button button_s button_icon">
+                        <img class="icon" src="assets/icons/save.svg" alt="save">Save this recipe</button>
+                    <ul class="recipe-stats">
+                        <li><img class="icon" src="assets/icons/saved.svg" alt="saved">{{displayingItem.header.saved}}
+                        </li>
+                        <li><img class="icon" src="assets/icons/like.svg" alt="likes">{{displayingItem.header.likes}}
+                        </li>
+                        <li><img class="icon" src="assets/icons/dislike.svg"
+                                alt="dislikes">{{displayingItem.header.dislikes}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="main-container__body">
+            <div class="recipe-article recipe">
+                <div class="recipe__media-gallery">
+                    <div class="galery">
+                        <div class="galery-active">
+                            <ng-container *ngIf="displayingItem.body.galery.videoSrc !== ''; else image">
+                                <div class="video-container" (click)="toggleVideo(video)"   (dblclick)="toggleFullScreen(video)">
+                                    <video #video class="image-wrapper" (timeupdate)="calcTime(video, seekBar)">
+                                        <source [src]="displayingItem.body.galery.videoSrc" type="video/mp4">
+                                        <p>Your browser doesn't support video.</p>
+                                    </video>
+                                    <div class="video-controls" >
+                                        <button class="icon-button" id="play-pause" (click)="toggleVideo(video)">
+                                            <ng-container *ngIf="video.paused; else pause">
+                                                <img class="icon_l" src="assets/icons/play.svg" alt="play">
+                                            </ng-container>
+                                            <ng-template #pause>
+                                                <img class="icon_l" src="assets/icons/pause.svg" alt="pause">
+                                            </ng-template>
+                                        </button>
+
+                                        <button class="icon-button" id="mute" (click)="toggleMute(video, volumeBar)">
+                                            <ng-container *ngIf="!video.muted; else muted">
+                                                <img class="icon_l" src="assets/icons/sound.svg" alt="sound">
+                                            </ng-container>
+                                            <ng-template #muted>
+                                                <img class="icon_l" src="assets/icons/muted.svg" alt="muted">
+                                            </ng-template>
+                                        </button>
+                                        <input #volumeBar type="range" id="volume-bar" min="0" max="1" step="0.1" value="1" (change)="volumeOnChange(video, volumeBar)">
+                                        <input #seekBar class="slider-progress" type="range" id="seek-bar" value="0" (change)="setTime(video, seekBar)">
+                                        <button class="icon-button" id="full-screen" (click)="toggleFullScreen(video)">
+                                            <img src="assets/icons/fullscreen.svg" alt="full-screen">
+                                            
+                                        </button>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <ng-template #image>
+                                <img class="image-wrapper" [src]="displayingItem.body.galery.imagesSrc[0]" alt="galery">
+                            </ng-template>
+                        </div>
+                        <div class="galery-group">
+                            <div class="group-wrapper">
+
+                                <ng-container
+                                    *ngFor="let media of displayingItem.body.galery.imagesSrc; let indexOfMedia = index">
+                                    <ng-container *ngIf="displayingItem.body.galery.videoSrc !== ''; else exceptFirst">
+                                        <div *ngIf="indexOfMedia < 4"><img class="image-wrapper" [src]="media"
+                                                alt="galery"></div>
+                                    </ng-container>
+                                    <ng-template #exceptFirst>
+                                        <div *ngIf="indexOfMedia > 0 && indexOfMedia < 5"><img class="image-wrapper"
+                                                [src]="media" alt="galery"></div>
+                                    </ng-template>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="recipe__author">
+                    <span class="label"></span>
+                    <div class="profile">
+                        <div class="profile-image">
+                            <img class="image-wrapper" [src]="displayingItem.header.author.img" alt="profile photo">
+                        </div>
+                        <h2 class="text-h2">{{displayingItem.header.author.name}}</h2>
+                    </div>
+                    <div class="desc">
+                        <span>{{body.desc}}</span>
+                    </div>
+                </div>
+                <div class="recipe__nutritions">
+                    <h4 class="text-h4">Nutritional value per portion</h4>
+                    <table>
+                        <tr>
+                            <th class="text-m_m">Energy</th>
+                            <th class="text-m_m">Protein</th>
+                            <th class="text-m_m">Fat</th>
+                            <th class="text-m_m">Сarbohydrate</th>
+                        </tr>
+                        <tr>
+                            <td>{{body.nutritions.energy}}</td>
+                            <td>{{body.nutritions.protein}}</td>
+                            <td>{{body.nutritions.fat}}</td>
+                            <td>{{body.nutritions.carbohydrate}}</td>
+                        </tr>
+                        <tr>
+                            <td>kcal</td>
+                            <td>g</td>
+                            <td>g</td>
+                            <td>g</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="recipe__ingredients" id="bodyEl">
+                    <div class="ingredients-header">
+                        <h4 class="text-h4">Ingredients</h4>
+                        <div class="control-field">
+                            <span>portions</span>
+                            <button class="icon-button" (click)="changeAmount(-1)"><img class="icon_s"
+                                    src="assets/icons/minus.svg" alt="minus"></button>
+                            <span>{{displayingItem.header.portions}}</span>
+                            <button class="icon-button" (click)="changeAmount(1)"><img class="icon_s"
+                                    src="assets/icons/plus.svg" alt="plus"></button>
+                        </div>
+                    </div>
+                    <ul class="ingredients-list">
+                        <ng-container *ngFor="let ingredient of displayingItem.header.ingredients">
+
+                            <li>
+                                <span>{{ingredient.name}}</span>
+
+                                <span></span>
+                                <span *ngIf="ingredient.amount > 0">{{Round(ingredient.amount *
+                                    displayingItem.header.portions/displayingItem.header.portionsDefault)}}</span>
+                                <span> {{ingredient.suffix}}</span>
+                            </li>
+
+                        </ng-container>
+                    </ul>
+                </div>
+                <div class="recipe__instructions">
+                    <div class="instructions__header">
+                        <h4 class="text-h4">Instructions</h4>
+                        <ul>
+                            <li>
+                                <img class="icon" src="assets/icons/time.svg" alt="time">
+                                <span
+                                    *ngIf="displayingItem.header.timeToDo.hours !== 0">{{displayingItem.header.timeToDo.hours}}
+                                    <ng-container *ngIf="displayingItem.header.timeToDo.hours > 1; else hour">
+                                        hours</ng-container>
+                                    <ng-template #hour>hour</ng-template>
+                                </span>
+                                <span
+                                    *ngIf="displayingItem.header.timeToDo.minutes !== 0">{{displayingItem.header.timeToDo.minutes}}
+                                    minutes</span>
+                            </li>
+                            <li id="print-button" (click)="saveAsPDF()">
+                                <img class="icon" src="assets/icons/print.svg" alt="print">
+                                <span>Print</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="recipe__advice">
+                    <span class="label"></span>
+                    <span>{{body.advice}}</span>
+                </div>
+            </div>
+            <div class="main-container__footer">
+                <nav>
+                    <ul>
+                        <li></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</ng-container>
+<ng-template #notFound>
+    <app-error></app-error>
+</ng-template>

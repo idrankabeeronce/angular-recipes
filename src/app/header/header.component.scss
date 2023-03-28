@@ -1,0 +1,72 @@
+@import '../../variables';
+
+.header-container {
+    height: 80px;
+    box-shadow: 0 4px 26px rgba(0, 0, 0, .12);
+}
+.header-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.logo-container {
+    width: 70px;
+    height: 70px;
+    cursor: pointer;
+}
+
+.header-menu {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    .header-menu {
+        display: block;
+    }
+
+    .nav-group,
+    .button-add {
+        display: none;
+    }
+}
+
+.menu-container {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    background: $base-color-01;
+    box-shadow: 0px 26px 26px -22px rgba(0, 0, 0, .09);
+    width: 100%;
+    transform-origin: top;
+    box-sizing: border-box;
+    opacity: 1;
+    transform: scaleY(1);
+
+    transition: transform .3s;
+}
+.menu-container > * {
+    opacity: 1;
+    transition: opacity .2s .3s;
+}
+.menu-container:is(.hidden) > nav  {
+    opacity: 0;
+    transition: opacity .2s;
+}
+.hidden {
+    opacity: 0;
+    transform: scaleY(0);
+    transition: transform .3s, opacity 0s .3s;
+}
+
+
+.menu-container> nav> .nav-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.menu-container> nav>.nav-group > li {
+    margin-right: 0;
+    margin-bottom: 40px;
+}
