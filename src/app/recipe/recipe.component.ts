@@ -36,7 +36,7 @@ export class RecipeComponent implements OnInit {
 
   ngOnInit(): void {
     //this.video = document.getElementById("video");
-    this.url = window.location.hostname + this.router.url;
+    this.url = document.location.href;
 
     const ref = this.activatedRoute.snapshot.paramMap.get('id');
 
@@ -225,7 +225,7 @@ export class RecipeComponent implements OnInit {
     columns.columns.push({ width: '*', text: '' })
 
     for (let item of data)
-      columns.columns.push({ text: item.toUpperCase(), link: window.location.hostname + '/?category=' + item, style: style, width: width })
+      columns.columns.push({ text: item.toUpperCase(), link: document.location.hostname + '/?category=' + item, style: style, width: width })
 
     columns.columns.push({ width: '*', text: '' })
 
