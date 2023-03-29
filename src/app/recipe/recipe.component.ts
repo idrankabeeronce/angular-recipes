@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Title } from "@angular/platform-browser";
+import { Title, Meta } from "@angular/platform-browser";
 import * as data from '../../assets/base/articles.json';
 import * as dataHeader from '../../assets/base/recipes.json';
 
@@ -30,13 +30,14 @@ export class RecipeComponent implements OnInit {
   video: any;
   url = '';
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private titleService: Title) {
+    private titleService: Title, private metaService: Meta) {
 
   }
 
   ngOnInit(): void {
-    //this.video = document.getElementById("video");
-    this.url = document.location.href;
+    
+    
+
 
     const ref = this.activatedRoute.snapshot.paramMap.get('id');
 
@@ -50,6 +51,7 @@ export class RecipeComponent implements OnInit {
     if (this.displayingItem === null)
       return
 
+      
 
     this.titleService.setTitle(`${this.displayingItem.title} | Recipes`)
     this.foundItem = true;
@@ -61,6 +63,13 @@ export class RecipeComponent implements OnInit {
       }
     }
 
+
+    this.url = window.location.href;
+
+    const baseUrl = window.location.protocol + '//' + window.location.hostname;
+    const imageUrl = baseUrl + this.displayingItem.header.imgSrc;
+
+    this.metaService.addTag( { property: 'og:image', content: imageUrl } );
 
   }
   Round(value: number) {
@@ -225,7 +234,7 @@ export class RecipeComponent implements OnInit {
     columns.columns.push({ width: '*', text: '' })
 
     for (let item of data)
-      columns.columns.push({ text: item.toUpperCase(), link: document.location.hostname + '/?category=' + item, style: style, width: width })
+      columns.columns.push({ text: item.toUpperCase(), link: window.location.hostname + '/?category=' + item, style: style, width: width })
 
     columns.columns.push({ width: '*', text: '' })
 
