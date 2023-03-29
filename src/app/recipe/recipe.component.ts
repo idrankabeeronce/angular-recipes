@@ -29,14 +29,16 @@ export class RecipeComponent implements OnInit {
   foundItem = false;
   video: any;
   url = '';
+  noImagesAtAll = true;
+
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
     private titleService: Title, private metaService: Meta) {
 
   }
 
   ngOnInit(): void {
-    
-    
+
+
 
 
     const ref = this.activatedRoute.snapshot.paramMap.get('id');
@@ -51,7 +53,14 @@ export class RecipeComponent implements OnInit {
     if (this.displayingItem === null)
       return
 
-      
+    for(let stepOfInstructions of this.body.instructions) {
+      if (stepOfInstructions.imageSrc !== '')
+        this.noImagesAtAll = false;
+        
+      if (!this.noImagesAtAll)        
+        break;
+    }
+
 
     this.titleService.setTitle(`${this.displayingItem.title} | Recipes`)
     this.foundItem = true;
@@ -66,10 +75,17 @@ export class RecipeComponent implements OnInit {
 
     this.url = window.location.href;
 
-    const baseUrl = window.location.protocol + '//' + window.location.hostname;
+    const baseUrl = window.location.protocol + '//' + window.location.hostname + '/angular-recipes/';
     const imageUrl = baseUrl + this.displayingItem.header.imgSrc;
+    const desc = this.body.desc
+    this.metaService.addTags([
+      { property: 'og:title', content: this.title },
+      { property: 'og:type', content: 'website' },
+      { property: 'og:url', content: window.location.href },
+      { property: 'og:description', content: desc },
+      { property: 'og:image', content: imageUrl }
 
-    this.metaService.addTag( { property: 'og:image', content: imageUrl } );
+    ]);
 
   }
   Round(value: number) {
@@ -90,7 +106,7 @@ export class RecipeComponent implements OnInit {
 
   toggleMute(video: any, bar: any) {
     video.muted = !video.muted;
-    if (video.muted) 
+    if (video.muted)
       bar.value = 0
     else
       bar.value = video.volume;
@@ -121,15 +137,7 @@ export class RecipeComponent implements OnInit {
   saveAsPDF() {
     const doc = new jsPDF();
 
-    var canvasOfRecipe = document.createElement('canvas');
-    var ctx = canvasOfRecipe.getContext('2d');
 
-    var img = new Image();
-    img.src = this.displayingItem.header.imgSrc;
-
-    canvasOfRecipe.height = img.height;
-    canvasOfRecipe.width = img.width;
-    ctx?.drawImage(img, 0, 0);
 
 
 
@@ -143,7 +151,7 @@ export class RecipeComponent implements OnInit {
 
           columns: [
             {
-              image: canvasOfRecipe.toDataURL(),
+              image: this.createImage(this.displayingItem.header.imgSrc),
               width: 170,
               height: 250,
               cover: [170, 250]
@@ -180,13 +188,13 @@ export class RecipeComponent implements OnInit {
         },
         {
           text: this.body.desc,
-          fontSize: 12,
+          fontSize: 10,
           margin: [0, 0, 0, 20],
           lineHeight: 2
         },
         {
           text: 'Ingredients',
-          fontSize: 12,
+          fontSize: 10,
           margin: [0, 0, 0, 10],
           lineHeight: 2,
           bold: true
@@ -194,12 +202,13 @@ export class RecipeComponent implements OnInit {
         this.createIngredientsTable(),
         {
           text: 'Instructions',
-          fontSize: 12,
+          fontSize: 10,
           margin: [0, 0, 0, 20],
           lineHeight: 2,
           bold: true,
           pageBreak: 'before'
-        }
+        },
+        this.createInstructionList(this.body.instructions, 'list')
       ],
       styles: {
         header: {
@@ -217,6 +226,10 @@ export class RecipeComponent implements OnInit {
         author: {
           fontSize: 10,
           margin: [0, 0, 0, 20]
+        },
+        list: {
+          fontSize: 10,
+          lineHeight: 2
         }
       },
       defaultStyle: {
@@ -230,17 +243,47 @@ export class RecipeComponent implements OnInit {
   }
 
   createRow(data: any, style?: string, width?: any, alignment?: any, gap?: any) {
-    var columns: any = { columns: [], alignment: alignment, columnGap: gap };
-    columns.columns.push({ width: '*', text: '' })
+    var body: any = { columns: [], alignment: alignment, columnGap: gap };
+    body.columns.push({ width: '*', text: '' })
 
     for (let item of data)
-      columns.columns.push({ text: item.toUpperCase(), link: window.location.hostname + '/?category=' + item, style: style, width: width })
+      body.columns.push({ text: item.toUpperCase(), link: window.location.hostname + '/?category=' + item, style: style, width: width })
 
-    columns.columns.push({ width: '*', text: '' })
+    body.columns.push({ width: '*', text: '' })
 
-    return columns
+    return body
   }
+  createImage(imageSrc: any) {
+    var canvasOfRecipe = document.createElement('canvas');
+    var ctx = canvasOfRecipe.getContext('2d');
 
+    var img = new Image();
+    img.src = imageSrc;
+
+    canvasOfRecipe.height = img.height;
+    canvasOfRecipe.width = img.width;
+    ctx?.drawImage(img, 0, 0);
+
+    return canvasOfRecipe.toDataURL()
+  }
+  createInstructionList(data: any, style?: any) {
+    var body: any = { ol: [], style: style };
+    var column: any = {};
+    for (let item of data) {
+      column = {}
+      if (item.imageSrc !== '')
+        column = { columns: [{ image: this.createImage(item.imageSrc), width: 150, height: 100, cover: [150, 100], margin: [-10, 0, 0, 0] }, { text: item.text }], margin: [0, 0, 0, 20] };
+      else
+        column = { columns: [{ text: item.text }], margin: [0, 0, 0, 10] };
+
+      body.ol.push(
+        column
+      )
+
+    }
+
+    return body
+  }
   createIngredientsTable() {
     var res: any = { table: { heights: 20, widths: ['auto', '*', 'auto'], body: [] }, layout: 'noBorders' };
 
@@ -251,7 +294,7 @@ export class RecipeComponent implements OnInit {
   }
 
   copyUrlToClipboard() {
-    
-  navigator.clipboard.writeText(this.url);
+
+    navigator.clipboard.writeText(this.url);
   }
 }

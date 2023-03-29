@@ -89,7 +89,7 @@
                             </ng-template>
                         </div>
                         <div class="galery-group">
-                            <div class="group-wrapper">
+                            
 
                                 <ng-container
                                     *ngFor="let media of displayingItem.body.galery.imagesSrc; let indexOfMedia = index">
@@ -102,7 +102,7 @@
                                                 [src]="media" alt="galery"></div>
                                     </ng-template>
                                 </ng-container>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -196,8 +196,8 @@
                         </ng-container>
                         <ol class="instructions-list">
                             <ng-container *ngFor="let step of body.instructions">
-                                <div class="group">
-                                    <div class="image-div"><img class="image-wrapper" [src]="step.imageSrc"
+                                <div [ngClass]="noImagesAtAll? 'indent' : ''" class="group">
+                                    <div *ngIf="!noImagesAtAll" class="image-div"><img class="image-wrapper" *ngIf="step.imageSrc !== ''" [src]="step.imageSrc"
                                             alt="recipe"></div>
                                     <li>{{step.text}}</li>
                                 </div>

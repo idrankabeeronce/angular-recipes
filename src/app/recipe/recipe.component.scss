@@ -34,29 +34,17 @@
     }
 
     &>.galery-group {
-        overflow: hidden;
-        position: relative;
+        display: flex;
+        gap: 10px;
         height: 150px;
         width: 100%;
 
-        &>.group-wrapper {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            display: flex;
-            gap: 10px;
-
-            /*
-            transition: .5s ease;
-            transform: translate(calc(-(step)*25% - (30px / 8)));
-            */
             &>div {
-                flex: 0 0 calc(25% - (30px / 4));
+                
                 height: 100%;
             }
 
-        }
+        
     }
 }
 
@@ -374,12 +362,16 @@ input[type='range'] {
         display: flex;
         gap: 60px;
 
+        &:is(.indent) {
+            margin-left: 60px;
+        }
         >* {
             padding-bottom: 20px;
         }
 
         >.image-div {
             flex: 1 1 35%;
+            height: 200px;
         }
 
         &>li {

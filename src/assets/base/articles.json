@@ -27,7 +27,7 @@
                     "imageSrc": "assets/images/recipes/recipe-ex.jpg"
                 },{
                     "text" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
-                    "imageSrc": "assets/images/recipes/recipe-ex.jpg"
+                    "imageSrc": ""
                 },{
                     "text" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
                     "imageSrc": "assets/images/recipes/recipe-ex.jpg"
@@ -36,7 +36,7 @@
                     "imageSrc": "assets/images/recipes/recipe-ex.jpg"
                 },{
                     "text" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
-                    "imageSrc": "assets/images/recipes/recipe-ex.jpg"
+                    "imageSrc": ""
                 }
             ],
             "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
