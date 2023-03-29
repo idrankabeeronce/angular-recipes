@@ -5,7 +5,6 @@
 }
 
 .recipe-header__info,
-.recipe-stats,
 .recipe-header__info-group {
     display: flex;
     gap: 20px;
@@ -18,7 +17,7 @@
 
 .recipe-article>div {
     max-width: 700px;
-
+    margin-bottom: 60px;
     &.recipe__instructions,
     &.recipe__advice {
         max-width: none;
@@ -109,6 +108,7 @@
 input[type='range'] {
 
     cursor: pointer;
+
     /*
     -webkit-appearance: none;
     cursor: pointer;
@@ -363,6 +363,87 @@ input[type='range'] {
     }
 }
 
+.instructions-list {
+    list-style-type: none;
+    counter-reset: num;
+    position: relative;
+    padding: 15px 0 5px 0;
+    font-size: 16px;
+
+    &>.group {
+        display: flex;
+        gap: 60px;
+
+        >* {
+            padding-bottom: 20px;
+        }
+
+        >.image-div {
+            flex: 1 1 35%;
+        }
+
+        &>li {
+            position: relative;
+            flex: 1 1 65%;
+            margin: 0;
+            line-height: 1.4em;
+
+            &::after {
+                content: counter(num);
+                counter-increment: num;
+                display: inline-block;
+                position: absolute;
+                top: 0;
+                left: -45px;
+                width: 28px;
+                height: 28px;
+                line-height: 28px;
+                background: transparent;
+                color: $text-color;
+                text-align: center;
+                font-size: 18px;
+                border-radius: 50%;
+                border: 2px solid $text-color;
+            }
+
+            &::before {
+                content: '';
+                position: absolute;
+                top: 30px;
+                bottom: 0px;
+                left: -30px;
+                width: 1px;
+                border-left: 2px solid $text-color;
+
+            }
+
+
+        }
+
+        &:last-child {
+            >li::before {
+                content: none;
+            }
+        }
+    }
+}
+.footer__header {
+    margin-bottom: 20px;
+}
+.share-links-list {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    > li>  button > a {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+
 @media screen and (max-width: 768px) {
     .recipe__author {
         flex-direction: column;
@@ -371,5 +452,19 @@ input[type='range'] {
 
     .recipe__nutritions {
         padding: 0;
+    }
+
+    .instructions-list {
+        &>.group {
+
+            >.image-div {
+                flex: 1 1 50%;
+            }
+
+            &>li {
+                position: relative;
+                flex: 1 1 50%;
+            }
+        }
     }
 }

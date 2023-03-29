@@ -49,12 +49,13 @@
                     <div class="galery">
                         <div class="galery-active">
                             <ng-container *ngIf="displayingItem.body.galery.videoSrc !== ''; else image">
-                                <div class="video-container" (click)="toggleVideo(video)"   (dblclick)="toggleFullScreen(video)">
-                                    <video #video class="image-wrapper" (timeupdate)="calcTime(video, seekBar)">
+                                <div class="video-container">
+                                    <video #video class="image-wrapper" (timeupdate)="calcTime(video, seekBar)"
+                                        (click)="toggleVideo(video)" (dblclick)="toggleFullScreen(video)">
                                         <source [src]="displayingItem.body.galery.videoSrc" type="video/mp4">
                                         <p>Your browser doesn't support video.</p>
                                     </video>
-                                    <div class="video-controls" >
+                                    <div class="video-controls">
                                         <button class="icon-button" id="play-pause" (click)="toggleVideo(video)">
                                             <ng-container *ngIf="video.paused; else pause">
                                                 <img class="icon_l" src="assets/icons/play.svg" alt="play">
@@ -72,11 +73,13 @@
                                                 <img class="icon_l" src="assets/icons/muted.svg" alt="muted">
                                             </ng-template>
                                         </button>
-                                        <input #volumeBar type="range" id="volume-bar" min="0" max="1" step="0.1" value="1" (change)="volumeOnChange(video, volumeBar)">
-                                        <input #seekBar class="slider-progress" type="range" id="seek-bar" value="0" (change)="setTime(video, seekBar)">
+                                        <input #volumeBar type="range" id="volume-bar" min="0" max="1" step="0.1"
+                                            value="1" (change)="volumeOnChange(video, volumeBar)">
+                                        <input #seekBar class="slider-progress" type="range" id="seek-bar" value="0"
+                                            (change)="setTime(video, seekBar)">
                                         <button class="icon-button" id="full-screen" (click)="toggleFullScreen(video)">
                                             <img src="assets/icons/fullscreen.svg" alt="full-screen">
-                                            
+
                                         </button>
                                     </div>
                                 </div>
@@ -187,6 +190,20 @@
                             </li>
                         </ul>
                     </div>
+                    <div class="instructions__body">
+                        <ng-container *ngFor="let step of body.instructions">
+
+                        </ng-container>
+                        <ol class="instructions-list">
+                            <ng-container *ngFor="let step of body.instructions">
+                                <div class="group">
+                                    <div class="image-div"><img class="image-wrapper" [src]="step.imageSrc"
+                                            alt="recipe"></div>
+                                    <li>{{step.text}}</li>
+                                </div>
+                            </ng-container>
+                        </ol>
+                    </div>
                 </div>
                 <div class="recipe__advice">
                     <span class="label"></span>
@@ -194,9 +211,37 @@
                 </div>
             </div>
             <div class="main-container__footer">
-                <nav>
-                    <ul>
-                        <li></li>
+                <div class="footer__header">
+                    <h4 class="text-h4">Share:</h4>
+                </div>
+                <nav class="footer__body">
+                    <ul class="share-links-list">
+                        <li>
+                            <button class="icon-button icon-button_bordered">
+                                <a [href]="'https://www.facebook.com/share.php?u='+ url" target="_top">
+                                    <img class="icon" src="assets/icons/facebook-rev.svg" alt="facebook">
+                                </a>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="icon-button icon-button_bordered">
+                                <a [href]="'https://twitter.com/intent/tweet?via=SmartRecruiters&url='+ url" target="_blank">
+                                    <img class="icon" src="assets/icons/twitter-rev.svg" alt="twitter">
+                                </a>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="icon-button icon-button_bordered">
+                                <a [href]="'https://telegram.me/share/url?url='+ url" target="_blank">
+                                    <img class="icon" src="assets/icons/telegram.svg" alt="telegram">
+                                </a>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="icon-button icon-button_bordered" (click)="copyUrlToClipboard()">
+                                <img class="icon" src="assets/icons/chain.svg" alt="link">
+                            </button>
+                        </li>
                     </ul>
                 </nav>
             </div>

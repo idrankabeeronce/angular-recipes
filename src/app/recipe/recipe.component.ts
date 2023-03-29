@@ -28,6 +28,7 @@ export class RecipeComponent implements OnInit {
   displayingItem: any = null;
   foundItem = false;
   video: any;
+  url = '';
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
     private titleService: Title) {
 
@@ -35,7 +36,7 @@ export class RecipeComponent implements OnInit {
 
   ngOnInit(): void {
     //this.video = document.getElementById("video");
-
+    this.url = window.location.hostname + this.router.url;
 
     const ref = this.activatedRoute.snapshot.paramMap.get('id');
 
@@ -238,5 +239,10 @@ export class RecipeComponent implements OnInit {
       res.table.body.push([{ alignment: 'left', text: ingredient.name }, { text: '' }, { alignment: 'right', text: (ingredient.amount > 0 ? ingredient.amount : '') + ' ' + ingredient.suffix }])
     }
     return res
+  }
+
+  copyUrlToClipboard() {
+    
+  navigator.clipboard.writeText(this.url);
   }
 }

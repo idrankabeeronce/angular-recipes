@@ -63,16 +63,9 @@
     margin-right: 10px;
 }
 
-.recipe-group,
-.recipe-stats {
+.recipe-group {
     display: flex;
     gap: 20px;
-    align-items: center;
-}
-
-.recipe-stats>li {
-
-    display: flex;
     align-items: center;
 }
 
