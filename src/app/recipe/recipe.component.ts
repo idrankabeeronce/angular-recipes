@@ -19,9 +19,6 @@ import html2canvas from 'html2canvas';
 export class RecipeComponent implements OnInit {
 
   @ViewChild('bodyEl') pdfBody!: ElementRef;
-
-
-  title = 'asd';
   dataArticles = (data as any).default;
   dataRecipes = (dataHeader as any).default;
   body: any = {};
@@ -53,11 +50,11 @@ export class RecipeComponent implements OnInit {
     if (this.displayingItem === null)
       return
 
-    for(let stepOfInstructions of this.body.instructions) {
+    for (let stepOfInstructions of this.body.instructions) {
       if (stepOfInstructions.imageSrc !== '')
         this.noImagesAtAll = false;
-        
-      if (!this.noImagesAtAll)        
+
+      if (!this.noImagesAtAll)
         break;
     }
 
@@ -78,15 +75,10 @@ export class RecipeComponent implements OnInit {
     const baseUrl = window.location.protocol + '//' + window.location.hostname + '/angular-recipes/';
     const imageUrl = baseUrl + this.displayingItem.header.imgSrc;
     const desc = this.body.desc
-    this.metaService.addTags([
-      { property: 'og:title', content: this.title },
-      { property: 'og:type', content: 'website' },
-      { property: 'og:url', content: window.location.href },
-      { property: 'og:description', content: desc },
-      { property: 'og:image', content: imageUrl }
-
-    ]);
-
+    this.metaService.updateTag({ property: 'og:image', content: imageUrl });
+    this.metaService.updateTag({ property: 'og:title', content: this.titleService.getTitle() });
+    this.metaService.updateTag(
+      { property: 'og:url', content: window.location.href })
   }
   Round(value: number) {
     return Math.round(value * 100) / 100

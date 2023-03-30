@@ -1,5 +1,6 @@
 import { query } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
+import { Meta } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import * as data from '../../assets/base/recipes.json';
 
@@ -20,10 +21,27 @@ export class RecipesComponent implements OnInit {
   fakeArray: any = [];
   showHomeLink = false;
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router) {
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, 
+    private metaService: Meta) {
   }
 
   ngOnInit(): void {
+
+    
+    const baseUrl = window.location.protocol + '//' + window.location.hostname + '/angular-recipes/';
+    const imageUrl = baseUrl + 'assets/images/recipes/recipe-ex.jpg';
+    const desc = 'Here you can find good recipe'
+    this.metaService.addTags([
+      { property: 'og:title', content: this.title },
+      { property: 'og:type', content: 'article' },
+      { property: 'og:url', content: window.location.href },
+      { property: 'og:description', content: desc },
+      { property: 'og:image', content: imageUrl }
+
+    ]);
+
+
+
     const category = this.activatedRoute.snapshot.queryParamMap.get('category');
     if (category !== null) {
       this.getDataByCategory(category);
