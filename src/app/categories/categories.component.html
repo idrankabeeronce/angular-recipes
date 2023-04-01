@@ -1,0 +1,46 @@
+<div class="container main-container categories-container">
+    <div class="main-container__header">
+        <h1 class="text-h1_bold">Categories</h1>
+        <div class="header-desc">
+            <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at
+                in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu
+                ultrices sit amet, porttitor vitae ligula.</span>
+        </div>
+        <div class="search">
+            <form action="" class="form search-form">
+                <input placeholder="Enter category" type="text" name="search">
+                <button type="submit" class="icon-button button-search">
+                    <img class="icon" src="assets/icons/search.svg" alt="search">
+                </button>
+            </form>
+            <ng-container *ngIf="searchParam !== ''">
+                <form action="" class="reset-form">
+                    <label for="search">{{searchParam}}</label><br>
+                    <button type="submit" class="icon-button button-search">
+                        <img class="icon" src="assets/icons/close.svg" alt="reset">
+                    </button>
+                </form>
+            </ng-container>
+        </div>
+    </div>
+    <div class="main-container__body">
+        <ng-container *ngIf="categoriesList.length > 0; else cantFind">
+            <nav class="category-nav">
+                <ul>
+                    <ng-container *ngFor="let category of categoriesList">
+                        <li>
+                            <button class="button button_positive-outline button-category"
+                                routerLink="/" [queryParams]="{category : category}"><span
+                                    class="text-s_l text_prim-color">{{category}}</span></button>
+                        </li>
+                    </ng-container>
+                </ul>
+            </nav>
+        </ng-container>
+        <ng-template #cantFind>
+            <div class="empty-card">
+                <h1 class="text-h2_bold">Sorry, couldn't find anything</h1>
+            </div>
+        </ng-template>
+    </div>
+</div>

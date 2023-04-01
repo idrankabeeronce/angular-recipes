@@ -192,11 +192,14 @@ ul:is(.ingredients-list)>li {
         border-color: $primary-color;
 
         &:hover {
-            background: $primary-color-outline-hover;
+            background: $primary-color;
+            color: #fff;
         }
 
         &:active {
             background: $primary-color-outline-active;
+            border-color: $primary-color-outline-active;
+            color: #fff;
         }
     }
 

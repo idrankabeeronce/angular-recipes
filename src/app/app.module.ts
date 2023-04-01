@@ -10,6 +10,7 @@ import { FooterComponent } from './footer/footer.component';
 import { RecipeComponent } from './recipe/recipe.component';
 import { ErrorComponent } from './error/error.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { CategoriesComponent } from './categories/categories.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     HeaderComponent,
     FooterComponent,
     RecipeComponent,
-    ErrorComponent
+    ErrorComponent,
+    CategoriesComponent
   ],
   imports: [
     BrowserModule,

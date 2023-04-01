@@ -4,10 +4,17 @@ import { AdminComponent } from './admin/admin.component';
 import { ErrorComponent } from './error/error.component';
 import { RecipeComponent } from './recipe/recipe.component';
 import { RecipesComponent } from './recipes/recipes.component';
+import { CategoriesComponent } from './categories/categories.component';
 
 const routes: Routes = [
   {
     path: '',  title: 'Home | Recipes', component: RecipesComponent
+  },
+  {
+    path: 'recipes', component: RecipesComponent
+  },
+  {
+    path: 'categories', title: 'Categories | Recipes', component: CategoriesComponent
   },
   {
     path: 'recipe',

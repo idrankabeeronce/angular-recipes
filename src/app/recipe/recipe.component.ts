@@ -27,6 +27,7 @@ export class RecipeComponent implements OnInit {
   video: any;
   url = '';
   noImagesAtAll = true;
+  pathUrl: string = '';
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
     private titleService: Title, private metaService: Meta) {
@@ -69,7 +70,7 @@ export class RecipeComponent implements OnInit {
       }
     }
 
-
+    this.pathUrl = window.location.pathname;
     this.url = window.location.href;
 
     const baseUrl = window.location.protocol + '//' + window.location.hostname + '/angular-recipes/';
@@ -277,7 +278,7 @@ export class RecipeComponent implements OnInit {
     return body
   }
   createIngredientsTable() {
-    var res: any = { table: { heights: 20, widths: ['auto', '*', 'auto'], body: [] }, layout: 'noBorders' };
+    var res: any = { table: { heights: 20, widths: ['auto', '*', 'auto'], body: [] }, layout: 'noBorders', fontSize: 10 };
 
     for (let ingredient of this.displayingItem.header.ingredients) {
       res.table.body.push([{ alignment: 'left', text: ingredient.name }, { text: '' }, { alignment: 'right', text: (ingredient.amount > 0 ? ingredient.amount : '') + ' ' + ingredient.suffix }])

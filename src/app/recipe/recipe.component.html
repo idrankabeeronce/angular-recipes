@@ -94,12 +94,30 @@
                                 <ng-container
                                     *ngFor="let media of displayingItem.body.galery.imagesSrc; let indexOfMedia = index">
                                     <ng-container *ngIf="displayingItem.body.galery.videoSrc !== ''; else exceptFirst">
-                                        <div *ngIf="indexOfMedia < 4"><img class="image-wrapper" [src]="media"
-                                                alt="galery"></div>
+                                        <div *ngIf="indexOfMedia < 4">
+                                            <ng-container *ngIf="displayingItem.body.galery.imagesSrc.length > 4 && indexOfMedia === 3; else imageOnly">
+                                                <a [routerLink]="pathUrl" class="route-to-galery-link">
+                                                    <img class="image-wrapper" [src]="media"
+                                                        alt="galery">
+                                                    </a>
+                                            </ng-container>
+                                            <ng-template #imageOnly>
+                                                <img class="image-wrapper" [src]="media" alt="galery">
+                                            </ng-template>
+                                            </div>
                                     </ng-container>
                                     <ng-template #exceptFirst>
-                                        <div *ngIf="indexOfMedia > 0 && indexOfMedia < 5"><img class="image-wrapper"
-                                                [src]="media" alt="galery"></div>
+                                        <div *ngIf="indexOfMedia > 0 && indexOfMedia < 5">
+                                            <ng-container *ngIf="displayingItem.body.galery.imagesSrc.length > 5 && indexOfMedia === 4; else imageOnly">
+                                                <a href="" class="route-to-galery-link">
+                                                    <img class="image-wrapper" [src]="media"
+                                                        alt="galery">
+                                                    </a>
+                                            </ng-container>
+                                            <ng-template #imageOnly>
+                                                <img class="image-wrapper" [src]="media" alt="galery">
+                                            </ng-template>
+                                        </div>
                                     </ng-template>
                                 </ng-container>
                             

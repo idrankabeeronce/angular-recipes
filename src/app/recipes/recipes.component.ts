@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Meta } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import * as data from '../../assets/base/recipes.json';
+import * as categoriesData from '../../assets/base/categories.json';
 
 @Component({
   selector: 'app-recipes',
@@ -13,6 +14,7 @@ export class RecipesComponent implements OnInit {
   dataItems: any = [];
   displayingList: any = [];
   title = '';
+  searchParam: any = null;
   listOpen = true;
   step = 1;
   category: any = '';
@@ -20,14 +22,13 @@ export class RecipesComponent implements OnInit {
   paginationLength = 0;
   fakeArray: any = [];
   showHomeLink = false;
-
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, 
+  categoriesList: any = (categoriesData as any).default;
+  constructor(private activatedRoute: ActivatedRoute, private router: Router,
     private metaService: Meta) {
   }
 
   ngOnInit(): void {
 
-    
     const baseUrl = window.location.protocol + '//' + window.location.hostname + '/angular-recipes/';
     const imageUrl = baseUrl + 'assets/images/recipes/recipe-ex.jpg';
     const desc = 'Here you can find good recipe'
@@ -40,18 +41,15 @@ export class RecipesComponent implements OnInit {
 
     ]);
 
-
-
-    const category = this.activatedRoute.snapshot.queryParamMap.get('category');
-    if (category !== null) {
-      this.getDataByCategory(category);
-      this.showHomeLink = true;
-      this.title = category.charAt(0).toLocaleUpperCase() + category.slice(1) + ' recepies';
+    this.searchParam = this.activatedRoute.snapshot.queryParamMap.get('search')?.toLowerCase();
+    if (this.searchParam === '' || this.searchParam === undefined) {
+      this.searchParam = null
     }
-    else {
-      this.dataItems = (data as any).default;
-      this.title = "Recipes"
-    }
+
+    this.category = this.activatedRoute.snapshot.queryParamMap.get('category');
+
+    this.getData(this.category, this.searchParam);
+
     this.paginationLength = Math.ceil(this.dataItems.length / this.displayingLength);
     this.fakeArray = new Array(this.paginationLength);
 
@@ -63,10 +61,19 @@ export class RecipesComponent implements OnInit {
     });
   }
 
-  getDataByCategory(category: any) {
+  getData(category?: any, searchParam?: any) {
+    this.title = "Recipes"
+    if (category !== null) {
+      this.showHomeLink = true;
+      this.title = this.category.charAt(0).toLocaleUpperCase() + this.category.slice(1) + ' recepies';
+    }
+    console.log(category, searchParam);
     for (let item of (data as any).default) {
-      if (item.categories.includes(category))
-        this.dataItems.push(item);
+      if (category === null ? true : item.categories.includes(category)) {
+        if (searchParam === null ? true : item.title.toLowerCase().includes(searchParam)) {
+          this.dataItems.push(item);
+        }
+      }
     }
 
   }
@@ -118,14 +125,33 @@ export class RecipesComponent implements OnInit {
   Round(value: number) {
     return Math.round(value * 100) / 100
   }
-  routerNavigateParam(param: string) {
-    this.router.navigateByUrl('/recipe').then(() => {
-      this.router.navigate([''], { queryParams: { category: param } })
+  routerNavigateParam(categoryParam: string) {
+    const queryParam: any = {}
+    queryParam.category = categoryParam;
+    if (this.searchParam !== null)
+      queryParam.search = this.searchParam;
+
+    this.router.navigateByUrl('/recipes').then(() => {
+      this.router.navigate([''], { queryParams: queryParam })
     })
   }
   routerNavigateReload() {
-    this.router.navigateByUrl('/recipe').then(()=>{
+    this.router.navigateByUrl('/recipes').then(() => {
       this.router.navigate(['/'])
     })
+  }
+  routerNavigateSearchParam(searchParam?: string) {
+    const queryParam: any = {}
+
+    if (this.category !== null)
+      queryParam.category = this.category;
+
+
+    queryParam.search = searchParam;
+
+    this.router.navigateByUrl('/recipes').then(() => {
+      this.router.navigate([''], { queryParams: queryParam })
+    })
+
   }
 }

@@ -1,5 +1,26 @@
 @import '../../variables';
 
+.category-nav {
+    max-width: 600px;
+
+    & ul {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+        & .button-category {
+            padding: 7px 10px;
+            border-width: 1px;
+            border-radius: 5px;
+            &:hover {
+                span {
+                    color: inherit;
+                }   
+            }
+        }
+    }
+}
+
 .header-desc {
     position: relative;
     padding-bottom: 40px;
@@ -27,7 +48,38 @@
         }
     }
 }
-
+.control-group {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-end;
+}
+.search {
+    display: flex;
+    gap: 20px;
+}
+.search-form {
+    flex: 1;
+    height: 30px;
+    justify-content: space-between;
+    border-radius: 5px;
+    & > input {
+        flex: 1;
+    }
+}
+.reset-form {
+    display: flex;
+    align-items: center;
+    background: rgb(246 223 152);
+    border-radius: 5px;
+    & > label {
+        padding: 0 10px;
+        }
+}
+.button-search {
+    display: flex;
+    align-items: center;
+}
 
 #recipes>* {
     margin-bottom: 40px;
@@ -110,7 +162,10 @@
     margin-right: -10px;
 }
 
-
+.empty-card {
+    margin-top: 140px;
+    text-align: center;
+}
 
 @media screen and (max-width: 768px) {
     .recipe-card {

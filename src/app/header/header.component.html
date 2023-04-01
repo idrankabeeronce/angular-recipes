@@ -1,13 +1,11 @@
 <div class="container header-container">
     <div class="header-group">
-        <a class="logo-container" routerLink="/">
+        <a class="logo-container" (click)="goHomePage()">
             <img class="image-wrapper" src="assets/images/example.png" alt="recipes logo">
         </a>
         <nav>
             <ul class="nav-group">
-                <li><a routerLink="/">Category 1</a></li>
-                <li><a routerLink="/">Category 2</a></li>
-                <li><a routerLink="/">Category 3</a></li>
+                <li><a routerLink="categories">Categories</a></li>
             </ul>
         </nav>
         <button class="button button_positive-outline button-add">Add recipe</button>
@@ -19,9 +17,7 @@
 <div [ngClass]="openMenu? '' : 'hidden'" class="main-container menu-container">
     <nav>
         <ul class="nav-group">
-            <li><a routerLink="/">Category 1</a></li>
-            <li><a routerLink="/">Category 2</a></li>
-            <li><a routerLink="/">Category 3</a></li>
+            <li><a routerLink="categories" (click)="openCloseMenu()">Categories</a></li>
         </ul>
     </nav>
 </div>

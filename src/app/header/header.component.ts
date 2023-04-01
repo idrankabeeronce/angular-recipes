@@ -28,9 +28,16 @@ export class HeaderComponent implements OnInit {
     this.openMenu = !this.openMenu;
     if (!this.openMenu) {
       this.buttonIcon = 'assets/icons/menu.svg';
+      document.body.style.setProperty('overflow', 'auto');
     } else {
+      document.body.style.setProperty('overflow', 'hidden');
       this.buttonIcon = 'assets/icons/close.svg';
     }
   }
 
+  goHomePage() {
+    this.router.navigateByUrl('/recipes').then(() => {
+      this.router.navigate(['/'])
+    })
+  }
 }
