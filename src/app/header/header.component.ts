@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -12,7 +12,7 @@ export class HeaderComponent implements OnInit {
   buttonIcon = 'assets/icons/menu.svg';
   openMenu = false;
   constructor(public cdr: ChangeDetectorRef, public breakpointObserver: BreakpointObserver,
-    private router: Router) { }
+    private router: Router, private acti: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.breakpointObserver
@@ -39,5 +39,8 @@ export class HeaderComponent implements OnInit {
     this.router.navigateByUrl('/recipes').then(() => {
       this.router.navigate(['/'])
     })
+  }
+  getUrl() {    
+    return this.router.url    
   }
 }

@@ -1,0 +1,97 @@
+<ng-container *ngIf="!firstCompleted">
+    <div class="page-wrapper">
+        <div class="form-wrapper">
+            <form class="form" [formGroup]="firstForm">
+                <h1 class="text-h2">Create new recipe</h1>
+                <label class="text-m_m" for="title">Title:
+                    <input [class]="firstForm.touched? 'as' : ''" class="text-s" type="text" formControlName="title"
+                        placeholder="Enter title of recipe">
+                </label>
+
+                <label class="text-m_m" for="author">Author:
+                    <input class="text-s" type="text" formControlName="author" placeholder="Enter your name">
+                </label>
+
+                <label class="text-m_m" for="desc">Description of recipe:
+                    <input class="text-s" type="text" formControlName="desc" placeholder="Enter description of recipe">
+                </label>
+
+                <div class="control-panel">
+
+                    <button type="button" class="button" (click)="cancel()">Cancel</button>
+
+                    <button type="button" class="button button_positive" (click)="setFirstStep(true)">Next</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="firstCompleted && !secondCompleted">
+    <div class="page-wrapper">
+        <div class="form-wrapper">
+            <form class="form" [formGroup]="secondForm">
+                <h1 class="text-h2">H new recipe</h1>
+                <label id="categories" class="text-m_m" for="categories">Categories:
+                    <div class="container-select">
+                        <select #select [class]="onAttempt? 'ng-invalid' : ''">
+                            <ng-container *ngFor="let category of categoryList">
+                                <option [value]="category">{{category}}</option>
+                            </ng-container>
+                        </select>
+                        <button class="button button_positive-outline" (click)="addCategory(select.value)">Add</button>
+                    </div>
+                </label>
+                <table id="table-categories" [class]="secondForm.value.categories.data.length > 0? 'table_offset-top': ''">
+                    <ng-container *ngFor="let item of secondForm.value.categories.data; let i = index">
+                        <tr>
+                            <td>{{item}}</td>
+                            <td><button class="icon-button" (click)="removeCategory(i)">
+                                    <img class="icon" src="assets/icons/close.svg" alt="delete">
+                                </button></td>
+                        </tr>
+                    </ng-container>
+                </table>
+                <label class="text-m_m" for="ingredients">Ingredients:</label>
+                <label class="text-m" id="sub-label">Ingredient:<input [formControl]="nameIngredient" class="text-s" type="text" placeholder="Ingredient"></label>
+                <label class="text-m" id="sub-label">Amout:<input [formControl]="amountIngredient" class="text-s" type="number" placeholder="Amount"></label>
+                <label class="text-m" id="sub-label">Unit:<input  [formControl]="suffixIngredient" class="text-s" type="text" placeholder="Suffix"></label>
+                    <button class="button button_positive-outline" (click)="addIngredients()">Add</button>
+                
+                <table id="table-ingredients" [class]="secondForm.value.ingredients.data.length > 0? 'table_offset-top': ''">
+                    <ng-container *ngFor="let item of secondForm.value.ingredients.data; let i = index">
+                        <tr>
+                            <td>{{item.name}}</td>
+                            <td>{{item.amount}}</td>
+                            <td>{{item.suffix}}</td>
+                            <td><button class="icon-button" (click)="removeIngredients(i)">
+                                    <img class="icon" src="assets/icons/close.svg" alt="delete">
+                                </button></td>
+                        </tr>
+                    </ng-container>
+                </table>
+                <label class="text-m_m" for="portions">Portions:
+                    <input class="text-s" type="number" formControlName="portions" placeholder="Amount">
+                </label>
+
+                <label class="text-m_m" for="timeToDo">Required time:
+                    <input class="text-s" type="time" formControlName="timeToDo" placeholder="Enter title of recipe">
+                </label>
+
+                <div class="control-panel">
+
+                    <button type="button" class="button" (click)="stepBack()">Back</button>
+
+                    <button type="button" class="button button_positive" (click)="setSecondStep(true)">Next</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</ng-container>
+
+<div class="container main-container">
+    <div class="main-container__header">
+        
+    </div>
+    <div class="main-container__body"></div>
+</div>

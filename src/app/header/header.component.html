@@ -8,7 +8,7 @@
                 <li><a routerLink="categories">Categories</a></li>
             </ul>
         </nav>
-        <button class="button button_positive-outline button-add">Add recipe</button>
+        <button class="button button_positive-outline button-add" routerLink="/new" [queryParams]="{returnURL : getUrl()}">Add recipe</button>
         <button class="icon-button header-menu" (click)="openCloseMenu()">
             <img [src]="buttonIcon" alt="menu button">
         </button>

@@ -26,6 +26,12 @@ h3,
 h4,
 h5,
 input,
+label,
+select,
+table,
+th,
+td, 
+option,
 ul,
 li {
     font-family: 'Inter', sans-serif;
@@ -175,7 +181,8 @@ ul:is(.ingredients-list)>li {
     background: transparent;
     font-size: 16px;
     border-radius: 25px;
-    border: 2px solid;
+    outline: 2px solid;
+    outline-offset: -2px;
     padding: 14px 20px;
     transition: .3s ease;
     cursor: pointer;
@@ -189,7 +196,7 @@ ul:is(.ingredients-list)>li {
     }
 
     &.button_positive-outline {
-        border-color: $primary-color;
+        outline-color: $primary-color;
 
         &:hover {
             background: $primary-color;
@@ -198,7 +205,7 @@ ul:is(.ingredients-list)>li {
 
         &:active {
             background: $primary-color-outline-active;
-            border-color: $primary-color-outline-active;
+            outline-color: $primary-color-outline-active;
             color: #fff;
         }
     }
@@ -233,6 +240,8 @@ ul:is(.ingredients-list)>li {
     font-size: 16px;
     border: none;
     cursor: pointer;
+    display: flex;
+    align-items: center;
 }
 
 .icon-button_bordered {
@@ -268,7 +277,7 @@ img:is(.icon_l) {
     transition: transform .2s ease;
 }
 
-.form {
+.form-button {
     display: flex;
     border: 2px solid $text-color;
     border-radius: 30px;
@@ -296,7 +305,7 @@ img:is(.icon_l) {
 
 
 @media screen and (max-width: 365px) {
-    .form {
+    .form-button {
         flex-wrap: wrap;
         row-gap: 10px;
         padding: 5px;
@@ -437,4 +446,14 @@ img:is(.icon_l) {
     width: 100%;
     object-fit: cover;
     object-position: 50% 50%;
+}
+
+.page-wrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    background: rgba(0,0,0,.5);
 }
