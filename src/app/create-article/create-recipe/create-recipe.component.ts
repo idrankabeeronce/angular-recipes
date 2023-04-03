@@ -7,6 +7,7 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 import * as dataCategories from '../../../assets/base/categories.json'
 import { Title } from '@angular/platform-browser';
+import { PreviewArticleService } from 'src/app/preview-article.service';
 @Component({
   selector: 'app-create-recipe',
   templateUrl: './create-recipe.component.html',
@@ -29,7 +30,7 @@ export class CreateRecipeComponent implements OnInit {
   secondForm = new FormGroup({
     categories: new FormControl({ data: [] } as any),
     ingredients: new FormControl({ data: [] } as any),
-    portions: new FormControl(1, Validators.required),
+    portions: new FormControl('', Validators.required),
     timeToDo: new FormControl('', Validators.required)
   })
 
@@ -42,7 +43,7 @@ export class CreateRecipeComponent implements OnInit {
 
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private titleService: Title) { }
+    private titleService: Title, private previewArticle: PreviewArticleService) { }
 
   ngOnInit(): void {
 
@@ -132,7 +133,7 @@ export class CreateRecipeComponent implements OnInit {
     const value = { name: this.nameIngredient.value, amount: this.amountIngredient.value, suffix: this.suffixIngredient.value };
     this.secondForm.value.ingredients?.data.push(value);
     this.nameIngredient.setValue('');
-    this.amountIngredient.setValue('');
+    this.amountIngredient.setValue(null);
     this.suffixIngredient.setValue('');
 
     this.nameIngredient.markAsUntouched();
@@ -166,8 +167,79 @@ export class CreateRecipeComponent implements OnInit {
     return err
   }
   showPreview(bool: boolean) {
+    
 
+    console.log();
+
+    const item = {
+      header: {
+        title: this.firstForm.value.title,
+        author: {
+          name: this.firstForm.value.author,
+          img: "assets/images/profiles/person.jpg"
+        },
+        id: 15,
+        likes: 0,
+        dislikes: 0,
+        saved: 0,
+        imgSrc: "assets/images/recipes/recipe-ex.jpg",
+        categories: this.secondForm.value.categories.data,
+        difficulty: 1,
+        ingredients: this.secondForm.value.ingredients.data,
+        portions: this.secondForm.value.portions,
+        portionsDefault: this.secondForm.value.portions,
+        timeToDo: {
+          hours: Number(this.secondForm.value.timeToDo?.slice(0, 2)),
+          minutes: Number(this.secondForm.value.timeToDo?.slice(3, 5)),
+        },
+        desc: this.firstForm.value.desc,
+        ref: "article-15"
+      },
+      id: 15,
+        title: this.firstForm.value.title,
+        ref: "article-15",
+        body: {
+            galery: {
+                videoSrc: "assets/videos/recipes/video.mp4",
+                imagesSrc: [
+                    "assets/images/recipes/recipe-ex.jpg",
+                    "assets/images/recipes/recipe-ex.jpg",
+                    "assets/images/recipes/recipe-ex.jpg",
+                    "assets/images/recipes/recipe-ex.jpg",
+                    "assets/images/recipes/recipe-ex.jpg",
+                    "assets/images/recipes/recipe-ex.jpg"
+                ]
+            },
+            nutritions: {
+                energy: 521,
+                protein: 12,
+                fat: 32,
+                carbohydrate: 68
+            },
+            instructions: [
+                {
+                    text : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
+                    imageSrc: "assets/images/recipes/recipe-ex.jpg"
+                },{
+                    text : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
+                    imageSrc: ""
+                },{
+                    text : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
+                    imageSrc: "assets/images/recipes/recipe-ex.jpg"
+                },{
+                    text : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
+                    imageSrc: "assets/images/recipes/recipe-ex.jpg"
+                },{
+                    text : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
+                    imageSrc: ""
+                }
+            ],
+            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
+            advice: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus."
+        }
+    }
     if (bool) {
+      this.previewArticle.setPreviewItem(item)
       document.body.style.setProperty('overflow', 'hidden');
       this.titleService.setTitle('Preview | Recipes');
     }

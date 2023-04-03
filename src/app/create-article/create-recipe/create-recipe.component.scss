@@ -112,6 +112,7 @@ th {
     position: absolute;
     top: 20px;
     right: 40px;
+    z-index: 6;
 }
 .button-absolute {
     background: rgb(255 255 255);
@@ -129,6 +130,7 @@ th {
 .preview-content {
     margin: 50px 0;
     max-width: 768px;
+    pointer-events: none;
 }
 
 @media screen and (max-width: 768px) {

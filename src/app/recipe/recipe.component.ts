@@ -10,6 +10,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts.js';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import htmlToPdfmake from 'html-to-pdfmake';
 import html2canvas from 'html2canvas';
+import { PreviewArticleService } from '../preview-article.service';
 
 @Component({
   selector: 'app-recipe',
@@ -30,16 +31,20 @@ export class RecipeComponent implements OnInit {
   pathUrl: string = '';
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private titleService: Title, private metaService: Meta) {
+    private titleService: Title, private metaService: Meta,
+    private previewArticle: PreviewArticleService) {
 
   }
 
   ngOnInit(): void {
     if (this.activatedRoute.component?.name === 'CreateArticleComponent') {
-      this.displayingItem = this.dataArticles[0];
-      this.displayingItem.header = this.dataRecipes[0];
-      this.body = this.displayingItem.body;
-      this.foundItem = true;
+      this.previewArticle.getPreviewItem().subscribe((res) => {
+        this.displayingItem = res;
+        this.body = this.displayingItem.body;
+        this.foundItem = true;
+      });
+      console.log(this.displayingItem);
+      
 
 
     } else {
