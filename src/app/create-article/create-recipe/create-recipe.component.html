@@ -42,7 +42,8 @@
                         <button class="button button_positive-outline" (click)="addCategory(select.value)">Add</button>
                     </div>
                 </label>
-                <table id="table-categories" [class]="secondForm.value.categories.data.length > 0? 'table_offset-top': ''">
+                <table id="table-categories"
+                    [class]="secondForm.value.categories.data.length > 0? 'table_offset-top': ''">
                     <ng-container *ngFor="let item of secondForm.value.categories.data; let i = index">
                         <tr>
                             <td>{{item}}</td>
@@ -53,12 +54,16 @@
                     </ng-container>
                 </table>
                 <label class="text-m_m" for="ingredients">Ingredients:</label>
-                <label class="text-m" id="sub-label">Ingredient:<input [formControl]="nameIngredient" class="text-s" type="text" placeholder="Ingredient"></label>
-                <label class="text-m" id="sub-label">Amout:<input [formControl]="amountIngredient" class="text-s" type="number" placeholder="Amount"></label>
-                <label class="text-m" id="sub-label">Unit:<input  [formControl]="suffixIngredient" class="text-s" type="text" placeholder="Suffix"></label>
-                    <button class="button button_positive-outline" (click)="addIngredients()">Add</button>
-                
-                <table id="table-ingredients" [class]="secondForm.value.ingredients.data.length > 0? 'table_offset-top': ''">
+                <label class="text-m" id="sub-label">Ingredient:<input [formControl]="nameIngredient" class="text-s"
+                        type="text" placeholder="Ingredient"></label>
+                <label class="text-m" id="sub-label">Amout:<input [formControl]="amountIngredient" class="text-s"
+                        type="number" placeholder="Amount"></label>
+                <label class="text-m" id="sub-label">Unit:<input [formControl]="suffixIngredient" class="text-s"
+                        type="text" placeholder="Suffix"></label>
+                <button class="button button_positive-outline" (click)="addIngredients()">Add</button>
+
+                <table id="table-ingredients"
+                    [class]="secondForm.value.ingredients.data.length > 0? 'table_offset-top': ''">
                     <ng-container *ngFor="let item of secondForm.value.ingredients.data; let i = index">
                         <tr>
                             <td>{{item.name}}</td>
@@ -91,7 +96,22 @@
 
 <div class="container main-container">
     <div class="main-container__header">
-        
+        <button (click)="showPreview(true)">Preview</button>
     </div>
     <div class="main-container__body"></div>
 </div>
+
+<ng-container *ngIf="preview">
+    <div class="page-wrapper">
+        <div class="preview-control">
+            <button class="icon-button button-absolute" (click)="showPreview(false)">
+                <img src="assets/icons/close.svg" alt="close">
+            </button>
+        </div>
+        <div class="preview-container">
+            <div class="preview-content">
+                <app-recipe></app-recipe>
+            </div>
+        </div>
+    </div>
+</ng-container>

@@ -108,10 +108,35 @@ th {
         flex: 0 0 100px;
     }
 }
+.preview-control {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+}
+.button-absolute {
+    background: rgb(255 255 255);
+    border-radius: 50%;
+    width: 3em;
+    height: 3em;
+    justify-content: center;
+}
+.preview-container {
+    height: 100%;
+    overflow: auto;
+    display: grid;
+    place-items: center;
+}
+.preview-content {
+    margin: 50px 0;
+    max-width: 768px;
+}
 
 @media screen and (max-width: 768px) {
     .form {
         padding: 40px 20px 20px 20px;
+    }
+    .preview-content {
+        margin: 0;
     }
 }
 

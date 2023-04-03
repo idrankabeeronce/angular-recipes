@@ -35,51 +35,56 @@ export class RecipeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.activatedRoute.component?.name === 'CreateArticleComponent') {
+      this.displayingItem = this.dataArticles[0];
+      this.displayingItem.header = this.dataRecipes[0];
+      this.body = this.displayingItem.body;
+      this.foundItem = true;
 
 
+    } else {
+      const ref = this.activatedRoute.snapshot.paramMap.get('id');
 
-
-    const ref = this.activatedRoute.snapshot.paramMap.get('id');
-
-    this.titleService.setTitle('Page not found | Recipes')
-    for (let item of this.dataArticles) {
-      if (ref === item.ref) {
-        this.displayingItem = item;
-        this.body = this.displayingItem.body;
+      this.titleService.setTitle('Page not found | Recipes')
+      for (let item of this.dataArticles) {
+        if (ref === item.ref) {
+          this.displayingItem = item;
+          this.body = this.displayingItem.body;
+        }
       }
-    }
-    if (this.displayingItem === null)
-      return
+      if (this.displayingItem === null)
+        return
 
-    for (let stepOfInstructions of this.body.instructions) {
-      if (stepOfInstructions.imageSrc !== '')
-        this.noImagesAtAll = false;
+      for (let stepOfInstructions of this.body.instructions) {
+        if (stepOfInstructions.imageSrc !== '')
+          this.noImagesAtAll = false;
 
-      if (!this.noImagesAtAll)
-        break;
-    }
-
-
-    this.titleService.setTitle(`${this.displayingItem.title} | Recipes`)
-    this.foundItem = true;
-
-    for (let item of this.dataRecipes) {
-      if (item.id === this.displayingItem.id) {
-        item.portionsDefault = item.portions;
-        this.displayingItem.header = item;
+        if (!this.noImagesAtAll)
+          break;
       }
+
+
+      this.titleService.setTitle(`${this.displayingItem.title} | Recipes`)
+      this.foundItem = true;
+
+      for (let item of this.dataRecipes) {
+        if (item.id === this.displayingItem.id) {
+          item.portionsDefault = item.portions;
+          this.displayingItem.header = item;
+        }
+      }
+
+      this.pathUrl = window.location.pathname;
+      this.url = window.location.href;
+
+      const baseUrl = window.location.protocol + '//' + window.location.hostname + '/angular-recipes/';
+      const imageUrl = baseUrl + this.displayingItem.header.imgSrc;
+      const desc = this.body.desc
+      this.metaService.updateTag({ property: 'og:image', content: imageUrl });
+      this.metaService.updateTag({ property: 'og:title', content: this.titleService.getTitle() });
+      this.metaService.updateTag(
+        { property: 'og:url', content: window.location.href })
     }
-
-    this.pathUrl = window.location.pathname;
-    this.url = window.location.href;
-
-    const baseUrl = window.location.protocol + '//' + window.location.hostname + '/angular-recipes/';
-    const imageUrl = baseUrl + this.displayingItem.header.imgSrc;
-    const desc = this.body.desc
-    this.metaService.updateTag({ property: 'og:image', content: imageUrl });
-    this.metaService.updateTag({ property: 'og:title', content: this.titleService.getTitle() });
-    this.metaService.updateTag(
-      { property: 'og:url', content: window.location.href })
   }
   Round(value: number) {
     return Math.round(value * 100) / 100

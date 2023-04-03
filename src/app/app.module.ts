@@ -11,7 +11,8 @@ import { RecipeComponent } from './recipe/recipe.component';
 import { ErrorComponent } from './error/error.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CategoriesComponent } from './categories/categories.component';
-import { CreateRecipeComponent } from './create-recipe/create-recipe.component';
+import { CreateRecipeComponent } from './create-article/create-recipe/create-recipe.component';
+import { CreateArticleComponent } from './create-article/create-article.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { CreateRecipeComponent } from './create-recipe/create-recipe.component';
     RecipeComponent,
     ErrorComponent,
     CategoriesComponent,
-    CreateRecipeComponent
+    CreateRecipeComponent,
+    CreateArticleComponent
   ],
   imports: [
     BrowserModule,

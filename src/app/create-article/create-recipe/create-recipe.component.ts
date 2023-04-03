@@ -5,7 +5,8 @@ import { FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-import * as dataCategories from '../../assets/base/categories.json'
+import * as dataCategories from '../../../assets/base/categories.json'
+import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-create-recipe',
   templateUrl: './create-recipe.component.html',
@@ -15,9 +16,9 @@ export class CreateRecipeComponent implements OnInit {
   firstCompleted = false;
   secondCompleted = false;
   onAttempt = false;
-
-  firstStep = new BehaviorSubject<any>(false);
-  secondStep = new BehaviorSubject<any>(false);
+  preview = false;
+  firstStep = new BehaviorSubject<boolean>(false);
+  secondStep = new BehaviorSubject<boolean>(false);
   sub!: Subscription;
   categoryList = (dataCategories as any).default;
   firstForm = new FormGroup({
@@ -32,17 +33,21 @@ export class CreateRecipeComponent implements OnInit {
     timeToDo: new FormControl('', Validators.required)
   })
 
- 
-    nameIngredient = new FormControl('', Validators.required);
-    
-    amountIngredient = new FormControl('', Validators.required);
-    
-    suffixIngredient = new FormControl('', Validators.required);
-  
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router) { }
+  nameIngredient = new FormControl('', Validators.required);
+
+  amountIngredient = new FormControl('', Validators.required);
+
+  suffixIngredient = new FormControl('', Validators.required);
+
+
+  constructor(private activatedRoute: ActivatedRoute, private router: Router,
+    private titleService: Title) { }
 
   ngOnInit(): void {
+
+    console.log(this.firstForm);
+
     document.body.style.setProperty('overflow', 'hidden');
     this.sub = this.getFirstStep().subscribe((res) => {
       this.firstCompleted = res;
@@ -53,7 +58,6 @@ export class CreateRecipeComponent implements OnInit {
         document.body.style.setProperty('overflow', 'auto');
     })
   }
-
   getFirstStep(): Observable<any> {
     return this.firstStep.asObservable()
   }
@@ -101,7 +105,7 @@ export class CreateRecipeComponent implements OnInit {
 
   cancel() {
     document.body.style.setProperty('overflow', 'auto');
-    const url = String(this.activatedRoute.snapshot.queryParamMap.get('returnURL'));
+    const url = String(this.activatedRoute.snapshot.queryParamMap.get('returnURL')) === 'null' ? '/' : String(this.activatedRoute.snapshot.queryParamMap.get('returnURL'));
     this.router.navigateByUrl(url)
   }
 
@@ -160,5 +164,17 @@ export class CreateRecipeComponent implements OnInit {
     }
 
     return err
+  }
+  showPreview(bool: boolean) {
+
+    if (bool) {
+      document.body.style.setProperty('overflow', 'hidden');
+      this.titleService.setTitle('Preview | Recipes');
+    }
+    else {
+      document.body.style.setProperty('overflow', 'auto');
+      this.titleService.setTitle('New recipe | Recipes');
+    }
+    this.preview = bool;
   }
 }
