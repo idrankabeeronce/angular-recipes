@@ -63,13 +63,12 @@ export class RecipesComponent implements OnInit {
 
   getData(category?: any, searchParam?: any) {
     this.title = "Recipes"
-    if (category !== null) {
+    if (category !== null && category !== '') {
       this.showHomeLink = true;
       this.title = this.category.charAt(0).toLocaleUpperCase() + this.category.slice(1) + ' recepies';
     }
-    console.log(category, searchParam);
     for (let item of (data as any).default) {
-      if (category === null ? true : item.categories.includes(category)) {
+      if (category === null || category === '' ? true : item.categories.includes(category)) {
         if (searchParam === null ? true : item.title.toLowerCase().includes(searchParam)) {
           this.dataItems.push(item);
         }

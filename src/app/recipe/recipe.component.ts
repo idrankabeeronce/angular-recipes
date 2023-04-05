@@ -44,7 +44,7 @@ export class RecipeComponent implements OnInit {
         this.foundItem = true;
       });
       console.log(this.displayingItem);
-      
+
 
 
     } else {
@@ -152,6 +152,18 @@ export class RecipeComponent implements OnInit {
       content: [
         {
 
+
+          image: this.createImage('assets/icons/logo.svg'),
+          width: 50,
+          height: 50,
+          cover: [50, 50],
+          absolutePosition: {
+            x: 525,
+            y: 20
+          },
+          link: window.location.protocol + '//' + window.location.hostname + '/angular-recipes/'
+        },
+        {
           columns: [
             {
               image: this.createImage(this.displayingItem.header.imgSrc),
@@ -250,8 +262,9 @@ export class RecipeComponent implements OnInit {
     body.columns.push({ width: '*', text: '' })
 
     for (let item of data)
-      body.columns.push({ text: item.toUpperCase(), link: window.location.hostname + '/?category=' + item, style: style, width: width })
+      body.columns.push({ text: item.toUpperCase(), link: window.location.protocol + '//' + window.location.hostname + '/angular-recipes/?category=' + item, style: style, width: width })
 
+    
     body.columns.push({ width: '*', text: '' })
 
     return body
