@@ -31,7 +31,7 @@
     <div class="page-wrapper">
         <div class="form-wrapper">
             <form class="form" [formGroup]="secondForm">
-                <h1 class="text-h2">H new recipe</h1>
+                <h1 class="text-h2">Add some extra</h1>
                 <label id="categories" class="text-m_m" for="categories">Categories:
                     <div class="container-select">
                         <select #select [class]="onAttempt? 'ng-invalid' : ''">
@@ -48,7 +48,7 @@
                         <tr>
                             <td>{{item}}</td>
                             <td><button class="icon-button" (click)="removeCategory(i)">
-                                    <img class="icon" src="assets/icons/close.svg" alt="delete">
+                                    <img class="icon_m" src="assets/icons/close.svg" alt="delete">
                                 </button></td>
                         </tr>
                     </ng-container>
@@ -94,11 +94,87 @@
     </div>
 </ng-container>
 
-<div class="container main-container">
-    <div class="main-container__header">
-        <button (click)="showPreview(true)">Preview</button>
+<div class="container main-container" [id]="secondCompleted? 'create-page-container': ''">
+
+    <div [class]="secondCompleted? '': 'hidden'" class="main-container__aside">
+        <div class="widget-panel">
+            <div class="elements-panel">
+                <div class="group-element">
+                    <button class="button button_positive-outline button-add button_icon"
+                        (click)="showCategoriesForm(true)">
+                        Add Category
+                        <img class="icon_m" src="assets/icons/plus.svg" alt="add">
+                    </button>
+                    <button class="button button_positive-outline button-add button_icon"
+                        (click)="showIngredientsForm(true)">
+                        Add Ingredient
+                        <img class="icon_m" src="assets/icons/plus.svg" alt="add">
+                    </button>
+                </div>
+                <div id="galery important" class="galery-element">
+                    <h2 class="text-h3">Add Galery</h2>
+                    <p class="text-m text-grey">Drag me</p>
+                </div>
+                <div id="advise" class="advise-element">
+                    <h2 class="text-h3">Add Advise</h2>
+                    <p class="text-m text-grey">Drag me</p>
+                </div>
+                <div id="nutrition" class="nutrition-element">
+                    <h2 class="text-h3">Add Nutrition</h2>
+                    <p class="text-m text-grey">Drag me</p>
+                </div>
+                <div id="instruction important" class="instruction-element">
+                    <h2 class="text-h3">Add Instruction</h2>
+                    <p class="text-m text-grey">Drag me</p>
+                </div>
+
+            </div>
+            <div class="widget-panel__control-panel">
+                <button class="button" (click)="cancel()">Cancel</button>
+                <button class="button" (click)="showPreview(true)">Preview</button>
+                <button class="button button_positive" (click)="saveRecipe()">Confirm</button>
+            </div>
+        </div>
+
+
     </div>
-    <div class="main-container__body"></div>
+
+    <div class="main-container__header">
+        <h1 class="text-h1_bold">{{firstForm.value.title}}</h1>
+        
+        <p class="text-m text-grey">Author: {{firstForm.value.author}}</p>
+        <div class="group-container group-container_center">
+            <h4 class="text-h4">Description: <span class="text-h4 text-h4_light">{{firstForm.value.desc}}</span></h4>
+            <h4 class="text-h4">Portions: <span class="text-h4 text-h4_light">{{secondForm.value.portions}}</span></h4>
+            <h4 class="text-h4">Required time: <span class="text-h4 text-h4_light">{{secondForm.value.timeToDo}}</span></h4>
+        </div>
+        <div class="group-container group-container_vertical">
+            <h4 class="text-h4">Categories:</h4>
+            <ul class="group-categories">
+                <ng-container *ngFor="let category of secondForm.value.categories.data">
+                    <li>{{category}}</li>
+                </ng-container>
+            </ul>
+        </div>
+    </div>
+    <div class="main-container__body">
+        <div class="group-container group-container_vertical">
+            <h4 class="text-h4">Ingredients:</h4>
+            <ul class="ingredients-list">
+                <ng-container *ngFor="let ingredient of secondForm.value.ingredients.data">
+
+                    <li>
+                        <span>{{ingredient.name}}</span>
+
+                        <span></span>
+                        <span *ngIf="ingredient.amount > 0">{{ingredient.amount}}</span>
+                        <span> {{ingredient.suffix}}</span>
+                    </li>
+
+                </ng-container>
+            </ul>
+        </div>
+    </div>
 </div>
 
 <ng-container *ngIf="preview">
@@ -112,6 +188,56 @@
             <div class="preview-content">
                 <app-recipe></app-recipe>
             </div>
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="addNewCategory">
+    <div class="page-wrapper">
+        <div class="form-wrapper">
+            <div class="form">
+                <h1 class="text-h2">Add category:</h1>
+                <div class="categories-list">
+                    <ng-container *ngFor="let category of categoryList">
+                        <button class="button button_positive-outline"
+                            (click)="addCategory(category)">{{category}}</button>
+                    </ng-container>
+                </div>
+                <button class="button button_positive" (click)="showCategoriesForm(false)">Close</button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="addNewIngredient">
+    <div class="page-wrapper">
+        <div class="form-wrapper">
+            <form [class]="invalidIngredients? 'invalid': ''" class="form">
+                <h1 class="text-h2">Add ingredients:</h1>
+                <label class="text-m" id="sub-label">Ingredient:<input [formControl]="nameIngredient" class="text-s"
+                        type="text" placeholder="Ingredient"></label>
+                <label class="text-m" id="sub-label">Amout:<input [formControl]="amountIngredient" class="text-s"
+                        type="number" placeholder="Amount"></label>
+                <label class="text-m" id="sub-label">Unit:<input [formControl]="suffixIngredient" class="text-s"
+                        type="text" placeholder="Suffix"></label>
+                <button class="button button_positive-outline" (click)="addIngredients()">Add</button>
+
+                <table id="table-ingredients"
+                    [class]="secondForm.value.ingredients.data.length > 0? 'table_offset-top': ''">
+                    <ng-container *ngFor="let item of secondForm.value.ingredients.data; let i = index">
+                        <tr>
+                            <td>{{item.name}}</td>
+                            <td>{{item.amount}}</td>
+                            <td>{{item.suffix}}</td>
+                            <td><button class="icon-button" (click)="removeIngredients(i)">
+                                    <img class="icon" src="assets/icons/close.svg" alt="delete">
+                                </button></td>
+                        </tr>
+                    </ng-container>
+                </table>
+                <button style="margin-top: 40px" class="button button_positive"
+                    (click)="showIngredientsForm(false)">Close</button>
+            </form>
         </div>
     </div>
 </ng-container>

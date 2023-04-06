@@ -10,7 +10,12 @@
     align-items: center;
     height: 100%;
 }
-
+.header-group__sub-group {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: 40px;
+}
 .logo-container {
     width: 60px;
     height: 60px;

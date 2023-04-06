@@ -16,10 +16,14 @@ import { PreviewArticleService } from 'src/app/preview-article.service';
 export class CreateRecipeComponent implements OnInit {
   firstCompleted = false;
   secondCompleted = false;
+  addNewCategory = false;
+  addNewIngredient = false;
+  invalidIngredients = false;
+
   onAttempt = false;
   preview = false;
-  firstStep = new BehaviorSubject<boolean>(false);
-  secondStep = new BehaviorSubject<boolean>(false);
+  firstStep = new BehaviorSubject<boolean>(this.firstCompleted);
+  secondStep = new BehaviorSubject<boolean>(this.secondCompleted);
   sub!: Subscription;
   categoryList = (dataCategories as any).default;
   firstForm = new FormGroup({
@@ -30,7 +34,7 @@ export class CreateRecipeComponent implements OnInit {
   secondForm = new FormGroup({
     categories: new FormControl({ data: [] } as any),
     ingredients: new FormControl({ data: [] } as any),
-    portions: new FormControl('', Validators.required),
+    portions: new FormControl('', [Validators.required, Validators.min(1)]),
     timeToDo: new FormControl('', Validators.required)
   })
 
@@ -79,9 +83,11 @@ export class CreateRecipeComponent implements OnInit {
 
     if (this.secondForm.controls.categories.value.data.length === 0) {
       this.onAttempt = true;
-      this.nameIngredient.markAsTouched();
-      this.amountIngredient.markAsTouched();
-      this.suffixIngredient.markAsTouched();
+      if (this.secondForm.controls.ingredients.value.data.length === 0) {
+        this.nameIngredient.markAsTouched();
+        this.amountIngredient.markAsTouched();
+        this.suffixIngredient.markAsTouched();
+      }
       this.secondForm.markAllAsTouched();
       error = true;
     }
@@ -118,7 +124,9 @@ export class CreateRecipeComponent implements OnInit {
     this.categoryList.splice([this.categoryList.indexOf(value)], 1);
     this.secondForm.value.categories?.data.push(value);
     this.onAttempt = false;
-    console.log(this.secondForm);
+    if (this.categoryList.length === 0) {
+      this.addNewCategory = false;
+    }
   }
 
   removeCategory(index: number) {
@@ -167,7 +175,7 @@ export class CreateRecipeComponent implements OnInit {
     return err
   }
   showPreview(bool: boolean) {
-    
+
 
     console.log();
 
@@ -196,50 +204,50 @@ export class CreateRecipeComponent implements OnInit {
         ref: "article-15"
       },
       id: 15,
-        title: this.firstForm.value.title,
-        ref: "article-15",
-        body: {
-            galery: {
-                videoSrc: "assets/videos/recipes/video.mp4",
-                imagesSrc: [
-                    "assets/images/recipes/recipe-ex.jpg",
-                    "assets/images/recipes/recipe-ex.jpg",
-                    "assets/images/recipes/recipe-ex.jpg",
-                    "assets/images/recipes/recipe-ex.jpg",
-                    "assets/images/recipes/recipe-ex.jpg",
-                    "assets/images/recipes/recipe-ex.jpg"
-                ]
-            },
-            nutritions: {
-                energy: 521,
-                protein: 12,
-                fat: 32,
-                carbohydrate: 68
-            },
-            instructions: [
-                {
-                    text : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
-                    imageSrc: "assets/images/recipes/recipe-ex.jpg"
-                },{
-                    text : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
-                    imageSrc: ""
-                },{
-                    text : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
-                    imageSrc: "assets/images/recipes/recipe-ex.jpg"
-                },{
-                    text : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
-                    imageSrc: "assets/images/recipes/recipe-ex.jpg"
-                },{
-                    text : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
-                    imageSrc: ""
-                }
-            ],
-            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
-            advice: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus."
-        }
+      title: this.firstForm.value.title,
+      ref: "article-15",
+      body: {
+        galery: {
+          videoSrc: "assets/videos/recipes/video.mp4",
+          imagesSrc: [
+            "assets/images/recipes/recipe-ex.jpg",
+            "assets/images/recipes/recipe-ex.jpg",
+            "assets/images/recipes/recipe-ex.jpg",
+            "assets/images/recipes/recipe-ex.jpg",
+            "assets/images/recipes/recipe-ex.jpg",
+            "assets/images/recipes/recipe-ex.jpg"
+          ]
+        },
+        nutritions: {
+          energy: 521,
+          protein: 12,
+          fat: 32,
+          carbohydrate: 68
+        },
+        instructions: [
+          {
+            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
+            imageSrc: "assets/images/recipes/recipe-ex.jpg"
+          }, {
+            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
+            imageSrc: ""
+          }, {
+            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
+            imageSrc: "assets/images/recipes/recipe-ex.jpg"
+          }, {
+            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
+            imageSrc: "assets/images/recipes/recipe-ex.jpg"
+          }, {
+            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
+            imageSrc: ""
+          }
+        ],
+        desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
+        advice: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus."
+      }
     }
     if (bool) {
-      this.previewArticle.setPreviewItem(item)
+      this.previewArticle.setPreviewItem(item);
       document.body.style.setProperty('overflow', 'hidden');
       this.titleService.setTitle('Preview | Recipes');
     }
@@ -248,5 +256,31 @@ export class CreateRecipeComponent implements OnInit {
       this.titleService.setTitle('New recipe | Recipes');
     }
     this.preview = bool;
+  }
+
+  saveRecipe() {
+
+  }
+  showCategoriesForm(bool: boolean) {
+    this.addNewCategory = bool;
+    if (bool) {
+      document.body.style.setProperty('overflow', 'hidden');
+    } else {
+      document.body.style.setProperty('overflow', 'auto');
+    }
+  }
+  showIngredientsForm(bool: boolean) {
+    if (this.secondForm.value.ingredients.data.length === 0) {
+      this.invalidIngredients = true;
+      return
+    }
+
+    this.addNewIngredient = bool;
+    if (bool) {
+      document.body.style.setProperty('overflow', 'hidden');
+    } else {
+      document.body.style.setProperty('overflow', 'auto');
+    }
+
   }
 }

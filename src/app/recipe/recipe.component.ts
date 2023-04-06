@@ -37,7 +37,7 @@ export class RecipeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.activatedRoute.component?.name === 'CreateArticleComponent') {
+    if (this.activatedRoute.snapshot.url[0].path === 'new') {
       this.previewArticle.getPreviewItem().subscribe((res) => {
         this.displayingItem = res;
         this.body = this.displayingItem.body;
