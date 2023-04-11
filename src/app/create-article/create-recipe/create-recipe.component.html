@@ -11,6 +11,10 @@
                 <label class="text-m_m" for="author">Author:
                     <input class="text-s" type="text" formControlName="author" placeholder="Enter your name">
                 </label>
+                <label class="text-m_m" for="authorImg">Profile image:
+                    <input class="text-s" #inputProfileImg type="file" formControlName="authorImg"
+                        accept="image/png, image/jpeg" (change)="imageReader(inputProfileImg)">
+                </label>
 
                 <label class="text-m_m" for="desc">Description of recipe:
                     <input class="text-s" type="text" formControlName="desc" placeholder="Enter description of recipe">
@@ -94,7 +98,8 @@
     </div>
 </ng-container>
 
-<div class="container main-container" [id]="secondCompleted? 'create-page-container': ''">
+<div [class]="secondCompleted? '': 'hidden'" class="container main-container"
+    [id]="secondCompleted? 'create-page-container': ''">
 
     <div [class]="secondCompleted? '': 'hidden'" class="main-container__aside">
         <div class="widget-panel">
@@ -111,68 +116,80 @@
                         <img class="icon_m" src="assets/icons/plus.svg" alt="add">
                     </button>
                 </div>
-                <div id="galery important" class="galery-element">
-                    <h2 class="text-h3">Add Galery</h2>
-                    <p class="text-m text-grey">Drag me</p>
+                <div class="draggable-group" cdkDropList #mainActionList="cdkDropList" [cdkDropListData]="actionList"
+                    [cdkDropListConnectedTo]="mainList">
+                    <div #item [id]="item === 'instruction' || item === 'galery'? 'important' : ''"
+                        class="draggable-card" [class]="item" *ngFor="let item of actionList" cdkDrag
+                        (cdkDragStarted)="dropArea.classList.add('drop-area')"
+                        (cdkDragEnded)="dropArea.classList.remove('drop-area')">
+                        <h2 class="text-h3">Add {{item}}</h2>
+                        <p class="text-m text-grey">Drag me</p>
+                    </div>
+
                 </div>
-                <div id="advise" class="advise-element">
-                    <h2 class="text-h3">Add Advise</h2>
-                    <p class="text-m text-grey">Drag me</p>
-                </div>
-                <div id="nutrition" class="nutrition-element">
-                    <h2 class="text-h3">Add Nutrition</h2>
-                    <p class="text-m text-grey">Drag me</p>
-                </div>
-                <div id="instruction important" class="instruction-element">
-                    <h2 class="text-h3">Add Instruction</h2>
-                    <p class="text-m text-grey">Drag me</p>
-                </div>
+
 
             </div>
             <div class="widget-panel__control-panel">
                 <button class="button" (click)="cancel()">Cancel</button>
-                <button class="button" (click)="showPreview(true)">Preview</button>
+                <button class="button" (click)="showPreviewOfPage(true)">Preview</button>
                 <button class="button button_positive" (click)="saveRecipe()">Confirm</button>
             </div>
         </div>
 
 
     </div>
+    <div #dropArea class="create-content" #mainList="cdkDropList" cdkDropList [cdkDropListData]="list"
+        [cdkDropListConnectedTo]="mainActionList" (cdkDropListDropped)="drop($event)">
+        <div class="main-container__header">
 
-    <div class="main-container__header">
-        <h1 class="text-h1_bold">{{firstForm.value.title}}</h1>
-        
-        <p class="text-m text-grey">Author: {{firstForm.value.author}}</p>
-        <div class="group-container group-container_center">
-            <h4 class="text-h4">Description: <span class="text-h4 text-h4_light">{{firstForm.value.desc}}</span></h4>
-            <h4 class="text-h4">Portions: <span class="text-h4 text-h4_light">{{secondForm.value.portions}}</span></h4>
-            <h4 class="text-h4">Required time: <span class="text-h4 text-h4_light">{{secondForm.value.timeToDo}}</span></h4>
+            <h1 class="text-h1_bold">{{firstForm.value.title}}</h1>
+            <div class="profile">
+                <div class="profile-image">
+                    <img class="image-wrapper" [src]="profileImg" alt="profile photo">
+                </div>
+                <h2 class="text-h3">Author: {{firstForm.value.author}}</h2>
+            </div>
+
+            <div class="group-container group-container_center">
+                <h4 class="text-h4">Description: <span class="text-h4 text-h4_light">{{firstForm.value.desc}}</span>
+                </h4>
+                <h4 class="text-h4">Portions: <span class="text-h4 text-h4_light">{{secondForm.value.portions}}</span>
+                </h4>
+                <h4 class="text-h4">Required time: <span
+                        class="text-h4 text-h4_light">{{secondForm.value.timeToDo}}</span>
+                </h4>
+            </div>
+            <div class="group-container group-container_vertical group-container_center">
+                <h4 class="text-h4">Categories:</h4>
+                <ul class="group-categories">
+                    <ng-container *ngFor="let category of secondForm.value.categories.data">
+                        <li>{{category}}</li>
+                    </ng-container>
+                </ul>
+            </div>
         </div>
-        <div class="group-container group-container_vertical">
-            <h4 class="text-h4">Categories:</h4>
-            <ul class="group-categories">
-                <ng-container *ngFor="let category of secondForm.value.categories.data">
-                    <li>{{category}}</li>
-                </ng-container>
-            </ul>
-        </div>
-    </div>
-    <div class="main-container__body">
-        <div class="group-container group-container_vertical">
-            <h4 class="text-h4">Ingredients:</h4>
-            <ul class="ingredients-list">
-                <ng-container *ngFor="let ingredient of secondForm.value.ingredients.data">
+        <div class="main-container__body form-container">
+            <div class="group-container group-container_vertical">
+                <h4 class="text-h4">Ingredients:</h4>
+                <ul class="ingredients-list">
+                    <ng-container *ngFor="let ingredient of secondForm.value.ingredients.data">
 
-                    <li>
-                        <span>{{ingredient.name}}</span>
+                        <li>
+                            <span>{{ingredient.name}}</span>
 
-                        <span></span>
-                        <span *ngIf="ingredient.amount > 0">{{ingredient.amount}}</span>
-                        <span> {{ingredient.suffix}}</span>
-                    </li>
+                            <span></span>
+                            <span *ngIf="ingredient.amount > 0">{{ingredient.amount}}</span>
+                            <span> {{ingredient.suffix}}</span>
+                        </li>
 
-                </ng-container>
-            </ul>
+                    </ng-container>
+                </ul>
+            </div>
+
+            <ng-container *ngFor="let item of list">
+                <ng-container *ngTemplateOutlet="templateItem; context : {$implicit: item}"></ng-container>
+            </ng-container>
         </div>
     </div>
 </div>
@@ -180,7 +197,7 @@
 <ng-container *ngIf="preview">
     <div class="page-wrapper">
         <div class="preview-control">
-            <button class="icon-button button-absolute" (click)="showPreview(false)">
+            <button class="icon-button button-absolute" (click)="showPreviewOfPage(false)">
                 <img src="assets/icons/close.svg" alt="close">
             </button>
         </div>
@@ -225,6 +242,7 @@
                 <table id="table-ingredients"
                     [class]="secondForm.value.ingredients.data.length > 0? 'table_offset-top': ''">
                     <ng-container *ngFor="let item of secondForm.value.ingredients.data; let i = index">
+
                         <tr>
                             <td>{{item.name}}</td>
                             <td>{{item.amount}}</td>
@@ -241,3 +259,105 @@
         </div>
     </div>
 </ng-container>
+
+<ng-template #templateItem let-item>
+    <div [class]="item" class="group-container group-container_vertical">
+        <ng-container [ngSwitch]="item">
+
+            <div *ngSwitchCase="'galery'" class="group-container group-container_vertical galery">
+                <h4 class="text-h4">Galery:</h4>
+                <form class="form edit-form" [formGroup]="galeryForm">
+                    <label class="text-m_m">Images:
+                        <input #inputGaleryImgs class="text-s" type="file" formControlName="imagesForm"
+                            accept="image/png, image/jpeg" multiple
+                            (change)="galeryImagesReader(inputGaleryImgs)"></label>
+
+                </form>
+                <div [class]="galery.imgs.length > 0? 'uploaded-galery': ''" class="galery-group galery-group_2h">
+                    <ng-container *ngFor="let img of galery.imgs">
+                        <div>
+                            <img class="image-wrapper" [src]="img" alt="galery image">
+                        </div>
+                    </ng-container>
+                </div>
+                <form class="form edit-form" [formGroup]="galeryForm">
+                    <label class="text-m_m">Video:
+                        <input #inputGaleryVideo class="text-s" type="file" formControlName="videoForm"
+                            accept="video/mp4" (change)="galeryVideoReader(inputGaleryVideo)"></label>
+
+                </form>
+                <div class="uploaded-galery" *ngIf="galery.video !== ''">
+                    <div>
+                        <video>
+                            <source [src]="galery.video" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngSwitchCase="'nutrition'" class="group-container group-container_vertical">
+                <h4 class="text-h4">Nutrition:</h4>
+                <form action="" class="form edit-form" [formGroup]="nutritionForm">
+                    <table>
+                        <tr>
+                            <th class="text-m_m">Energy</th>
+                            <th class="text-m_m">Protein</th>
+                            <th class="text-m_m">Fat</th>
+                            <th class="text-m_m">Сarbohydrate</th>
+                        </tr>
+                        <tr>
+                            <td class="kcal"><input type="number" formControlName="energy"></td>
+                            <td class="g"><input type="number" formControlName="protein"></td>
+                            <td class="g"><input type="number" formControlName="fat"></td>
+                            <td class="g"><input type="number" formControlName="carbohydrate"></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+
+            <div *ngSwitchCase="'instruction'" class="group-container group-container_vertical">
+                <h4 class="text-h4">Instruction:</h4>
+                <ul [formGroup]="instructionForm" class="instruction-group">
+                    <ng-container formArrayName="instructionArray">
+                        <ng-container *ngFor="let step of instructionArray.controls; let i = index">
+
+                            <li [formGroup]="step">
+                                <h3 class="text-m_m">Step {{i+1}}</h3>
+                                <div class="step-body">
+                                    <div class="image">
+                                        <label class="text-m_m">Image: </label>
+                                        <input #stepImage formControlName="imageSrc" type="file"
+                                            accept="image/png, image/jpeg"
+                                            (change)="imageInstructionReader(stepImage, i)">
+                                        <div *ngIf="step.value.imageSrc !== ''">
+                                            <img class="image-wrapper" [src]="instructionImgsArray[i]" alt="image">
+                                        </div>
+                                    </div>
+                                    <div class="desc">
+                                        <label class="text-m_m">Description: </label>
+                                        <textarea formControlName="text" cols="30" rows="5"
+                                            placeholder="Minimum 10 characters"></textarea>
+                                    </div>
+                                    <button *ngIf="i > 0" class="icon-button" (click)="deleteInstruction(i)">
+                                        <img class="icon_m" src="assets/icons/close.svg" alt="delete">
+                                    </button>
+                                </div>
+                            </li>
+
+                        </ng-container>
+                    </ng-container>
+                </ul>
+                <button class="button" (click)="addInstruction()">Add new step</button>
+            </div>
+
+            <div *ngSwitchCase="'advise'" class="group-container group-container_vertical">
+                <h4 class="text-h4">Advise:</h4>
+                <form class="form edit-form">
+                    <textarea placeholder="Minimum 20 characters" [formControl]="adviseForm" cols="50"
+                        rows="5"></textarea>
+                </form>
+            </div>
+
+        </ng-container>
+    </div>
+</ng-template>

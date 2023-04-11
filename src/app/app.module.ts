@@ -13,6 +13,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CategoriesComponent } from './categories/categories.component';
 import { CreateRecipeComponent } from './create-article/create-recipe/create-recipe.component';
 import { CreateArticleComponent } from './create-article/create-article.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { CreateArticleComponent } from './create-article/create-article.componen
     AppRoutingModule,
     NoopAnimationsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]

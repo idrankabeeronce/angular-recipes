@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
@@ -14,30 +15,89 @@ import { PreviewArticleService } from 'src/app/preview-article.service';
   styleUrls: ['./create-recipe.component.scss']
 })
 export class CreateRecipeComponent implements OnInit {
+
   firstCompleted = false;
   secondCompleted = false;
   addNewCategory = false;
   addNewIngredient = false;
   invalidIngredients = false;
 
+  list = [];
+  actionList = ['galery', 'nutrition', 'instruction', 'advise'];
+
+  adviseForm = new FormControl('')
+  adviseCompleted = false;
+
+  galeryForm = new FormGroup({
+    imagesForm: new FormControl('', Validators.required),
+    videoForm: new FormControl('')
+  });
+
+  profileImg = "";
+  galery: any = { imgs: [], video: '' };
+
+  nutritionForm = new FormGroup({
+    energy: new FormControl(''),
+    protein: new FormControl(''),
+    fat: new FormControl(''),
+    carbohydrate: new FormControl('')
+  });
+
+  instructionForm = new FormGroup({
+    instructionArray: new FormArray([
+      new FormGroup({
+        text: new FormControl('', [Validators.required, Validators.minLength(10)]),
+        imageSrc: new FormControl('')
+      })
+    ])
+  })
+  instructionImgsArray:any = [];
+
+  get instructionArray() {
+    return this.instructionForm.controls['instructionArray'] as any
+  }
+
+  addInstruction() {
+    if (!this.instructionArray.valid) {
+      this.instructionArray.markAllAsTouched();
+      return
+    }
+
+    const stepForm = new FormGroup({
+      text: new FormControl('', [Validators.required, Validators.minLength(10)]),
+      imageSrc: new FormControl('')
+    });
+    this.instructionArray.push(stepForm);
+
+  }
+
+  deleteInstruction(stepIndex: number) {
+    this.instructionArray.removeAt(stepIndex);
+  }
+
+  instructionCompleted = false;
+  galeryCompleted = false;
+  nutritionCompleted = false;
+
   onAttempt = false;
   preview = false;
   firstStep = new BehaviorSubject<boolean>(this.firstCompleted);
   secondStep = new BehaviorSubject<boolean>(this.secondCompleted);
   sub!: Subscription;
-  categoryList = (dataCategories as any).default;
+  categoryList: any = [];
   firstForm = new FormGroup({
     title: new FormControl('', Validators.required),
     desc: new FormControl('', Validators.required),
-    author: new FormControl('', Validators.required)
+    author: new FormControl('', Validators.required),
+    authorImg: new FormControl('', Validators.required)
   })
+
   secondForm = new FormGroup({
     categories: new FormControl({ data: [] } as any),
     ingredients: new FormControl({ data: [] } as any),
     portions: new FormControl('', [Validators.required, Validators.min(1)]),
     timeToDo: new FormControl('', Validators.required)
   })
-
 
   nameIngredient = new FormControl('', Validators.required);
 
@@ -49,20 +109,6 @@ export class CreateRecipeComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
     private titleService: Title, private previewArticle: PreviewArticleService) { }
 
-  ngOnInit(): void {
-
-    console.log(this.firstForm);
-
-    document.body.style.setProperty('overflow', 'hidden');
-    this.sub = this.getFirstStep().subscribe((res) => {
-      this.firstCompleted = res;
-    })
-    this.sub = this.getSecondStep().subscribe((res) => {
-      this.secondCompleted = res;
-      if (res)
-        document.body.style.setProperty('overflow', 'auto');
-    })
-  }
   getFirstStep(): Observable<any> {
     return this.firstStep.asObservable()
   }
@@ -106,12 +152,8 @@ export class CreateRecipeComponent implements OnInit {
 
   }
 
-  firstStepCompleted() {
-    this.firstCompleted = true;
-  }
-
   cancel() {
-    document.body.style.setProperty('overflow', 'auto');
+    this.changeBodyOverflow(false)
     const url = String(this.activatedRoute.snapshot.queryParamMap.get('returnURL')) === 'null' ? '/' : String(this.activatedRoute.snapshot.queryParamMap.get('returnURL'));
     this.router.navigateByUrl(url)
   }
@@ -120,6 +162,42 @@ export class CreateRecipeComponent implements OnInit {
     this.setFirstStep(false);
   }
 
+  ngOnInit(): void {
+    this.getCategories();
+
+    this.changeBodyOverflow(true);
+    this.sub = this.getFirstStep().subscribe((res) => {
+      this.firstCompleted = res;
+      console.log(this.firstForm);
+
+    })
+    this.sub = this.getSecondStep().subscribe((res) => {
+      this.secondCompleted = res;
+      this.changeBodyOverflow(!res);
+    })
+
+  }
+
+  getCategories() {
+    for (let category of (dataCategories as any).default) {
+      this.categoryList.push(category);
+    }
+  }
+
+  // drop handler, activate adding data to recipe
+  drop(event: CdkDragDrop<any>) {
+    transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+
+    if (event.container.data.includes('nutrition'))
+      Object.values(this.nutritionForm.controls).forEach((e: any) => {
+        e.setValidators([Validators.required, Validators.min(0)])
+      })
+
+    if (event.container.data.includes('advise'))
+      this.adviseForm.setValidators([Validators.required, Validators.minLength(20)])
+  }
+
+  // add new
   addCategory(value: any) {
     this.categoryList.splice([this.categoryList.indexOf(value)], 1);
     this.secondForm.value.categories?.data.push(value);
@@ -148,36 +226,36 @@ export class CreateRecipeComponent implements OnInit {
     this.amountIngredient.markAsUntouched();
     this.suffixIngredient.markAsUntouched();
   }
+
   removeIngredients(index: number) {
     this.secondForm.value.ingredients.data.splice(index, 1);
   }
-  validateIngrefients(nameInput: any, amountInput: any, suffixInput: any) {
-    nameInput.classList.remove('ng-invalid', 'ng-touched');
-    amountInput.classList.remove('ng-invalid', 'ng-touched');
-    suffixInput.classList.remove('ng-invalid', 'ng-touched');
-    let err = false;
 
-    if (nameInput.value === '') {
-      err = true;
-      nameInput.classList.add('ng-invalid', 'ng-touched');
-    }
+  // forms below are displaying while editing
 
-    if (amountInput.value === '') {
-      err = true;
-      amountInput.classList.add('ng-invalid', 'ng-touched');
-    }
-
-    if (suffixInput.value === '') {
-      err = true;
-      suffixInput.classList.add('ng-invalid', 'ng-touched');
-    }
-
-    return err
+  showCategoriesForm(bool: boolean) {
+    this.addNewCategory = bool;
+    this.changeBodyOverflow(bool);
   }
-  showPreview(bool: boolean) {
 
+  showIngredientsForm(bool: boolean) {
+    if (this.secondForm.value.ingredients.data.length === 0 && !bool) {
+      this.invalidIngredients = true;
+      return
+    }
+    this.addNewIngredient = bool;
+    this.changeBodyOverflow(bool)
 
-    console.log();
+  }
+
+  showPreviewOfPage(bool: boolean) {
+    const instruction: any[] = [];
+  
+      Object.values(this.instructionArray.controls).forEach((e: any, i: number) => {
+        console.log(i);
+        
+        instruction.push({ text: e.value.text, imageSrc: this.instructionImgsArray[i] })
+      })
 
     const item = {
       header: {
@@ -208,15 +286,8 @@ export class CreateRecipeComponent implements OnInit {
       ref: "article-15",
       body: {
         galery: {
-          videoSrc: "assets/videos/recipes/video.mp4",
-          imagesSrc: [
-            "assets/images/recipes/recipe-ex.jpg",
-            "assets/images/recipes/recipe-ex.jpg",
-            "assets/images/recipes/recipe-ex.jpg",
-            "assets/images/recipes/recipe-ex.jpg",
-            "assets/images/recipes/recipe-ex.jpg",
-            "assets/images/recipes/recipe-ex.jpg"
-          ]
+          videoSrc: this.galery.video,
+          imagesSrc: this.galery.imgs
         },
         nutritions: {
           energy: 521,
@@ -224,24 +295,7 @@ export class CreateRecipeComponent implements OnInit {
           fat: 32,
           carbohydrate: 68
         },
-        instructions: [
-          {
-            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
-            imageSrc: "assets/images/recipes/recipe-ex.jpg"
-          }, {
-            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
-            imageSrc: ""
-          }, {
-            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
-            imageSrc: "assets/images/recipes/recipe-ex.jpg"
-          }, {
-            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
-            imageSrc: "assets/images/recipes/recipe-ex.jpg"
-          }, {
-            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
-            imageSrc: ""
-          }
-        ],
+        instructions: instruction,
         desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
         advice: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus."
       }
@@ -259,28 +313,107 @@ export class CreateRecipeComponent implements OnInit {
   }
 
   saveRecipe() {
+    const importantEl = document.querySelectorAll('#important')
+    const forms = [this.firstForm, this.secondForm, this.galeryForm, this.nutritionForm, this.adviseForm, this.instructionArray];
+    var err = false;
 
-  }
-  showCategoriesForm(bool: boolean) {
-    this.addNewCategory = bool;
-    if (bool) {
-      document.body.style.setProperty('overflow', 'hidden');
-    } else {
-      document.body.style.setProperty('overflow', 'auto');
+    
+      const instruction: any[] = [];
+  
+      Object.values(this.instructionArray.controls).forEach((e: any, i: number) => {
+        console.log(i);
+        
+        instruction.push({ text: e.value.text, imageSrc: this.instructionImgsArray[i] })
+      })
+  
+    
+
+    if (importantEl.length > 0 || !this.isAllvalid(forms)) {
+      err = true;
     }
-  }
-  showIngredientsForm(bool: boolean) {
-    if (this.secondForm.value.ingredients.data.length === 0) {
-      this.invalidIngredients = true;
+    if (err) {
+      importantEl.forEach((e) => {
+        e.classList.add('invalid');
+      });
+      forms.forEach((e) => {
+        e.markAllAsTouched();
+      })
       return
     }
 
-    this.addNewIngredient = bool;
-    if (bool) {
+    console.log('all cool');
+
+  }
+
+  isAllvalid(forms: any) {
+    var valid = true;
+    forms.forEach((e: any) => {
+      if (!e.valid) {
+        valid = false;
+        return
+      }
+    })
+    return valid
+  }
+
+  imageReader(element: any, displayingElement?: any) {
+    let uploadedFile: any;
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      uploadedFile = reader.result;
+      if (displayingElement === undefined)
+        this.profileImg = uploadedFile;
+      else
+        displayingElement = uploadedFile;
+    });
+    reader.readAsDataURL(element.files[0])
+  }
+
+  imageInstructionReader(element: any, index: number) {
+    let uploadedFile: any;
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      uploadedFile = reader.result;
+      console.log(uploadedFile);
+      this.instructionImgsArray[index] = uploadedFile;
+    });
+    reader.readAsDataURL(element.files[0])
+  }
+  galeryImagesReader(element: any) {
+    const length = this.galery.imgs.length + element.files.length;
+
+    if (length > 8) {
+      alert('Only 8 images or less allowed')
+      return
+    }
+    for (let file of element.files) {
+      let uploadedFile: any;
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        uploadedFile = reader.result;
+        this.galery.imgs.push(uploadedFile);
+      });
+      reader.readAsDataURL(file);
+    }
+
+  }
+
+  galeryVideoReader(element: any) {
+    let uploadedFile: any;
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      uploadedFile = reader.result;
+      this.galery.video = uploadedFile;
+    });
+    reader.readAsDataURL(element.files[0])
+  }
+
+  changeBodyOverflow(value: boolean) {
+    if (value) {
       document.body.style.setProperty('overflow', 'hidden');
     } else {
       document.body.style.setProperty('overflow', 'auto');
     }
-
   }
+
 }

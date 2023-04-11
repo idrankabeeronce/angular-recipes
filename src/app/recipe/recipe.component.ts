@@ -43,8 +43,14 @@ export class RecipeComponent implements OnInit {
         this.body = this.displayingItem.body;
         this.foundItem = true;
       });
-      console.log(this.displayingItem);
 
+      for (let stepOfInstructions of this.body.instructions) {
+        if (stepOfInstructions.imageSrc !== '')
+          this.noImagesAtAll = false;
+
+        if (!this.noImagesAtAll)
+          break;
+      }
 
 
     } else {
@@ -57,6 +63,7 @@ export class RecipeComponent implements OnInit {
           this.body = this.displayingItem.body;
         }
       }
+      
       if (this.displayingItem === null)
         return
 
