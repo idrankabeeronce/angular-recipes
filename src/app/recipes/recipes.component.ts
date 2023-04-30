@@ -100,7 +100,6 @@ export class RecipesComponent implements OnInit {
       const item = this.dataItems[index];
 
       item.listOpen = false;
-      item.portionsDefault = item.portions;
 
       this.displayingList.push(item);
     }

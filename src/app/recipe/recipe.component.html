@@ -136,7 +136,7 @@
                         <span>{{body.desc}}</span>
                     </div>
                 </div>
-                <div class="recipe__nutritions">
+                <div *ngIf="keysOfNutritions > 0" class="recipe__nutritions">
                     <h4 class="text-h4">Nutritional value per portion</h4>
                     <table>
                         <tr>
@@ -223,7 +223,7 @@
                         </ol>
                     </div>
                 </div>
-                <div class="recipe__advice">
+                <div *ngIf="body.advice !== ''" class="recipe__advice">
                     <span class="label"></span>
                     <span>{{body.advice}}</span>
                 </div>

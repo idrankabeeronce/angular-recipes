@@ -30,6 +30,8 @@ export class RecipeComponent implements OnInit {
   noImagesAtAll = true;
   pathUrl: string = '';
 
+  keysOfNutritions = 0;
+
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
     private titleService: Title, private metaService: Meta,
     private previewArticle: PreviewArticleService) {
@@ -41,6 +43,7 @@ export class RecipeComponent implements OnInit {
       this.previewArticle.getPreviewItem().subscribe((res) => {
         this.displayingItem = res;
         this.body = this.displayingItem.body;
+        this.keysOfNutritions = Object.keys(this.body.nutritions).length;
         this.foundItem = true;
       });
 
@@ -61,6 +64,7 @@ export class RecipeComponent implements OnInit {
         if (ref === item.ref) {
           this.displayingItem = item;
           this.body = this.displayingItem.body;
+          this.keysOfNutritions = Object.keys(this.body.nutritions).length;
         }
       }
       

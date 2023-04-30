@@ -17,7 +17,7 @@
                 </label>
 
                 <label class="text-m_m" for="desc">Description of recipe:
-                    <input class="text-s" type="text" formControlName="desc" placeholder="Enter description of recipe">
+                    <textarea class="text-s" cols="40" type="text" formControlName="desc" placeholder="Enter description of recipe"></textarea>
                 </label>
 
                 <div class="control-panel">
@@ -51,7 +51,7 @@
                     <ng-container *ngFor="let item of secondForm.value.categories.data; let i = index">
                         <tr>
                             <td>{{item}}</td>
-                            <td><button class="icon-button" (click)="removeCategory(i)">
+                            <td class="td_right"><button class="icon-button" (click)="removeCategory(i)">
                                     <img class="icon_m" src="assets/icons/close.svg" alt="delete">
                                 </button></td>
                         </tr>
@@ -71,9 +71,9 @@
                     <ng-container *ngFor="let item of secondForm.value.ingredients.data; let i = index">
                         <tr>
                             <td>{{item.name}}</td>
-                            <td>{{item.amount}}</td>
+                            <td class="td_right">{{item.amount}}</td>
                             <td>{{item.suffix}}</td>
-                            <td><button class="icon-button" (click)="removeIngredients(i)">
+                            <td class="td_right"><button class="icon-button" (click)="removeIngredients(i)">
                                     <img class="icon" src="assets/icons/close.svg" alt="delete">
                                 </button></td>
                         </tr>
@@ -245,9 +245,9 @@
 
                         <tr>
                             <td>{{item.name}}</td>
-                            <td>{{item.amount}}</td>
+                            <td class="td_right">{{item.amount}}</td>
                             <td>{{item.suffix}}</td>
-                            <td><button class="icon-button" (click)="removeIngredients(i)">
+                            <td class="td_right"><button class="icon-button" (click)="removeIngredients(i)">
                                     <img class="icon" src="assets/icons/close.svg" alt="delete">
                                 </button></td>
                         </tr>

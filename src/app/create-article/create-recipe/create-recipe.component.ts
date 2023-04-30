@@ -6,9 +6,14 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-import * as dataCategories from '../../../assets/base/categories.json'
+import * as dataCategories from '../../../assets/base/categories.json';
+import * as recipesJson from '../../../assets/base/recipes.json';
+import * as articlesJson from '../../../assets/base/articles.json';
+
 import { Title } from '@angular/platform-browser';
 import { PreviewArticleService } from 'src/app/preview-article.service';
+
+
 @Component({
   selector: 'app-create-recipe',
   templateUrl: './create-recipe.component.html',
@@ -41,7 +46,7 @@ export class CreateRecipeComponent implements OnInit {
     protein: new FormControl(''),
     fat: new FormControl(''),
     carbohydrate: new FormControl('')
-  });
+  },);
 
   instructionForm = new FormGroup({
     instructionArray: new FormArray([
@@ -51,7 +56,7 @@ export class CreateRecipeComponent implements OnInit {
       })
     ])
   })
-  instructionImgsArray:any = [];
+  instructionImgsArray: any = [];
 
   get instructionArray() {
     return this.instructionForm.controls['instructionArray'] as any
@@ -163,6 +168,9 @@ export class CreateRecipeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.nutritionForm.disable();
+
     this.getCategories();
 
     this.changeBodyOverflow(true);
@@ -188,11 +196,13 @@ export class CreateRecipeComponent implements OnInit {
   drop(event: CdkDragDrop<any>) {
     transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
 
-    if (event.container.data.includes('nutrition'))
+    if (event.container.data.includes('nutrition')) {
+      this.nutritionForm.enable();
+
       Object.values(this.nutritionForm.controls).forEach((e: any) => {
         e.setValidators([Validators.required, Validators.min(0)])
       })
-
+    }
     if (event.container.data.includes('advise'))
       this.adviseForm.setValidators([Validators.required, Validators.minLength(20)])
   }
@@ -249,57 +259,8 @@ export class CreateRecipeComponent implements OnInit {
   }
 
   showPreviewOfPage(bool: boolean) {
-    const instruction: any[] = [];
-  
-      Object.values(this.instructionArray.controls).forEach((e: any, i: number) => {
-        console.log(i);
-        
-        instruction.push({ text: e.value.text, imageSrc: this.instructionImgsArray[i] })
-      })
+    const item = this.defineItem();
 
-    const item = {
-      header: {
-        title: this.firstForm.value.title,
-        author: {
-          name: this.firstForm.value.author,
-          img: "assets/images/profiles/person.jpg"
-        },
-        id: 15,
-        likes: 0,
-        dislikes: 0,
-        saved: 0,
-        imgSrc: "assets/images/recipes/recipe-ex.jpg",
-        categories: this.secondForm.value.categories.data,
-        difficulty: 1,
-        ingredients: this.secondForm.value.ingredients.data,
-        portions: this.secondForm.value.portions,
-        portionsDefault: this.secondForm.value.portions,
-        timeToDo: {
-          hours: Number(this.secondForm.value.timeToDo?.slice(0, 2)),
-          minutes: Number(this.secondForm.value.timeToDo?.slice(3, 5)),
-        },
-        desc: this.firstForm.value.desc,
-        ref: "article-15"
-      },
-      id: 15,
-      title: this.firstForm.value.title,
-      ref: "article-15",
-      body: {
-        galery: {
-          videoSrc: this.galery.video,
-          imagesSrc: this.galery.imgs
-        },
-        nutritions: {
-          energy: 521,
-          protein: 12,
-          fat: 32,
-          carbohydrate: 68
-        },
-        instructions: instruction,
-        desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
-        advice: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus."
-      }
-    }
     if (bool) {
       this.previewArticle.setPreviewItem(item);
       document.body.style.setProperty('overflow', 'hidden');
@@ -314,19 +275,15 @@ export class CreateRecipeComponent implements OnInit {
 
   saveRecipe() {
     const importantEl = document.querySelectorAll('#important')
-    const forms = [this.firstForm, this.secondForm, this.galeryForm, this.nutritionForm, this.adviseForm, this.instructionArray];
+    const forms = [this.firstForm, this.secondForm, this.galeryForm, this.adviseForm, this.instructionArray];
+
+    if(this.nutritionForm.enabled)
+      forms.push(this.nutritionForm);
+      
+    var result = this.defineItem();
+
     var err = false;
 
-    
-      const instruction: any[] = [];
-  
-      Object.values(this.instructionArray.controls).forEach((e: any, i: number) => {
-        console.log(i);
-        
-        instruction.push({ text: e.value.text, imageSrc: this.instructionImgsArray[i] })
-      })
-  
-    
 
     if (importantEl.length > 0 || !this.isAllvalid(forms)) {
       err = true;
@@ -341,7 +298,7 @@ export class CreateRecipeComponent implements OnInit {
       return
     }
 
-    console.log('all cool');
+    console.log(result);
 
   }
 
@@ -415,5 +372,61 @@ export class CreateRecipeComponent implements OnInit {
       document.body.style.setProperty('overflow', 'auto');
     }
   }
+  defineItem() {
+    const instruction: any[] = [];
+    let nutritionsObj: any = {}
 
+    Object.values(this.instructionArray.controls).forEach((e: any, i: number) => {
+      instruction.push({ text: e.value.text, imageSrc: this.instructionImgsArray[i] === undefined ? '' : this.instructionImgsArray[i] })
+    })
+
+    if (this.nutritionForm.enabled)
+      nutritionsObj = {
+        energy: this.nutritionForm.value?.energy,
+        protein: this.nutritionForm.value?.protein,
+        fat: this.nutritionForm.value?.fat,
+        carbohydrate: this.nutritionForm.value?.carbohydrate
+      };
+
+    const item = {
+      header: {
+        title: this.firstForm.value.title,
+        author: {
+          name: this.firstForm.value.author,
+          img: this.profileImg
+        },
+        id: (recipesJson as any).default.length + 1,
+        likes: 0,
+        dislikes: 0,
+        saved: 0,
+        imgSrc: this.galery.imgs[0],
+        categories: this.secondForm.value.categories.data,
+        difficulty: 1,
+        ingredients: this.secondForm.value.ingredients.data,
+        portions: this.secondForm.value.portions,
+        portionsDefault: this.secondForm.value.portions,
+        timeToDo: {
+          hours: Number(this.secondForm.value.timeToDo?.slice(0, 2)),
+          minutes: Number(this.secondForm.value.timeToDo?.slice(3, 5)),
+        },
+        desc: this.firstForm.value.desc,
+        ref: `article-${(recipesJson as any).default.length}`
+      },
+      id: (recipesJson as any).default.length + 1,
+      title: this.firstForm.value.title,
+      ref: `article-${(recipesJson as any).default.length}`,
+      body: {
+        galery: {
+          videoSrc: this.galery.video,
+          imagesSrc: this.galery.imgs
+        },
+        nutritions: nutritionsObj,
+        instructions: instruction,
+        desc: this.firstForm.value.desc,
+        advice: this.adviseForm?.value
+      }
+    }
+
+    return item;
+  }
 }

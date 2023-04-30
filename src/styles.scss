@@ -299,7 +299,7 @@ ul:is(.ingredients-list)>li {
     font-size: 16px;
     border: none;
     cursor: pointer;
-    display: flex;
+    display: inline-flex;
     align-items: center;
 }
 
@@ -584,7 +584,8 @@ img:is(.icon_l) {
 
         &>div {
             width: 100%;
-            height: 100%;
+            height: 150px;
+            max-width: 50%;
 
             &>.route-to-galery-link {
                 display: block;

@@ -111,12 +111,24 @@
             position: relative;
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
 
             .image,
             .desc {
                 display: grid;
                 gap: 5px;
                 flex: 1 1 350px;
+
+                & textarea {
+                    flex: 1 1 auto;
+                    border: none;
+                    border-radius: 5px;
+                    outline: 1px solid;
+                    outline-offset: -1px;
+                    padding: 8px 10px;
+                    resize: none;
+                }
+
             }
 
             .image {
@@ -388,11 +400,21 @@
 
     & input {
         flex: 1 1 auto;
-
+        border: none;
         border-radius: 5px;
         outline: 1px solid;
         outline-offset: -1px;
         padding: 8px 10px;
+    }
+    & textarea {
+        flex: 1 1 auto;
+        border: none;
+        border-radius: 5px;
+        outline: 1px solid;
+        outline-offset: -1px;
+        padding: 8px 10px;
+        resize: none;
+        height: 100px;
     }
 }
 
@@ -407,7 +429,7 @@
 input,
 textarea {
     &:is(.ng-invalid):is(.ng-touched) {
-        outline: 2px solid rgb(169, 23, 23);
+        outline: 2px solid rgb(169, 23, 23)!important;
     }
 }
 
@@ -441,6 +463,9 @@ table {
     &:is(.table_offset-top) {
         margin-top: 10px;
     }
+    & button {
+        display: inline-flex;
+    }
 
 }
 
@@ -452,7 +477,7 @@ td,
 th {
     padding: 8px 10px;
 
-    &:nth-child(2) {
+    &.td_right {
         text-align: right;
     }
 

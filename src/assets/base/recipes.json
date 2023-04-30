@@ -45,6 +45,7 @@
             }
         ],
         "portions": 6,
+        "portionsDefault": 6,
         "timeToDo": {
             "hours": 2,
             "minutes": 30
@@ -78,6 +79,7 @@
             }
         ],
         "portions": 3,
+        "portionsDefault": 3,
         "timeToDo": {
             "hours": 0,
             "minutes": 30
@@ -130,6 +132,7 @@
             }
         ],
         "portions": 2,
+        "portionsDefault": 2,
         "timeToDo": {
             "hours": 0,
             "minutes": 30
@@ -168,6 +171,7 @@
             }
         ],
         "portions": 1,
+        "portionsDefault": 1,
         "timeToDo": {
             "hours": 1,
             "minutes": 30
@@ -206,6 +210,7 @@
             }
         ],
         "portions": 1,
+        "portionsDefault": 1,
         "timeToDo": {
             "hours": 1,
             "minutes": 0
@@ -244,6 +249,7 @@
             }
         ],
         "portions": 10,
+        "portionsDefault": 10,
         "timeToDo": {
             "hours": 0,
             "minutes": 30
@@ -282,6 +288,7 @@
             }
         ],
         "portions": 1,
+        "portionsDefault": 1,
         "timeToDo": {
             "hours": 0,
             "minutes": 30
@@ -320,6 +327,7 @@
             }
         ],
         "portions": 1,
+        "portionsDefault": 1,
         "timeToDo": {
             "hours": 1,
             "minutes": 0
@@ -358,6 +366,7 @@
             }
         ],
         "portions": 1,
+        "portionsDefault": 1,
         "timeToDo": {
             "hours": 0,
             "minutes": 30
@@ -396,6 +405,7 @@
             }
         ],
         "portions": 1,
+        "portionsDefault": 1,
         "timeToDo": {
             "hours": 0,
             "minutes": 20
@@ -434,6 +444,7 @@
             }
         ],
         "portions": 1,
+        "portionsDefault": 1,
         "timeToDo": {
             "hours": 1,
             "minutes": 15
