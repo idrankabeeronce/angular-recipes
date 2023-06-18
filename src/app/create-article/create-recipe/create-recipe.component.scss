@@ -493,8 +493,10 @@ select {
     font-weight: 400;
     top: 35px;
     opacity: 0;
-    width: 148px;
-    border: 1px solid;
+    width: 150px;
+    box-sizing: border-box;
+    outline: 1px solid;
+    outline-offset: -1px;
     border-radius: 5px;
     border-top-right-radius: 0px;
     border-top-left-radius: 0px;
