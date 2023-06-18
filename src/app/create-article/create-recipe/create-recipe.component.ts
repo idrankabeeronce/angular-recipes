@@ -61,7 +61,19 @@ export class CreateRecipeComponent implements OnInit {
   get instructionArray() {
     return this.instructionForm.controls['instructionArray'] as any
   }
+  getValues() {
+    if (document.querySelector(".custom-options")?.classList.contains('opened'))
+      document.querySelector(".custom-options")?.classList.remove('opened');
+    else
+      document.querySelector(".custom-options")?.classList.add('opened');
+  }
 
+  setValue(customSelect:any, select: any, event:any) {
+    const value = event.target.dataset.value;
+    customSelect.dataset.value = value;
+    customSelect.children[0].innerHTML = value;
+    select.value = value;
+  }
   addInstruction() {
     if (!this.instructionArray.valid) {
       this.instructionArray.markAllAsTouched();
@@ -168,7 +180,10 @@ export class CreateRecipeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    document.body.addEventListener('click', function(event:any) {
+      if(!event.target.classList.contains('custom-select') && !event.target.parentElement.classList.contains('custom-select'))
+        document.querySelector('.custom-options')?.classList.remove('opened');
+    })
     this.nutritionForm.disable();
 
     this.getCategories();
@@ -208,9 +223,14 @@ export class CreateRecipeComponent implements OnInit {
   }
 
   // add new
-  addCategory(value: any) {
+  addCategory(value: any, customSelect?:any, select?:any) {
     this.categoryList.splice([this.categoryList.indexOf(value)], 1);
     this.secondForm.value.categories?.data.push(value);
+    if(customSelect) {      
+      customSelect.dataset.value = this.categoryList[0];
+      customSelect.children[0].innerHTML = this.categoryList[0];
+    }
+    
     this.onAttempt = false;
     if (this.categoryList.length === 0) {
       this.addNewCategory = false;
@@ -258,19 +278,22 @@ export class CreateRecipeComponent implements OnInit {
 
   }
 
-  showPreviewOfPage(bool: boolean) {
+  showPreviewOfPage(bool: boolean, wrapper?: any) {
     const item = this.defineItem();
 
     if (bool) {
       this.previewArticle.setPreviewItem(item);
       document.body.style.setProperty('overflow', 'hidden');
       this.titleService.setTitle('Preview | Recipes');
+      this.preview = bool;
     }
     else {
       document.body.style.setProperty('overflow', 'auto');
       this.titleService.setTitle('New recipe | Recipes');
+      wrapper.style.animation = 'fade-out .3s forwards';
+      setTimeout(()=>{this.preview = bool;}, 300)
     }
-    this.preview = bool;
+    
   }
 
   saveRecipe() {
@@ -429,4 +452,5 @@ export class CreateRecipeComponent implements OnInit {
 
     return item;
   }
+
 }

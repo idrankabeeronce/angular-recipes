@@ -38,12 +38,24 @@
                 <h1 class="text-h2">Add some extra</h1>
                 <label id="categories" class="text-m_m" for="categories">Categories:
                     <div class="container-select">
-                        <select #select [class]="onAttempt? 'ng-invalid' : ''">
+                        <select #select [class]="onAttempt? 'ng-invalid' : ''" >
                             <ng-container *ngFor="let category of categoryList">
-                                <option [value]="category">{{category}}</option>
+                                <option hidden [value]="category">{{category}}</option>
                             </ng-container>
+                            
                         </select>
-                        <button class="button button_positive-outline" (click)="addCategory(select.value)">Add</button>
+                        <ng-container *ngIf="categoryList.length > 0">
+                            <div #customSelect [class]="onAttempt? 'ng-invalid' : ''" class="custom-select" [attr.data-value]="categoryList[0]" (click)="getValues()">
+                                <span>{{categoryList[0]}}</span>
+                                <div class="custom-options">
+                                    <ng-container *ngFor="let category of categoryList">
+                                        <div class="custom-option" [attr.data-value]="category" (click)="setValue(customSelect, select, $event)">{{category}}</div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        
+                            <button class="button button_positive-outline" (click)="addCategory(select.value, customSelect, select)">Add</button>
+                        </ng-container>
                     </div>
                 </label>
                 <table id="table-categories"
@@ -195,9 +207,9 @@
 </div>
 
 <ng-container *ngIf="preview">
-    <div class="page-wrapper">
+    <div #previewWrapper class="page-wrapper">
         <div class="preview-control">
-            <button class="icon-button button-absolute" (click)="showPreviewOfPage(false)">
+            <button class="icon-button button-absolute" (click)="showPreviewOfPage(false, previewWrapper)">
                 <img src="assets/icons/close.svg" alt="close">
             </button>
         </div>
@@ -360,4 +372,4 @@
 
         </ng-container>
     </div>
-</ng-template>
+</ng-template> 

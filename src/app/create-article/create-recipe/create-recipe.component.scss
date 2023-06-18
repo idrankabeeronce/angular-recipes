@@ -438,24 +438,90 @@ textarea {
     gap: 10px;
     justify-content: space-between;
     align-items: stretch;
-
+    position: relative;
     &>select {
         flex: 1;
     }
 }
-
-select {
+.custom-select {
     padding: 7px 10px;
+    box-sizing: border-box;
+    position: relative;
     border-radius: 5px;
     border: none;
     outline: 1px solid;
     outline-offset: -1px;
-
+    height: 36px;
+    width: 150px;
+    max-width: 150px;
+    cursor: pointer;
     &:is(.ng-invalid) {
         outline: 2px solid rgb(169, 23, 23);
     }
+    &::after {
+        content: "";
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMCA3LjMzbDIuODI5LTIuODMgOS4xNzUgOS4zMzkgOS4xNjctOS4zMzkgMi44MjkgMi44My0xMS45OTYgMTIuMTd6Ii8+PC9zdmc+);
+        background-repeat: no-repeat;
+        background-size: 16px 16px;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        display: flex;
+        align-items: center;
+        height: 16px;
+        width: 16px;
+        transition: .2s ease;
+    }
 }
 
+select {
+    display: none;
+    &>option {
+        display: none;
+    }
+}
+.custom-select:has(.custom-options.opened) {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    &::after {
+        transform: rotate(180deg);
+    }
+}
+.custom-options {
+    position: absolute;
+    background: #fff;
+    font-weight: 400;
+    top: 35px;
+    opacity: 0;
+    width: 148px;
+    border: 1px solid;
+    border-radius: 5px;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+    left: 0;
+    transform: scaleY(0);
+    transition: transform .2s ease, opacity 0s .2s ease;
+    transform-origin: top;
+    z-index: 1;
+    &.opened {
+        opacity: 1;
+        transform: scaleY(1);
+        transition: transform .2s ease;
+    }
+    &>.custom-option {
+        width: 100%;
+        padding: 7px 10px;
+        box-sizing: border-box;
+        transition: .2s ease;
+        cursor: pointer;
+        &:hover {
+            background: rgba(0,0,0,.1);
+        }
+    }
+    &>.custom-option:not(:last-child) {
+        border-bottom: 1px solid;
+    }
+}
 table {
     border-collapse: collapse;
     margin-bottom: 30px;
@@ -526,14 +592,6 @@ td {
     top: 20px;
     right: 40px;
     z-index: 6;
-}
-
-.button-absolute {
-    background: rgb(255 255 255);
-    border-radius: 50%;
-    width: 3em;
-    height: 3em;
-    justify-content: center;
 }
 
 .preview-container {
