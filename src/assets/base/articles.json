@@ -77,7 +77,45 @@
         "id": "7",
         "title": "Something_7",
         "ref": "article-7",
-        "body": {}
+        "body": {
+            "galery": {
+                "videoSrc": "assets/videos/recipes/video.mp4",
+                "imagesSrc": [
+                    "assets/images/recipes/recipe-ex.jpg",
+                    "assets/images/recipes/recipe-ex.jpg",
+                    "assets/images/recipes/recipe-ex.jpg",
+                    "assets/images/recipes/recipe-ex.jpg",
+                    "assets/images/recipes/recipe-ex.jpg",
+                    "assets/images/recipes/recipe-ex.jpg"
+                ]
+            },
+            "nutritions": {
+                "energy": 521,
+                "protein": 12,
+                "fat": 32,
+                "carbohydrate": 68
+            },
+            "instructions": [
+                {
+                    "text" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
+                    "imageSrc": "assets/images/recipes/recipe-ex.jpg"
+                },{
+                    "text" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
+                    "imageSrc": ""
+                },{
+                    "text" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
+                    "imageSrc": "assets/images/recipes/recipe-ex.jpg"
+                },{
+                    "text" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
+                    "imageSrc": "assets/images/recipes/recipe-ex.jpg"
+                },{
+                    "text" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
+                    "imageSrc": ""
+                }
+            ],
+            "desc": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
+            "advice": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus."
+        }
     },
     {
         "id": "8",

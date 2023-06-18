@@ -14,6 +14,7 @@ import { CategoriesComponent } from './categories/categories.component';
 import { CreateRecipeComponent } from './create-article/create-recipe/create-recipe.component';
 import { CreateArticleComponent } from './create-article/create-article.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import { ReviewFormComponent } from './review-form/review-form.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     ErrorComponent,
     CategoriesComponent,
     CreateRecipeComponent,
-    CreateArticleComponent
+    CreateArticleComponent,
+    ReviewFormComponent
   ],
   imports: [
     BrowserModule,

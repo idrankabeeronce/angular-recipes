@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start-local": "ng serve --host=0.0.0.0 --disable-host-check",
     "build": "ng build --base-href /angular-recipes/",
     "deploy": "npm run build && npx angular-cli-ghpages",
     "watch": "ng build --watch --configuration development",
