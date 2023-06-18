@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Title, Meta } from "@angular/platform-browser";
 import * as data from '../../assets/base/articles.json';
 import * as dataHeader from '../../assets/base/recipes.json';
+import * as dataR from '../../assets/base/reviews/reviews.json';
+
 
 import jsPDF from 'jspdf';
 import pdfMake from 'pdfmake/build/pdfmake.js';
@@ -22,6 +24,8 @@ export class RecipeComponent implements OnInit {
   @ViewChild('bodyEl') pdfBody!: ElementRef;
   dataArticles = (data as any).default;
   dataRecipes = (dataHeader as any).default;
+  dataReviews = (dataR as any).default;
+
   body: any = {};
   displayingItem: any = null;
   foundItem = false;
@@ -29,8 +33,14 @@ export class RecipeComponent implements OnInit {
   url = '';
   noImagesAtAll = true;
   pathUrl: string = '';
-
+  reviews = true;
+  reviewsList: any = [];
+  showButtonReviews = true;
+  liked = 0;
+  disliked = 0;
   keysOfNutritions = 0;
+
+  showReviewForm = false;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
     private titleService: Title, private metaService: Meta,
@@ -39,7 +49,9 @@ export class RecipeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     if (this.activatedRoute.snapshot.url[0].path === 'new') {
+      this.reviews = false;
       this.previewArticle.getPreviewItem().subscribe((res) => {
         this.displayingItem = res;
         this.body = this.displayingItem.body;
@@ -67,7 +79,6 @@ export class RecipeComponent implements OnInit {
           this.keysOfNutritions = Object.keys(this.body.nutritions).length;
         }
       }
-      
       if (this.displayingItem === null)
         return
 
@@ -88,6 +99,23 @@ export class RecipeComponent implements OnInit {
           item.portionsDefault = item.portions;
           this.displayingItem.header = item;
         }
+      }
+
+      for (let item of this.dataReviews) {
+        if (item.articleId === this.displayingItem.id)
+
+          for (let [index, review] of Object(item.reviews).entries()) {
+            if (index < 3) {
+              this.reviewsList.push(review);
+              this.reviewsList[this.reviewsList.length - 1].pubDatePrint = this.parseDate(review.pubDate);
+              if (index === item.reviews.length - 1)
+                this.showButtonReviews = false;
+            }
+            if (review.rating === 1)
+              this.liked++
+            else
+              this.disliked++
+          }
       }
 
       this.pathUrl = window.location.pathname;
@@ -118,12 +146,45 @@ export class RecipeComponent implements OnInit {
     }
   }
 
+  setCustomBar(el: any, event: any, type:string, video: any) {
+    video.muted = false;
+    let diffXPerc = (event.offsetX)/(el.offsetWidth)  * 100;
+    if (type === "volume")
+      if (diffXPerc >= 95)
+        diffXPerc = 100;
+      else if (diffXPerc <= 5) {
+        video.muted = true;
+        diffXPerc = 0;
+      }
+
+    el.children[0].style.width = `${diffXPerc}%`;
+
+    const inputVolume = document.getElementById("volume-bar") as HTMLInputElement | null;
+    const inputVideo = document.getElementById("seek-bar") as HTMLInputElement | null;
+    if (type === "volume") {
+      inputVolume!.value = String(diffXPerc / 100);
+      this.volumeOnChange(video, inputVolume);
+    } else {
+      inputVideo!.value = String(diffXPerc);
+      this.setTime(video,inputVideo);
+      //this.seekOnChange(videoDiv, inputVideo);
+    }
+  }
+
+
   toggleMute(video: any, bar: any) {
     video.muted = !video.muted;
-    if (video.muted)
-      bar.value = 0
-    else
+    const el = document.querySelectorAll<HTMLDivElement>(".input-volume-bar")[0];
+    if (video.muted) {
+      bar.value = 0;
+      (el.children[0] as HTMLElement).style.width = `0%`;
+    }
+    else {     
+      if (video.volume === 0)
+        video.volume = 0.05; 
       bar.value = video.volume;
+      (el.children[0] as HTMLElement).style.width = `${video.volume * 100}%`;
+    }
   }
   toggleFullScreen(video: any) {
     if (video.requestFullscreen) {
@@ -142,19 +203,37 @@ export class RecipeComponent implements OnInit {
   }
   calcTime(video: any, bar: any) {
     var value = (100 / video.duration) * video.currentTime;
+    const el = document.querySelectorAll<HTMLDivElement>(".input-video-bar")[0];
+    (el.children[0] as HTMLElement).style.width = `${value}%`;
 
     bar.value = value;
   }
   volumeOnChange(video: any, bar: any) {
+    console.log(bar.value);
     video.volume = bar.value;
+  }
+
+  getAllReviews() {
+    const maxIndex = 100;
+
+    for (let item of this.dataReviews) {
+      if (item.articleId === this.displayingItem.id)
+
+        for (let index = 3; index < item.reviews.length; index++) {
+          this.reviewsList.push(item.reviews[index]);
+          this.reviewsList[this.reviewsList.length - 1].pubDatePrint = this.parseDate(item.reviews[index].pubDate);
+          if (maxIndex === index)
+            break;
+
+        }
+    }
+    this.showButtonReviews = false;
+
+    this.reviewsList = this.reviewsList.sort((a: any, b: any) => (new Date(a.pubDate).getTime() > new Date(b.pubDate).getTime() ? -1 : 1));
+    console.log(this.reviewsList);
   }
   saveAsPDF() {
     const doc = new jsPDF();
-
-
-
-
-
 
     const documentDefinition = {
       pageMargins: [20, 20, 20, 20],
@@ -275,7 +354,7 @@ export class RecipeComponent implements OnInit {
     for (let item of data)
       body.columns.push({ text: item.toUpperCase(), link: window.location.protocol + '//' + window.location.hostname + '/angular-recipes/?category=' + item, style: style, width: width })
 
-    
+
     body.columns.push({ width: '*', text: '' })
 
     return body
@@ -323,5 +402,24 @@ export class RecipeComponent implements OnInit {
   copyUrlToClipboard() {
 
     navigator.clipboard.writeText(this.url);
+  }
+
+  parseDate(date: string) {
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    return `${Number(date.split("-")[2])} ${monthNames[Number(date.split("-")[1]) - 1]} ${date.split("-")[0]}`;
+  }
+
+  showReview(bool: boolean, wrapper?: any) {
+    if (bool) { 
+      document.body.style.overflow = 'hidden';
+      this.showReviewForm = bool
+    }
+    else {
+      document.body.style.overflow = 'auto';
+      wrapper.style.animation = 'fade-out .3s forwards';
+      setTimeout(() => { this.showReviewForm = bool }, 300);
+    }
   }
 }
