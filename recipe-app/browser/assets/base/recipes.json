@@ -1,0 +1,466 @@
+[
+    {
+        "id": "1",
+        "title": "Something_1",
+        "author": {
+            "name": "Nikita",
+            "img": "assets/images/profiles/person.jpg"
+        },
+        "saved": 0,
+        "imgSrc": "assets/images/recipes/recipe-ex.jpg",
+        "categories": [
+            "breakfast",
+            "russian"
+        ],
+        "difficulty": 1,
+        "ingredients": [
+            {
+                "name": "Meat",
+                "amount": 2,
+                "suffix": "kg"
+            },
+            {
+                "name": "Egg",
+                "amount": 5,
+                "suffix": ""
+            },
+            {
+                "name": "Flour",
+                "amount": 150,
+                "suffix": "g"
+            },
+            {
+                "name": "Milk",
+                "amount": 100,
+                "suffix": "ml"
+            },
+            {
+                "name": "Water",
+                "amount": 50,
+                "suffix": "ml"
+            },
+            {
+                "name": "Spices",
+                "amount": 0,
+                "suffix": "to taste"
+            }
+        ],
+        "portions": 6,
+        "portionsDefault": 6,
+        "timeToDo": {
+            "hours": 2,
+            "minutes": 30
+        },
+        "desc": "text",
+        "ref": "article-1"
+    },
+    {
+        "id": "2",
+        "title": "Something_2",
+        "author": {
+            "name": "Nikita",
+            "img": "assets/images/profiles/person.jpg"
+        },
+        "saved": 0,
+        "imgSrc": "assets/images/recipes/recipe-ex.jpg",
+        "categories": [
+            "breakfast",
+            "british"
+        ],
+        "difficulty": 3,
+        "ingredients": [
+            {
+                "name": "Meat",
+                "amount": 2,
+                "suffix": "kg"
+            },
+            {
+                "name": "Egg",
+                "amount": 5,
+                "suffix": ""
+            }
+        ],
+        "portions": 3,
+        "portionsDefault": 3,
+        "timeToDo": {
+            "hours": 0,
+            "minutes": 30
+        },
+        "desc": "text",
+        "ref": "article-2"
+    },
+    {
+        "id": "3",
+        "title": "Something_3",
+        "author": {
+            "name": "Nikita",
+            "img": "assets/images/profiles/person.jpg"
+        },
+        "saved": 0,
+        "imgSrc": "assets/images/recipes/recipe-ex.jpg",
+        "categories": [
+            "british"
+        ],
+        "difficulty": 1,
+        "ingredients": [
+            {
+                "name": "Meat",
+                "amount": 2,
+                "suffix": "kg"
+            },
+            {
+                "name": "Egg",
+                "amount": 5,
+                "suffix": ""
+            },
+            {
+                "name": "Flour",
+                "amount": 150,
+                "suffix": "g"
+            },
+            {
+                "name": "Meat",
+                "amount": 2,
+                "suffix": "kg"
+            },
+            {
+                "name": "Egg",
+                "amount": 5,
+                "suffix": ""
+            },
+            {
+                "name": "Flour",
+                "amount": 150,
+                "suffix": "g"
+            }
+        ],
+        "portions": 2,
+        "portionsDefault": 2,
+        "timeToDo": {
+            "hours": 0,
+            "minutes": 30
+        },
+        "desc": "text",
+        "ref": "article-3"
+    },
+    {
+        "id": "4",
+        "title": "Something_4",
+        "author": {
+            "name": "Nikita",
+            "img": "assets/images/profiles/person.jpg"
+        },
+        "saved": 0,
+        "imgSrc": "assets/images/recipes/recipe-ex.jpg",
+        "categories": [
+            "dinner",
+            "italian"
+        ],
+        "difficulty": 1,
+        "ingredients": [
+            {
+                "name": "Meat",
+                "amount": 2,
+                "suffix": "kg"
+            },
+            {
+                "name": "Egg",
+                "amount": 5,
+                "suffix": ""
+            },
+            {
+                "name": "Flour",
+                "amount": 150,
+                "suffix": "g"
+            }
+        ],
+        "portions": 1,
+        "portionsDefault": 1,
+        "timeToDo": {
+            "hours": 1,
+            "minutes": 30
+        },
+        "desc": "text",
+        "ref": "article-4"
+    },
+    {
+        "id": "5",
+        "title": "Something_5",
+        "author": {
+            "name": "Nikita",
+            "img": "assets/images/profiles/person.jpg"
+        },
+        "saved": 0,
+        "imgSrc": "assets/images/recipes/recipe-ex.jpg",
+        "categories": [
+            "dinner",
+            "russian"
+        ],
+        "difficulty": 1,
+        "ingredients": [
+            {
+                "name": "Meat",
+                "amount": 2,
+                "suffix": "kg"
+            },
+            {
+                "name": "Egg",
+                "amount": 5,
+                "suffix": ""
+            },
+            {
+                "name": "Flour",
+                "amount": 150,
+                "suffix": "g"
+            }
+        ],
+        "portions": 1,
+        "portionsDefault": 1,
+        "timeToDo": {
+            "hours": 1,
+            "minutes": 0
+        },
+        "desc": "text",
+        "ref": "article-5"
+    },
+    {
+        "id": "6",
+        "title": "Something_6",
+        "author": {
+            "name": "Nikita",
+            "img": "assets/images/profiles/person.jpg"
+        },
+        "saved": 0,
+        "imgSrc": "assets/images/recipes/recipe-ex.jpg",
+        "categories": [
+            "dinner",
+            "russian"
+        ],
+        "difficulty": 5,
+        "ingredients": [
+            {
+                "name": "Meat",
+                "amount": 2,
+                "suffix": "kg"
+            },
+            {
+                "name": "Egg",
+                "amount": 5,
+                "suffix": ""
+            },
+            {
+                "name": "Flour",
+                "amount": 150,
+                "suffix": "g"
+            }
+        ],
+        "portions": 10,
+        "portionsDefault": 10,
+        "timeToDo": {
+            "hours": 0,
+            "minutes": 30
+        },
+        "desc": "text",
+        "ref": "article-6"
+    },
+    {
+        "id": "7",
+        "title": "Something_7",
+        "author": {
+            "name": "Nikita",
+            "img": "assets/images/profiles/person.jpg"
+        },
+        "saved": 0,
+        "imgSrc": "assets/images/recipes/recipe-ex.jpg",
+        "categories": [
+            "breakfast",
+            "russian"
+        ],
+        "difficulty": 1,
+        "ingredients": [
+            {
+                "name": "Meat",
+                "amount": 2,
+                "suffix": "kg"
+            },
+            {
+                "name": "Egg",
+                "amount": 5,
+                "suffix": ""
+            },
+            {
+                "name": "Flour",
+                "amount": 150,
+                "suffix": "g"
+            }
+        ],
+        "portions": 1,
+        "portionsDefault": 1,
+        "timeToDo": {
+            "hours": 0,
+            "minutes": 30
+        },
+        "desc": "text",
+        "ref": "article-7"
+    },
+    {
+        "id": "8",
+        "title": "Something_8",
+        "author": {
+            "name": "Nikita",
+            "img": "assets/images/profiles/person.jpg"
+        },
+        "saved": 0,
+        "imgSrc": "assets/images/recipes/recipe-ex.jpg",
+        "categories": [
+            "breakfast",
+            "russian"
+        ],
+        "difficulty": 1,
+        "ingredients": [
+            {
+                "name": "Meat",
+                "amount": 2,
+                "suffix": "kg"
+            },
+            {
+                "name": "Egg",
+                "amount": 5,
+                "suffix": ""
+            },
+            {
+                "name": "Flour",
+                "amount": 150,
+                "suffix": "g"
+            }
+        ],
+        "portions": 1,
+        "portionsDefault": 1,
+        "timeToDo": {
+            "hours": 1,
+            "minutes": 0
+        },
+        "desc": "text",
+        "ref": "article-8"
+    },
+    {
+        "id": "9",
+        "title": "Something_9",
+        "author": {
+            "name": "Nikita",
+            "img": "assets/images/profiles/person.jpg"
+        },
+        "saved": 0,
+        "imgSrc": "assets/images/recipes/recipe-ex.jpg",
+        "categories": [
+            "breakfast",
+            "russian"
+        ],
+        "difficulty": 1,
+        "ingredients": [
+            {
+                "name": "Meat",
+                "amount": 2,
+                "suffix": "kg"
+            },
+            {
+                "name": "Egg",
+                "amount": 5,
+                "suffix": ""
+            },
+            {
+                "name": "Flour",
+                "amount": 150,
+                "suffix": "g"
+            }
+        ],
+        "portions": 1,
+        "portionsDefault": 1,
+        "timeToDo": {
+            "hours": 0,
+            "minutes": 30
+        },
+        "desc": "text",
+        "ref": "article-9"
+    },
+    {
+        "id": "10",
+        "title": "Something_10",
+        "author": {
+            "name": "Nikita",
+            "img": "assets/images/profiles/person.jpg"
+        },
+        "saved": 0,
+        "imgSrc": "assets/images/recipes/recipe-ex.jpg",
+        "categories": [
+            "breakfast",
+            "russian"
+        ],
+        "difficulty": 1,
+        "ingredients": [
+            {
+                "name": "Meat",
+                "amount": 2,
+                "suffix": "kg"
+            },
+            {
+                "name": "Egg",
+                "amount": 5,
+                "suffix": ""
+            },
+            {
+                "name": "Flour",
+                "amount": 150,
+                "suffix": "g"
+            }
+        ],
+        "portions": 1,
+        "portionsDefault": 1,
+        "timeToDo": {
+            "hours": 0,
+            "minutes": 20
+        },
+        "desc": "text",
+        "ref": "article-10"
+    },
+    {
+        "id": "11",
+        "title": "Something_11",
+        "author": {
+            "name": "Nikita",
+            "img": "assets/images/profiles/person.jpg"
+        },
+        "saved": 0,
+        "imgSrc": "assets/images/recipes/recipe-ex.jpg",
+        "categories": [
+            "breakfast",
+            "russian"
+        ],
+        "difficulty": 1,
+        "ingredients": [
+            {
+                "name": "Meat",
+                "amount": 2,
+                "suffix": "kg"
+            },
+            {
+                "name": "Egg",
+                "amount": 5,
+                "suffix": ""
+            },
+            {
+                "name": "Flour",
+                "amount": 150,
+                "suffix": "g"
+            }
+        ],
+        "portions": 1,
+        "portionsDefault": 1,
+        "timeToDo": {
+            "hours": 1,
+            "minutes": 15
+        },
+        "desc": "text",
+        "ref": "article-11"
+    }
+]
