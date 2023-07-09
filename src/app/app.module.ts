@@ -30,7 +30,7 @@ import { ReviewFormComponent } from './review-form/review-form.component';
     ReviewFormComponent
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     NoopAnimationsModule,
     FormsModule,
