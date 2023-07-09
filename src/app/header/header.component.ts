@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit {
   }
 
   goHomePage() {
-    this.router.navigateByUrl('/recipes').then(() => {
+    this.router.navigateByUrl('/').then(() => {
       this.router.navigate(['/'])
     })
   }
