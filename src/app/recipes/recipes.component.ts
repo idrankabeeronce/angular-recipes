@@ -1,9 +1,8 @@
-import { query } from '@angular/animations';
-import { Component, OnInit } from '@angular/core';
-import { Meta } from '@angular/platform-browser';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { Component, OnInit, Optional } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import * as data from '../../assets/base/recipes.json';
 import * as categoriesData from '../../assets/base/categories.json';
+import { MetadataService } from '../metadata.service';
 
 @Component({
   selector: 'app-recipes',
@@ -24,22 +23,14 @@ export class RecipesComponent implements OnInit {
   showHomeLink = false;
   categoriesList: any = (categoriesData as any).default;
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private metaService: Meta) {
+    @Optional() private metadataService: MetadataService) {
   }
 
   ngOnInit(): void {
-
-    const baseUrl = window.location.protocol + '//' + window.location.hostname + '/angular-recipes/';
-    const imageUrl = baseUrl + 'assets/images/recipes/recipe-ex.jpg';
-    const desc = 'Here you can find good recipe'
-    this.metaService.addTags([
-      { property: 'og:title', content: this.title },
-      { property: 'og:type', content: 'article' },
-      { property: 'og:url', content: window.location.href },
-      { property: 'og:description', content: desc },
-      { property: 'og:image', content: imageUrl }
-
-    ]);
+    
+    if (this.metadataService) {
+      this.metadataService.updateMetadata({});
+    }
 
     this.searchParam = this.activatedRoute.snapshot.queryParamMap.get('search')?.toLowerCase();
     if (this.searchParam === '' || this.searchParam === undefined) {

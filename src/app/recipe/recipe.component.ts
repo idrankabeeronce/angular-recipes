@@ -1,6 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, Optional, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Title, Meta } from "@angular/platform-browser";
+import { Title } from "@angular/platform-browser";
 import * as data from '../../assets/base/articles.json';
 import * as dataHeader from '../../assets/base/recipes.json';
 import * as dataR from '../../assets/base/reviews/reviews.json';
@@ -10,9 +10,8 @@ import jsPDF from 'jspdf';
 import pdfMake from 'pdfmake/build/pdfmake.js';
 import pdfFonts from 'pdfmake/build/vfs_fonts.js';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
-import htmlToPdfmake from 'html-to-pdfmake';
-import html2canvas from 'html2canvas';
 import { PreviewArticleService } from '../preview-article.service';
+import { MetadataService } from '../metadata.service';
 
 @Component({
   selector: 'app-recipe',
@@ -43,7 +42,7 @@ export class RecipeComponent implements OnInit {
   showReviewForm = false;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private titleService: Title, private metaService: Meta,
+    private titleService: Title, @Optional() private metadataService: MetadataService,
     private previewArticle: PreviewArticleService) {
 
   }
@@ -121,13 +120,18 @@ export class RecipeComponent implements OnInit {
       this.pathUrl = window.location.pathname;
       this.url = window.location.href;
 
-      const baseUrl = window.location.protocol + '//' + window.location.hostname + '/angular-recipes/';
-      const imageUrl = baseUrl + this.displayingItem.header.imgSrc;
+      const imageUrl = this.displayingItem.header.imgSrc;
       const desc = this.body.desc
-      this.metaService.updateTag({ property: 'og:image', content: imageUrl });
-      this.metaService.updateTag({ property: 'og:title', content: this.titleService.getTitle() });
-      this.metaService.updateTag(
-        { property: 'og:url', content: window.location.href })
+      
+      if (this.metadataService) {
+        this.metadataService.updateMetadata({
+          title: this.displayingItem.title,
+          keywords : this.displayingItem.header.categories,
+          author: this.displayingItem.header.author.name,
+          description: desc,
+          imageRelativeUrl: imageUrl
+        });
+      }
     }
   }
   Round(value: number) {
