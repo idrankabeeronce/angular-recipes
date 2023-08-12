@@ -8,9 +8,9 @@
                 "videoSrc": "assets/videos/recipes/video.mp4",
                 "imagesSrc": [
                     "assets/images/recipes/recipe-ex.jpg",
-                    "assets/images/recipes/recipe-ex.jpg",
-                    "assets/images/recipes/recipe-ex.jpg",
-                    "assets/images/recipes/recipe-ex.jpg",
+                    "assets/images/recipes/recipe-ex-1.jpg",
+                    "assets/images/recipes/recipe-ex-2.jpg",
+                    "assets/images/recipes/recipe-ex-3.jpg",
                     "assets/images/recipes/recipe-ex.jpg",
                     "assets/images/recipes/recipe-ex.jpg"
                 ]
@@ -24,16 +24,16 @@
             "instructions": [
                 {
                     "text" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
-                    "imageSrc": "assets/images/recipes/recipe-ex.jpg"
+                    "imageSrc": "assets/images/recipes/recipe-ex-4.jpg"
                 },{
                     "text" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
                     "imageSrc": ""
                 },{
                     "text" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
-                    "imageSrc": "assets/images/recipes/recipe-ex.jpg"
+                    "imageSrc": "assets/images/recipes/recipe-ex-5.jpg"
                 },{
                     "text" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
-                    "imageSrc": "assets/images/recipes/recipe-ex.jpg"
+                    "imageSrc": "assets/images/recipes/recipe-ex-6.jpg"
                 },{
                     "text" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non nisi nec arcu tristique sagittis at in metus. Vivamus quam nibh, imperdiet eu sem nec, pulvinar finibus turpis. In dolor turpis, aliquam eu ultrices sit amet, porttitor vitae ligula.",
                     "imageSrc": ""
