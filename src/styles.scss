@@ -585,6 +585,7 @@ img:is(.icon_l) {
         width: 200px;
         height: 200px;
         margin-bottom: 10px;
+        border-radius: 50%;
 
         &>img {
             border-radius: 50%;
@@ -640,7 +641,7 @@ img:is(.icon_l) {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    top: 20%;
+                    top: calc(10% + .5em);
                     width: 100%;
                     height: 80%;
                     color: #000;
@@ -668,6 +669,49 @@ img:is(.icon_l) {
     }
 }
 
+
+.lazyload {
+    opacity: 0;
+}
+*:has( > .lazyload) {
+    position: relative;
+    overflow: hidden;
+}
+.lazyload-wrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(0.25turn, #cbcccc,  #cbcccc, #e3e3e3, #cbcccc, #cbcccc);
+	background-size: 500% 500%;
+    z-index: 2;
+    animation: hintloading 1s ease-in-out 0s infinite;
+    -webkit-animation: hintloading 1s ease-in-out 0s infinite;
+    
+}
+@keyframes hintloading
+{
+    0% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@-webkit-keyframes hintloading
+{
+  0% {
+    opacity: 0.5;
+  }
+  50%  {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
 @media screen and (max-width: 320px) {
     .text-h1, .text-h1_bold {
         font-size: 32px;

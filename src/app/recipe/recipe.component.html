@@ -49,9 +49,9 @@
                         <div class="galery-active">
                             <ng-container *ngIf="displayingItem.body.galery.videoSrc !== ''; else image">
                                 <div class="video-container">
-                                    <video #video id="video" class="image-wrapper" (timeupdate)="calcTime(video, seekBar)"
+                                    <video #video id="video" class="lazyload image-wrapper"  [attr.data-srcset]="displayingItem.body.galery.videoSrc" (timeupdate)="calcTime(video, seekBar)"
                                         (click)="toggleVideo(video)" (dblclick)="toggleFullScreen(video)">
-                                        <source [src]="displayingItem.body.galery.videoSrc" type="video/mp4">
+                                        <source type="video/mp4">
                                         <p>Your browser doesn't support video.</p>
                                     </video>
                                     <div class="video-controls">
@@ -106,11 +106,11 @@
                                         <ng-container
                                             *ngIf="displayingItem.body.galery.imagesSrc.length > 4 && indexOfMedia === 3; else imageOnly">
                                             <a [routerLink]="pathUrl" class="route-to-galery-link">
-                                                <img class="image-wrapper" [src]="media" alt="galery">
+                                                <img class="lazyload image-wrapper" [attr.data-src]="media" alt="galery">
                                             </a>
                                         </ng-container>
                                         <ng-template #imageOnly>
-                                            <img class="image-wrapper" [src]="media" alt="galery">
+                                            <img class="lazyload image-wrapper" [attr.data-src]="media" alt="galery">
                                         </ng-template>
                                     </div>
                                 </ng-container>
@@ -136,7 +136,7 @@
                     <span class="label"></span>
                     <div class="profile">
                         <div class="profile-image">
-                            <img class="image-wrapper" [src]="displayingItem.header.author.img" alt="profile photo">
+                            <img class="lazyload image-wrapper" [attr.data-src]="displayingItem.header.author.img" alt="profile photo">
                         </div>
                         <h2 class="text-h2">{{displayingItem.header.author.name}}</h2>
                     </div>
@@ -223,8 +223,8 @@
                         <ol class="instructions-list">
                             <ng-container *ngFor="let step of body.instructions">
                                 <div [ngClass]="noImagesAtAll? 'indent' : ''" class="group">
-                                    <div *ngIf="!noImagesAtAll" class="image-div"><img class="image-wrapper"
-                                            *ngIf="step.imageSrc !== ''" [src]="step.imageSrc" alt="recipe"></div>
+                                    <div *ngIf="!noImagesAtAll" class="image-div"><img class="lazyload image-wrapper"
+                                            *ngIf="step.imageSrc !== ''" [attr.data-src]="step.imageSrc" alt="recipe"></div>
                                     <li>{{step.text}}</li>
                                 </div>
                             </ng-container>

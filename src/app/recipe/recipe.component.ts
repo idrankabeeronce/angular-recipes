@@ -1,10 +1,12 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Title, Meta } from "@angular/platform-browser";
 import * as data from '../../assets/base/articles.json';
 import * as dataHeader from '../../assets/base/recipes.json';
 import * as dataR from '../../assets/base/reviews/reviews.json';
 
+
+import {lazyload} from 'src/assets/js/lazyload.js';
 
 import jsPDF from 'jspdf';
 import pdfMake from 'pdfmake/build/pdfmake.js';
@@ -19,7 +21,7 @@ import { PreviewArticleService } from '../preview-article.service';
   templateUrl: './recipe.component.html',
   styleUrls: ['./recipe.component.scss']
 })
-export class RecipeComponent implements OnInit {
+export class RecipeComponent implements OnInit, AfterViewInit {
 
   @ViewChild('bodyEl') pdfBody!: ElementRef;
   dataArticles = (data as any).default;
@@ -44,12 +46,9 @@ export class RecipeComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
     private titleService: Title, private metaService: Meta,
-    private previewArticle: PreviewArticleService) {
-
-  }
+    private previewArticle: PreviewArticleService) {}
 
   ngOnInit(): void {
-
     if (this.activatedRoute.snapshot.url[0].path === 'new') {
       this.reviews = false;
       this.previewArticle.getPreviewItem().subscribe((res) => {
@@ -129,6 +128,13 @@ export class RecipeComponent implements OnInit {
       this.metaService.updateTag(
         { property: 'og:url', content: window.location.href })
     }
+  }
+
+  ngAfterViewInit(): void {
+    console.log('loeaded');
+    
+    let lazyloadModule = new lazyload();
+    lazyloadModule.onDOMchange();         
   }
   Round(value: number) {
     return Math.round(value * 100) / 100
