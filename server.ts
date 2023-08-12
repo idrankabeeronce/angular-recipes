@@ -8,11 +8,13 @@ import {existsSync} from 'fs';
 import {join} from 'path';
 import * as path from 'path';
 import { HOST_URL } from './src/app/tokens/host-url';
+import mongoose, { CastError, ConnectOptions } from 'mongoose'
 
 import {AppServerModule} from './src/main.server';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
+
   const server = express();
   const distFolder = join(process.cwd(), 'dist/recipe-app/browser');
   const indexHtml = existsSync(join(distFolder, 'index.original.html')) ? 'index.original.html' : 'index';
@@ -46,30 +48,20 @@ export function app(): express.Express {
   // All regular routes use the Universal engine
   server.get('*', (req, res) => {
 
-    // url where the app is hosted (e.g. https://app-domain.com/);
-    // will be useful for generating meta tags;
     const hostUrl = req.protocol + '://' + req.get('Host');
 
-    // check whether User-Agent is bot
     if (isbot(req.header('User-Agent'))) {
-      console.log('SSR');
+      // console.log('SSR');
       // render app page on the server
-      //res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
       res.render(indexHtml, { req, providers: [
           { provide: APP_BASE_HREF, useValue: req.baseUrl },
-        
-          // HOST_URL will become available
-          // in Angular DI system on the server
           { provide: HOST_URL, useValue: hostUrl },
       ] });
     } else {
-      console.log('No SSR');
-      // return index.html without pre-rendering
+      // console.log('No SSR');
       // app will get rendered on the client
       res.sendFile(path.join(__dirname, '../browser/index.html'));
     }
-
-
     
   });
 
@@ -77,6 +69,17 @@ export function app(): express.Express {
 }
 
 function run(): void {
+  
+  mongoose
+  .connect('mongodb://localhost:27017/recipeDB')
+  .then(() => {
+    console.log("Connected to the database!");
+  })
+  .catch((err:any) => {
+    console.log("Cannot connect to the database!", err);
+    process.exit();
+  });
+
   const port = process.env['PORT'] || 4000;
 
   // Start up the Node server
