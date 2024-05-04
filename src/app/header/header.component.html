@@ -1,27 +1,27 @@
 <div class="container header-container">
     <div class="header-group">
-        <a class="logo-container" routerLink="/">
-            <img class="image-wrapper" src="assets/images/example.png" alt="recipes logo">
+        <div class="header-group__sub-group">
+        <a class="logo-container" (click)="goHomePage()">
+            <img class="image-wrapper" src="assets/icons/logo.svg" alt="recipes logo">
         </a>
         <nav>
             <ul class="nav-group">
-                <li><a routerLink="/">Category 1</a></li>
-                <li><a routerLink="/">Category 2</a></li>
-                <li><a routerLink="/">Category 3</a></li>
+                <li><a routerLink="categories">Categories</a></li>
             </ul>
         </nav>
-        <button class="button button_positive-outline button-add">Add recipe</button>
+        </div>
+        <div class="header-group__sub-group">
+        <button class="button button_positive-outline button-add" routerLink="/new" [queryParams]="{returnURL : getUrl()}">Add recipe</button>
         <button class="icon-button header-menu" (click)="openCloseMenu()">
             <img [src]="buttonIcon" alt="menu button">
         </button>
+        </div>
     </div>
 </div>
-<div [ngClass]="openMenu? '' : 'hidden'" class="main-container menu-container">
+<div [ngClass]="openMenu? '' : 'hiddenY'" class="main-container menu-container">
     <nav>
         <ul class="nav-group">
-            <li><a routerLink="/">Category 1</a></li>
-            <li><a routerLink="/">Category 2</a></li>
-            <li><a routerLink="/">Category 3</a></li>
+            <li><a class="text-h2" routerLink="categories" (click)="openCloseMenu()">Categories</a></li>
         </ul>
     </nav>
 </div>

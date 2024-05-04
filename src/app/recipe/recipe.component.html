@@ -35,10 +35,9 @@
                     <ul class="recipe-stats">
                         <li><img class="icon" src="assets/icons/saved.svg" alt="saved">{{displayingItem.header.saved}}
                         </li>
-                        <li><img class="icon" src="assets/icons/like.svg" alt="likes">{{displayingItem.header.likes}}
+                        <li><img class="icon" src="assets/icons/like.svg" alt="likes">{{liked}}
                         </li>
-                        <li><img class="icon" src="assets/icons/dislike.svg"
-                                alt="dislikes">{{displayingItem.header.dislikes}}</li>
+                        <li><img class="icon" src="assets/icons/dislike.svg" alt="dislikes">{{disliked}}</li>
                     </ul>
                 </div>
             </div>
@@ -46,15 +45,16 @@
         <div class="main-container__body">
             <div class="recipe-article recipe">
                 <div class="recipe__media-gallery">
-                    <div class="galery">
+                    <div *ngIf="displayingItem.body.galery.videoSrc || displayingItem.body.galery.imagesSrc.length" class="galery">
                         <div class="galery-active">
                             <ng-container *ngIf="displayingItem.body.galery.videoSrc !== ''; else image">
-                                <div class="video-container" (click)="toggleVideo(video)"   (dblclick)="toggleFullScreen(video)">
-                                    <video #video class="image-wrapper" (timeupdate)="calcTime(video, seekBar)">
-                                        <source [src]="displayingItem.body.galery.videoSrc" type="video/mp4">
+                                <div class="video-container">
+                                    <video #video id="video" class="lazyload image-wrapper"  [attr.data-srcset]="displayingItem.body.galery.videoSrc" (timeupdate)="calcTime(video, seekBar)"
+                                        (click)="toggleVideo(video)" (dblclick)="toggleFullScreen(video)">
+                                        <source type="video/mp4">
                                         <p>Your browser doesn't support video.</p>
                                     </video>
-                                    <div class="video-controls" >
+                                    <div class="video-controls">
                                         <button class="icon-button" id="play-pause" (click)="toggleVideo(video)">
                                             <ng-container *ngIf="video.paused; else pause">
                                                 <img class="icon_l" src="assets/icons/play.svg" alt="play">
@@ -72,12 +72,23 @@
                                                 <img class="icon_l" src="assets/icons/muted.svg" alt="muted">
                                             </ng-template>
                                         </button>
-                                        <input #volumeBar type="range" id="volume-bar" min="0" max="1" step="0.1" value="1" (change)="volumeOnChange(video, volumeBar)">
-                                        <input #seekBar class="slider-progress" type="range" id="seek-bar" value="0" (change)="setTime(video, seekBar)">
+                                        
+                                        <div #customVolumeBar class="input-volume-bar" (click)="setCustomBar(customVolumeBar, $event, 'volume', video)">
+                                            <div class="progress-bar"></div>
+                                        </div>
+                                        
+                                        <div #customVideoBar class="input-video-bar" (click)="setCustomBar(customVideoBar, $event, 'video', video)">
+                                            <div class="progress-bar"></div>
+                                        </div>
                                         <button class="icon-button" id="full-screen" (click)="toggleFullScreen(video)">
                                             <img src="assets/icons/fullscreen.svg" alt="full-screen">
-                                            
+
                                         </button>
+
+                                        <input #seekBar class="slider-progress" type="range" id="seek-bar" value="0"
+                                            (change)="setTime(video, seekBar)">
+                                            <input #volumeBar type="range" id="volume-bar" min="0" max="1" step="0.05"
+                                            value="1" (change)="volumeOnChange(video, volumeBar)">
                                     </div>
                                 </div>
                             </ng-container>
@@ -85,21 +96,40 @@
                                 <img class="image-wrapper" [src]="displayingItem.body.galery.imagesSrc[0]" alt="galery">
                             </ng-template>
                         </div>
-                        <div class="galery-group">
-                            <div class="group-wrapper">
+                        <div *ngIf="displayingItem.body.galery.imagesSrc.length > (displayingItem.body.galery.videoSrc !== '' ? 0 : 1)" 
+                            class="galery-group">
 
-                                <ng-container
-                                    *ngFor="let media of displayingItem.body.galery.imagesSrc; let indexOfMedia = index">
-                                    <ng-container *ngIf="displayingItem.body.galery.videoSrc !== ''; else exceptFirst">
-                                        <div *ngIf="indexOfMedia < 4"><img class="image-wrapper" [src]="media"
-                                                alt="galery"></div>
-                                    </ng-container>
-                                    <ng-template #exceptFirst>
-                                        <div *ngIf="indexOfMedia > 0 && indexOfMedia < 5"><img class="image-wrapper"
-                                                [src]="media" alt="galery"></div>
-                                    </ng-template>
+
+                            <ng-container
+                                *ngFor="let media of displayingItem.body.galery.imagesSrc; let indexOfMedia = index">
+                                <ng-container *ngIf="displayingItem.body.galery.videoSrc !== ''; else exceptFirst">
+                                    <div *ngIf="indexOfMedia < 4">
+                                        <ng-container
+                                            *ngIf="displayingItem.body.galery.imagesSrc.length > 4 && indexOfMedia === 3; else imageOnly">
+                                            <a [routerLink]="pathUrl" class="route-to-galery-link">
+                                                <img class="lazyload image-wrapper" [attr.data-src]="media" alt="galery">
+                                            </a>
+                                        </ng-container>
+                                        <ng-template #imageOnly>
+                                            <img class="lazyload image-wrapper" [attr.data-src]="media" alt="galery">
+                                        </ng-template>
+                                    </div>
                                 </ng-container>
-                            </div>
+                                <ng-template #exceptFirst>
+                                    <div *ngIf="indexOfMedia > 0 && indexOfMedia < 5">
+                                        <ng-container
+                                            *ngIf="displayingItem.body.galery.imagesSrc.length > 5 && indexOfMedia === 4; else imageOnly">
+                                            <a href="" class="route-to-galery-link">
+                                                <img class="image-wrapper" [src]="media" alt="galery">
+                                            </a>
+                                        </ng-container>
+                                        <ng-template #imageOnly>
+                                            <img class="image-wrapper" [src]="media" alt="galery">
+                                        </ng-template>
+                                    </div>
+                                </ng-template>
+                            </ng-container>
+
                         </div>
                     </div>
                 </div>
@@ -107,7 +137,7 @@
                     <span class="label"></span>
                     <div class="profile">
                         <div class="profile-image">
-                            <img class="image-wrapper" [src]="displayingItem.header.author.img" alt="profile photo">
+                            <img class="lazyload image-wrapper" [attr.data-src]="displayingItem.header.author.img" alt="profile photo">
                         </div>
                         <h2 class="text-h2">{{displayingItem.header.author.name}}</h2>
                     </div>
@@ -115,7 +145,7 @@
                         <span>{{body.desc}}</span>
                     </div>
                 </div>
-                <div class="recipe__nutritions">
+                <div *ngIf="keysOfNutritions > 0" class="recipe__nutritions">
                     <h4 class="text-h4">Nutritional value per portion</h4>
                     <table>
                         <tr>
@@ -187,18 +217,111 @@
                             </li>
                         </ul>
                     </div>
+                    <div class="instructions__body">
+                        <ng-container *ngFor="let step of body.instructions">
+
+                        </ng-container>
+                        <ol class="instructions-list">
+                            <ng-container *ngFor="let step of body.instructions">
+                                <div [ngClass]="noImagesAtAll? 'indent' : ''" class="group">
+                                    <div *ngIf="!noImagesAtAll" class="image-div"><img class="lazyload image-wrapper"
+                                            *ngIf="step.imageSrc !== ''" [attr.data-src]="step.imageSrc" alt="recipe"></div>
+                                    <li>{{step.text}}</li>
+                                </div>
+                            </ng-container>
+                        </ol>
+                    </div>
                 </div>
-                <div class="recipe__advice">
+                <div *ngIf="body.advice !== ''" class="recipe__advice">
                     <span class="label"></span>
                     <span>{{body.advice}}</span>
                 </div>
             </div>
-            <div class="main-container__footer">
-                <nav>
-                    <ul>
-                        <li></li>
+            <div class="main-container__upper-footer">
+                <div class="footer__header">
+                    <h4 class="text-h4">Share:</h4>
+                </div>
+                <nav class="footer__body">
+                    <ul class="share-links-list">
+                        <li>
+                            <button class="icon-button icon-button_bordered">
+                                <a [href]="'https://www.facebook.com/share.php?u='+ url" target="_blank">
+                                    <img class="icon" src="assets/icons/facebook-rev.svg" alt="facebook">
+                                </a>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="icon-button icon-button_bordered">
+                                <a [href]="'https://twitter.com/intent/tweet?via=SmartRecruiters&url='+ url"
+                                    target="_blank">
+                                    <img class="icon" src="assets/icons/twitter-rev.svg" alt="twitter">
+                                </a>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="icon-button icon-button_bordered">
+                                <a [href]="'https://telegram.me/share/url?url='+ url" target="_blank">
+                                    <img class="icon" src="assets/icons/telegram.svg" alt="telegram">
+                                </a>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="icon-button icon-button_bordered" (click)="copyUrlToClipboard()">
+                                <img class="icon" src="assets/icons/chain.svg" alt="link">
+                            </button>
+                        </li>
                     </ul>
                 </nav>
+            </div>
+            <div class="main-container__lower-footer">
+                <ng-container *ngIf="reviews">
+                    <div class="reviews-container">
+                        <div class="reviews-container__header">
+                            <h4 class="text-h4">Reviews</h4>
+                            <button *ngIf="showButtonReviews" class="button" (click)="getAllReviews()">Show
+                                more</button>
+                        </div>
+                        <div class="reviews-container__body">
+                            <ng-container *ngIf="reviewsList.length > 0; else emptyList">
+                                <div *ngFor="let review of reviewsList" class="review-card">
+                                    <div class="review-card__header">
+                                        <div>
+                                            <ng-container *ngIf="review.author.img !== ''; else noImg">
+                                                <img [src]="review.author.img" alt="avatar">
+                                            </ng-container>
+                                            <ng-template #noImg>
+                                                <div class="review-card__img-profile">{{review.author.name.charAt(0)}}
+                                                </div>
+                                            </ng-template>
+                                        </div>
+                                        <div>
+                                            <span>{{review.author.name}}</span>
+                                            <br>
+                                            <span>{{review.pubDatePrint}}</span>
+                                        </div>
+                                        <div class="review-card__header-rating">
+                                            <ng-container *ngIf="review.rating === 1; else dislike">
+                                                <img src="assets/icons/like.svg" alt="like">
+                                            </ng-container>
+                                            <ng-template #dislike>
+                                                <img src="assets/icons/dislike.svg" alt="dislike">
+                                            </ng-template>
+                                        </div>
+                                    </div>
+                                    <div class="review-card__body">
+                                        <span class="review-text">{{review.text}}</span>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <ng-template #emptyList>
+                                <div class="empty-container">There's no reviews yet. You could be the first.</div>
+                            </ng-template>
+                        </div>
+                        <div class="reviews-container__footer">
+                            <button class="button" (click)="showReview(true)">Write a review</button>
+                        </div>
+                    </div>
+                </ng-container>
             </div>
         </div>
     </div>
@@ -206,3 +329,12 @@
 <ng-template #notFound>
     <app-error></app-error>
 </ng-template>
+
+<div #wrapper *ngIf="showReviewForm" class="page-wrapper">
+    <div class="review-form-control">
+        <button class="icon-button button-absolute" (click)="showReview(false, wrapper)">
+            <img src="assets/icons/close.svg" alt="close">
+        </button>
+    </div>
+    <app-review-form></app-review-form>
+</div>

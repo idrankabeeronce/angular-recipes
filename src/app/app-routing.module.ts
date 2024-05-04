@@ -4,15 +4,27 @@ import { AdminComponent } from './admin/admin.component';
 import { ErrorComponent } from './error/error.component';
 import { RecipeComponent } from './recipe/recipe.component';
 import { RecipesComponent } from './recipes/recipes.component';
+import { CategoriesComponent } from './categories/categories.component';
+import { CreateRecipeComponent } from './create-article/create-recipe/create-recipe.component';
+import { CreateArticleComponent } from './create-article/create-article.component';
 
 const routes: Routes = [
   {
-    path: '',  title: 'Home | Recipes', component: RecipesComponent
+    path: '', title: 'Home | Recipes', component: RecipesComponent
   },
   {
-    path: 'recipe',
+    path: 'recipes', title: 'Home | Recipes', component: RecipesComponent,
+  },
+  { 
+    path: 'new', title: 'New recipe | Recipes', component: CreateArticleComponent,
+  },
+  {
+    path: 'categories', title: 'Categories | Recipes', component: CategoriesComponent
+  },
+  {
+    path: 'recipes',
     children: [
-      { path: ':id', component: RecipeComponent}
+      { path: ':id', component: RecipeComponent }
     ]
   },
   {
@@ -23,7 +35,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {scrollPositionRestoration: 'enabled'})],
+  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled', initialNavigation: 'enabledBlocking' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule {
