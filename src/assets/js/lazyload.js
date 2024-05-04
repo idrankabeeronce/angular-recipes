@@ -48,10 +48,7 @@ export class lazyload {
           };
         } else if (this.lazyComponent[componentIndex].dataset.srcset) {
           if (this.lazyComponent[componentIndex].tagName === "VIDEO") {
-            let child =
-              this.lazyComponent[componentIndex].querySelector("source");
-            child.src =
-              this.lazyComponent[componentIndex].getAttribute("data-srcset");
+            this.lazyComponent[componentIndex].src = this.lazyComponent[componentIndex].getAttribute("data-srcset");
             this.lazyComponent[componentIndex].onloadeddata = (event) => {
               let el = event.target;
               el.classList.remove("lazyload");
@@ -90,7 +87,7 @@ export class lazyload {
     this.lazyComponent = document.querySelectorAll(
       ".lazyload[data-src], .lazyload[data-srcset]"
     );
-    this.init();
+    setTimeout(() => this.init(), 4);
   }
   insertAfter(referenceNode, newNode) {
     referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);

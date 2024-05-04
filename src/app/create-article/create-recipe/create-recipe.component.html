@@ -144,7 +144,7 @@
             </div>
             <div class="widget-panel__control-panel">
                 <button class="button" (click)="cancel()">Cancel</button>
-                <button class="button" (click)="showPreviewOfPage(true)">Preview</button>
+                <button class="button" (click)="showPreviewOfPage()">Preview</button>
                 <button class="button button_positive" (click)="saveRecipe()">Confirm</button>
             </div>
         </div>
@@ -209,7 +209,7 @@
 <ng-container *ngIf="preview">
     <div #previewWrapper class="page-wrapper">
         <div class="preview-control">
-            <button class="icon-button button-absolute" (click)="showPreviewOfPage(false, previewWrapper)">
+            <button class="icon-button button-absolute" (click)="hidePreviewOfPage(previewWrapper)">
                 <img src="assets/icons/close.svg" alt="close">
             </button>
         </div>

@@ -22,7 +22,7 @@ const routes: Routes = [
     path: 'categories', title: 'Categories | Recipes', component: CategoriesComponent
   },
   {
-    path: 'recipe',
+    path: 'recipes',
     children: [
       { path: ':id', component: RecipeComponent }
     ]

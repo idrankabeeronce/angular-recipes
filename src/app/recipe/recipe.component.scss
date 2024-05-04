@@ -398,6 +398,13 @@ input[type='range'] {
 
             }
 
+            &.active {
+                
+                &::after {
+                    color: #fff;
+                    background-color: $text-color;
+                }
+            }
 
         }
 

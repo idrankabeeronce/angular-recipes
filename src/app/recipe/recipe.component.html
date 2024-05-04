@@ -45,7 +45,7 @@
         <div class="main-container__body">
             <div class="recipe-article recipe">
                 <div class="recipe__media-gallery">
-                    <div class="galery">
+                    <div *ngIf="displayingItem.body.galery.videoSrc || displayingItem.body.galery.imagesSrc.length" class="galery">
                         <div class="galery-active">
                             <ng-container *ngIf="displayingItem.body.galery.videoSrc !== ''; else image">
                                 <div class="video-container">
@@ -96,7 +96,8 @@
                                 <img class="image-wrapper" [src]="displayingItem.body.galery.imagesSrc[0]" alt="galery">
                             </ng-template>
                         </div>
-                        <div class="galery-group">
+                        <div *ngIf="displayingItem.body.galery.imagesSrc.length > (displayingItem.body.galery.videoSrc !== '' ? 0 : 1)" 
+                            class="galery-group">
 
 
                             <ng-container

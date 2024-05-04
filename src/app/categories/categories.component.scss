@@ -31,6 +31,25 @@
         }
     }
 }
+
+.category-skeleton {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    &__placeholder {
+        flex: 1 1 calc(150px - 10px);
+        height: 60px;
+        width: 100%;
+        background-color: #c6c6c6;
+        border-radius: 5px;
+    }
+
+}
 .search {
     width: 100%;
     display: flex;

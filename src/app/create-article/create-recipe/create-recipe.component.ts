@@ -12,8 +12,24 @@ import * as articlesJson from '../../../assets/base/articles.json';
 
 import { Title } from '@angular/platform-browser';
 import { PreviewArticleService } from 'src/app/preview-article.service';
+import { CategoryListItem } from 'src/app/interfaces/categoryListItem';
 
+interface Gallery {
+  imgs: Array<string | ArrayBuffer | null>,
+  video: string | ArrayBuffer | null
+}
 
+interface InstructionItem {
+  text: string,
+  imageSrc: string | ArrayBuffer | null
+}
+
+interface Nutritions {
+  energy?: string | number | null,
+  protein?: string | number | null,
+  fat?: string | number | null,
+  carbohydrate?: string | number | null
+}
 @Component({
   selector: 'app-create-recipe',
   templateUrl: './create-recipe.component.html',
@@ -38,8 +54,8 @@ export class CreateRecipeComponent implements OnInit {
     videoForm: new FormControl('')
   });
 
-  profileImg = "";
-  galery: any = { imgs: [], video: '' };
+  profileImg: string | ArrayBuffer | null = '';
+  galery: Gallery = { imgs: [], video: '' };
 
   nutritionForm = new FormGroup({
     energy: new FormControl(''),
@@ -56,10 +72,10 @@ export class CreateRecipeComponent implements OnInit {
       })
     ])
   })
-  instructionImgsArray: any = [];
+  instructionImgsArray: Array<string | ArrayBuffer | null> = [];
 
   get instructionArray() {
-    return this.instructionForm.controls['instructionArray'] as any
+    return this.instructionForm.controls['instructionArray']
   }
   getValues() {
     if (document.querySelector(".custom-options")?.classList.contains('opened'))
@@ -68,11 +84,13 @@ export class CreateRecipeComponent implements OnInit {
       document.querySelector(".custom-options")?.classList.add('opened');
   }
 
-  setValue(customSelect:any, select: any, event:any) {
-    const value = event.target.dataset.value;
-    customSelect.dataset.value = value;
-    customSelect.children[0].innerHTML = value;
-    select.value = value;
+  setValue(customSelect: HTMLElement, select: HTMLSelectElement, event: Event) {
+    const value = (event.target as HTMLElement).dataset["value"];
+    if (value) {
+      customSelect.dataset["value"] = value;
+      customSelect.children[0].innerHTML = value;
+      select.value = value;
+    }
   }
   addInstruction() {
     if (!this.instructionArray.valid) {
@@ -101,7 +119,7 @@ export class CreateRecipeComponent implements OnInit {
   firstStep = new BehaviorSubject<boolean>(this.firstCompleted);
   secondStep = new BehaviorSubject<boolean>(this.secondCompleted);
   sub!: Subscription;
-  categoryList: any = [];
+  categoryList: Array<CategoryListItem | string> = [];
   firstForm = new FormGroup({
     title: new FormControl('', Validators.required),
     desc: new FormControl('', Validators.required),
@@ -126,7 +144,7 @@ export class CreateRecipeComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
     private titleService: Title, private previewArticle: PreviewArticleService) { }
 
-  getFirstStep(): Observable<any> {
+  getFirstStep(): Observable<boolean> {
     return this.firstStep.asObservable()
   }
 
@@ -137,7 +155,7 @@ export class CreateRecipeComponent implements OnInit {
       this.firstForm.markAllAsTouched()
   }
 
-  getSecondStep(): Observable<any> {
+  getSecondStep(): Observable<boolean> {
     return this.secondStep.asObservable()
   }
 
@@ -180,8 +198,10 @@ export class CreateRecipeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    document.body.addEventListener('click', function(event:any) {
-      if(!event.target.classList.contains('custom-select') && !event.target.parentElement.classList.contains('custom-select'))
+    document.body.addEventListener('click', function (event: Event) {
+      const target = event.target as HTMLElement,
+        parent = target.parentElement as HTMLElement;
+      if (target && !target.classList.contains('custom-select') && parent && !parent.classList.contains('custom-select'))
         document.querySelector('.custom-options')?.classList.remove('opened');
     })
     this.nutritionForm.disable();
@@ -214,7 +234,7 @@ export class CreateRecipeComponent implements OnInit {
     if (event.container.data.includes('nutrition')) {
       this.nutritionForm.enable();
 
-      Object.values(this.nutritionForm.controls).forEach((e: any) => {
+      Object.values(this.nutritionForm.controls).forEach((e: FormControl) => {
         e.setValidators([Validators.required, Validators.min(0)])
       })
     }
@@ -223,14 +243,20 @@ export class CreateRecipeComponent implements OnInit {
   }
 
   // add new
-  addCategory(value: any, customSelect?:any, select?:any) {
-    this.categoryList.splice([this.categoryList.indexOf(value)], 1);
+  addCategory(value: string | CategoryListItem, customSelect?: HTMLElement, select?: HTMLSelectElement) {
+    const spliceKey = this.categoryList.indexOf(value);
+    if (spliceKey !== -1)
+      this.categoryList.splice(spliceKey, 1);
     this.secondForm.value.categories?.data.push(value);
-    if(customSelect) {      
-      customSelect.dataset.value = this.categoryList[0];
-      customSelect.children[0].innerHTML = this.categoryList[0];
+    if (customSelect) {
+      const val = typeof this.categoryList[0] === 'string'
+        ? this.categoryList[0]
+        : this.categoryList[0].title;
+
+      customSelect.dataset["value"] = val;
+      customSelect.children[0].innerHTML = val;
     }
-    
+
     this.onAttempt = false;
     if (this.categoryList.length === 0) {
       this.addNewCategory = false;
@@ -278,31 +304,35 @@ export class CreateRecipeComponent implements OnInit {
 
   }
 
-  showPreviewOfPage(bool: boolean, wrapper?: any) {
+  showPreviewOfPage() {
     const item = this.defineItem();
 
-    if (bool) {
-      this.previewArticle.setPreviewItem(item);
-      document.body.style.setProperty('overflow', 'hidden');
-      this.titleService.setTitle('Preview | Recipes');
-      this.preview = bool;
-    }
-    else {
-      document.body.style.setProperty('overflow', 'auto');
-      this.titleService.setTitle('New recipe | Recipes');
-      wrapper.style.animation = 'fade-out .3s forwards';
-      setTimeout(()=>{this.preview = bool;}, 300)
-    }
-    
+    this.previewArticle.setPreviewItem(item);
+    document.body.style.setProperty('overflow', 'hidden');
+    this.titleService.setTitle('Preview | Recipes');
+    this.preview = true;
+  }
+
+  hidePreviewOfPage(wrapper: HTMLElement) {
+    document.body.style.setProperty('overflow', 'auto');
+    this.titleService.setTitle('New recipe | Recipes');
+    wrapper.style.animation = 'fade-out .3s forwards';
+    setTimeout(() => { this.preview = false; }, 300)
   }
 
   saveRecipe() {
     const importantEl = document.querySelectorAll('#important')
-    const forms = [this.firstForm, this.secondForm, this.galeryForm, this.adviseForm, this.instructionArray];
+    const forms: Array<FormGroup | FormControl | FormArray> = [
+      this.firstForm,
+      this.secondForm,
+      this.galeryForm,
+      this.adviseForm,
+      this.instructionArray
+    ];
 
-    if(this.nutritionForm.enabled)
+    if (this.nutritionForm.enabled)
       forms.push(this.nutritionForm);
-      
+
     var result = this.defineItem();
 
     var err = false;
@@ -325,9 +355,9 @@ export class CreateRecipeComponent implements OnInit {
 
   }
 
-  isAllvalid(forms: any) {
+  isAllvalid(forms: Array<FormGroup | FormControl | FormArray>) {
     var valid = true;
-    forms.forEach((e: any) => {
+    forms.forEach((e: FormGroup | FormControl | FormArray) => {
       if (!e.valid) {
         valid = false;
         return
@@ -336,8 +366,10 @@ export class CreateRecipeComponent implements OnInit {
     return valid
   }
 
-  imageReader(element: any, displayingElement?: any) {
-    let uploadedFile: any;
+  imageReader(element: HTMLInputElement, displayingElement?: string | ArrayBuffer | null) {
+    if (!element.files) return;
+
+    let uploadedFile: string | ArrayBuffer | null;
     const reader = new FileReader();
     reader.addEventListener("load", () => {
       uploadedFile = reader.result;
@@ -349,37 +381,43 @@ export class CreateRecipeComponent implements OnInit {
     reader.readAsDataURL(element.files[0])
   }
 
-  imageInstructionReader(element: any, index: number) {
-    let uploadedFile: any;
+  imageInstructionReader(element: HTMLInputElement, index: number) {
+    if (!element.files) return;
+    let uploadedFile: string | ArrayBuffer | null;
     const reader = new FileReader();
     reader.addEventListener("load", () => {
       uploadedFile = reader.result;
-      console.log(uploadedFile);
       this.instructionImgsArray[index] = uploadedFile;
     });
     reader.readAsDataURL(element.files[0])
   }
-  galeryImagesReader(element: any) {
+  galeryImagesReader(element: HTMLInputElement) {
+
+    if (!element.files) return;
+
     const length = this.galery.imgs.length + element.files.length;
 
     if (length > 8) {
       alert('Only 8 images or less allowed')
       return
     }
-    for (let file of element.files) {
-      let uploadedFile: any;
+    for (var i = 0; i < element.files.length; i++) {
+      let uploadedFile: string | ArrayBuffer | null;
       const reader = new FileReader();
       reader.addEventListener("load", () => {
         uploadedFile = reader.result;
         this.galery.imgs.push(uploadedFile);
       });
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(element.files[i]);
     }
 
   }
 
-  galeryVideoReader(element: any) {
-    let uploadedFile: any;
+  galeryVideoReader(element: HTMLInputElement) {
+
+    if (!element.files) return;
+
+    let uploadedFile: string | ArrayBuffer | null;
     const reader = new FileReader();
     reader.addEventListener("load", () => {
       uploadedFile = reader.result;
@@ -396,19 +434,19 @@ export class CreateRecipeComponent implements OnInit {
     }
   }
   defineItem() {
-    const instruction: any[] = [];
-    let nutritionsObj: any = {}
+    const instruction: Array<InstructionItem> = [];
+    let nutritionsObj: Nutritions = {};
 
-    Object.values(this.instructionArray.controls).forEach((e: any, i: number) => {
+    Object.values(this.instructionArray.controls).forEach((e: FormGroup, i: number) => {
       instruction.push({ text: e.value.text, imageSrc: this.instructionImgsArray[i] === undefined ? '' : this.instructionImgsArray[i] })
     })
 
-    if (this.nutritionForm.enabled)
+    if (this.nutritionForm.enabled && this.nutritionForm.value)
       nutritionsObj = {
-        energy: this.nutritionForm.value?.energy,
-        protein: this.nutritionForm.value?.protein,
-        fat: this.nutritionForm.value?.fat,
-        carbohydrate: this.nutritionForm.value?.carbohydrate
+        energy: this.nutritionForm.value.energy,
+        protein: this.nutritionForm.value.protein,
+        fat: this.nutritionForm.value.fat,
+        carbohydrate: this.nutritionForm.value.carbohydrate
       };
 
     const item = {
@@ -435,9 +473,9 @@ export class CreateRecipeComponent implements OnInit {
         desc: this.firstForm.value.desc,
         ref: `article-${(recipesJson as any).default.length}`
       },
-      id: (recipesJson as any).default.length + 1,
+      id: 1,
       title: this.firstForm.value.title,
-      ref: `article-${(recipesJson as any).default.length}`,
+      ref: '1',
       body: {
         galery: {
           videoSrc: this.galery.video,

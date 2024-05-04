@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import * as data from '../../assets/base/categories.json'
 import { ActivatedRoute } from '@angular/router';
+import { PostService } from '../services/post.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-categories',
@@ -8,25 +9,32 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./categories.component.scss']
 })
 export class CategoriesComponent implements OnInit {
-  categoriesList = (data as any).default;
+  categoriesList = [] as Array<string>;
+  loading = true;
+  categorySub!: Subscription;
+
   searchParam: any = '';
-  constructor(private activatedRoute: ActivatedRoute) { }
+  constructor(private activatedRoute: ActivatedRoute, private postService: PostService) { }
 
   ngOnInit(): void {
     this.searchParam = this.activatedRoute.snapshot.queryParamMap.get('search') === null ? '' : this.activatedRoute.snapshot.queryParamMap.get('search')?.toLowerCase();
 
-    console.log(this.searchParam);
-
-    if (this.searchParam === '')
-      return
-
-    this.categoriesList = [];
-    for (let item of (data as any).default) {
-      if (item.includes(this.searchParam) ) {
-        this.categoriesList.push(item);
+    this.categorySub = this.postService.getCategories(this.searchParam).subscribe({
+      next: (data) => {
+        for (let category of data) {
+          this.categoriesList.push(category.title);
+        }
+        this.loading = false;
+      },
+      error: (err) => {
+        console.log(err);
+        this.loading = false;
       }
-    }
+    });
 
   }
 
+  ngOnDestroy(): void {
+    this.categorySub.unsubscribe();
+  }
 }

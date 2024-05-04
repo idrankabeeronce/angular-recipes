@@ -2,36 +2,56 @@ import { query } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { Meta } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import * as data from '../../assets/base/recipes.json';
-import * as categoriesData from '../../assets/base/categories.json';
+import { PostService } from '../services/post.service';
+import { Subscription } from 'rxjs';
+import { RecipesGetListParams } from '../interfaces/recipesGetListParams';
+import { RecipeListItem } from '../interfaces/recipeListItem';
+import { GetRecipesData } from '../interfaces/getRecipesData';
+import { CategoriesGetListParams } from '../interfaces/categoriesGetListParams';
 
+interface extRecipeListItem extends RecipeListItem {
+  listOpen: boolean
+}
 @Component({
   selector: 'app-recipes',
   templateUrl: './recipes.component.html',
   styleUrls: ['./recipes.component.scss']
 })
 export class RecipesComponent implements OnInit {
-  dataItems: any = [];
-  displayingList: any = [];
-  title = '';
-  searchParam: any = null;
+  private categorySub: Subscription = Subscription.EMPTY;
+  private limitCategoryList = 10;
+
+  showMoreCategories = false;
+  showHomeLink = false;
+
+  loading = true;
+  catLoading = true;
+
+  title: string = '';
+
+  category: string = '';
+  searchParam: string = '';
+
+  categoriesList = [] as Array<string>;
+  displayingList = [] as Array<extRecipeListItem>;
+
   listOpen = true;
-  step = 1;
-  category: any = '';
-  displayingLength = 10;
+  step: number = 1;
   paginationLength = 0;
   fakeArray: any = [];
-  showHomeLink = false;
-  categoriesList: any = (categoriesData as any).default;
-  constructor(private activatedRoute: ActivatedRoute, private router: Router,
-    private metaService: Meta) {
-  }
 
-  ngOnInit(): void {
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private metaService: Meta,
+    private postService: PostService
+  ) { }
 
+  ngOnInit(): void {    
     const baseUrl = window.location.protocol + '//' + window.location.hostname + '/angular-recipes/';
     const imageUrl = baseUrl + 'assets/images/recipes/recipe-ex.jpg';
-    const desc = 'Here you can find good recipe'
+    const desc = 'Here you can find good recipe';
+
     this.metaService.addTags([
       { property: 'og:title', content: this.title },
       { property: 'og:type', content: 'article' },
@@ -41,69 +61,95 @@ export class RecipesComponent implements OnInit {
 
     ]);
 
-    this.searchParam = this.activatedRoute.snapshot.queryParamMap.get('search')?.toLowerCase();
-    if (this.searchParam === '' || this.searchParam === undefined) {
-      this.searchParam = null
+    this.searchParam = this.activatedRoute.snapshot.queryParamMap.get('search')?.toLowerCase()
+      ?? '';
+
+    this.category = this.activatedRoute.snapshot.queryParamMap.get('category') ?? '';
+
+    if (this.category) {
+      this.catLoading = false;
+      this.showHomeLink = true;
+      this.title = this.category.charAt(0).toLocaleUpperCase() + this.category.slice(1) + ' recepies';
+    } else {
+      this.title = "Recipes";
+      this.catLoading = true;
+      const categoriesDataArg: CategoriesGetListParams = {
+        searchParam: this.searchParam, 
+        limit: this.limitCategoryList
+      }
+      this.categorySub = this.postService.getCategories(categoriesDataArg).subscribe({
+        next: (data) => {          
+          for (let category of data) {
+            this.categoriesList.push(category.title);
+          }
+          if (this.categoriesList.length === this.limitCategoryList) this.showMoreCategories = true;
+          this.catLoading = false;
+        },
+        error: (err) => {
+          console.log(err);
+          this.catLoading = false;
+        }
+      });
     }
 
-    this.category = this.activatedRoute.snapshot.queryParamMap.get('category');
-
-    this.getData(this.category, this.searchParam);
-
-    this.paginationLength = Math.ceil(this.dataItems.length / this.displayingLength);
-    this.fakeArray = new Array(this.paginationLength);
-
-    this.addToList();
-    document.addEventListener('click', (event: any) => {
-      if (event.target.closest("#button-list") === null && event.target.closest(".ingredients-container") === null) {
+    this.updateList();
+    document.addEventListener('click', (event: Event) => {
+      if ((event.target as HTMLElement).closest("#button-list") === null && (event.target as HTMLElement).closest(".ingredients-container") === null) {
         this.openList(99)
       }
     });
   }
 
-  getData(category?: any, searchParam?: any) {
-    this.title = "Recipes"
-    if (category !== null && category !== '') {
-      this.showHomeLink = true;
-      this.title = this.category.charAt(0).toLocaleUpperCase() + this.category.slice(1) + ' recepies';
-    }
-    for (let item of (data as any).default) {
-      if (category === null || category === '' ? true : item.categories.includes(category)) {
-        if (searchParam === null ? true : item.title.toLowerCase().includes(searchParam)) {
-          this.dataItems.push(item);
-        }
-      }
-    }
-
+  ngOnDestrot() {
+    this.categorySub.unsubscribe();
   }
-  pagginationStep(step: number) {
+  paginationStep(step: number) {
     if (step === this.step || step === 0 || step === this.paginationLength + 1)
       return
 
     this.step = step;
-    this.addToList()
+    this.loading = true;
+    this.updateList()
     setTimeout(() => {
       window.scrollTo({
         top: Number(document.getElementById('recipes')?.offsetTop) - 40,
         behavior: 'smooth'
       });
     }, 100)
-
   }
-  addToList() {
+
+  updateList() {
     this.displayingList = [];
-    for (let index = ((this.step - 1) * 10); index < this.dataItems.length; index++) {
+    this.paginationLength = 0;
+    this.fakeArray = [];
 
-      if (index === this.step * 10)
-        break
-
-      const item = this.dataItems[index];
-
-      item.listOpen = false;
-
-      this.displayingList.push(item);
+    const dataArgs: RecipesGetListParams = {
+      category: this.category?.toLowerCase() ?? '',
+      searchParam: this.searchParam ?? '',
+      step: this.step,
     }
+
+    this.postService.getRecipes(dataArgs).subscribe({
+      next: (data: GetRecipesData) => {        
+        if (data['list']) {
+          for (let item of data.list as Array<extRecipeListItem>) {
+            item.listOpen = false;           
+            this.displayingList.push(item);
+          }          
+          this.paginationLength = data['pagingationLength'] ?? 0;
+          
+          this.fakeArray = new Array(this.paginationLength);
+          
+        }
+        this.loading = false;
+      },
+      error: (err:any) => {
+        console.log(err);
+        this.loading = false;
+      }
+    });
   }
+
   openList(index: number) {
     for (let [indexOfItem, item] of this.displayingList.entries()) {
       if (index === indexOfItem && !item.listOpen) {
@@ -116,32 +162,26 @@ export class RecipesComponent implements OnInit {
 
 
   }
+
   changeAmount(index: number, value: number) {
     if (this.displayingList[index].portions > 1 || value > 0)
       this.displayingList[index].portions += value;
   }
+
   Round(value: number) {
     return Math.round(value * 100) / 100
   }
-  routerNavigateParam(categoryParam: string) {
-    const queryParam: any = {}
-    queryParam.category = categoryParam;
-    if (this.searchParam !== null)
-      queryParam.search = this.searchParam;
 
-    this.router.navigateByUrl('/recipes').then(() => {
-      this.router.navigate([''], { queryParams: queryParam })
-    })
-  }
   routerNavigateReload() {
     this.router.navigateByUrl('/recipes').then(() => {
       this.router.navigate(['/'])
     })
   }
+
   routerNavigateSearchParam(searchParam?: string) {
     const queryParam: any = {}
 
-    if (this.category !== null)
+    if (this.category)
       queryParam.category = this.category;
 
 
@@ -152,4 +192,16 @@ export class RecipesComponent implements OnInit {
     })
 
   }
+
+  routerNavigateParam(categoryParam: string) {
+    const queryParam: any = {}
+    queryParam.category = categoryParam;
+    if (this.searchParam)
+      queryParam.search = this.searchParam;
+
+    this.router.navigateByUrl('/recipes').then(() => {
+      this.router.navigate([''], { queryParams: queryParam })
+    })
+  }
+
 }

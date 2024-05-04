@@ -31,12 +31,11 @@ export class RecipeComponent implements OnInit, AfterViewInit {
   body: any = {};
   displayingItem: any = null;
   foundItem = false;
-  video: any;
   url = '';
   noImagesAtAll = true;
   pathUrl: string = '';
   reviews = true;
-  reviewsList: any = [];
+  reviewsList: Array<any> = [];
   showButtonReviews = true;
   liked = 0;
   disliked = 0;
@@ -122,7 +121,7 @@ export class RecipeComponent implements OnInit, AfterViewInit {
 
       const baseUrl = window.location.protocol + '//' + window.location.hostname + '/angular-recipes/';
       const imageUrl = baseUrl + this.displayingItem.header.imgSrc;
-      const desc = this.body.desc
+      const desc = this.body.desc;
       this.metaService.updateTag({ property: 'og:image', content: imageUrl });
       this.metaService.updateTag({ property: 'og:title', content: this.titleService.getTitle() });
       this.metaService.updateTag(
@@ -131,7 +130,7 @@ export class RecipeComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    console.log('loeaded');
+    console.log('loaded');
     
     let lazyloadModule = new lazyload();
     lazyloadModule.onDOMchange();         
@@ -145,7 +144,6 @@ export class RecipeComponent implements OnInit, AfterViewInit {
   }
   toggleVideo(video: any) {
     if (video.paused == true) {
-      // Play the video
       video.play();
     } else {
       video.pause();

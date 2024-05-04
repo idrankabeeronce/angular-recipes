@@ -256,11 +256,12 @@ ul:is(.ingredients-list)>li {
         outline-color: #2e2e2e;
     }
 
-    &.button_positive-outline {
+    &_positive-outline {
         outline-color: $primary-color;
 
         &:hover {
             background: $primary-color;
+            outline-color: $primary-color;
             color: #fff;
         }
 
@@ -271,7 +272,7 @@ ul:is(.ingredients-list)>li {
         }
     }
 
-    &.button_positive {
+    &_positive {
         border: none;
         color: #fff;
         background-color: $primary-color;
@@ -289,26 +290,25 @@ ul:is(.ingredients-list)>li {
         }
     }
 
-    &.button_s {
+    &_s {
         padding: 5px 10px;
     }
 
-    &.button_icon {
+    &_icon {
         display: flex;
         align-items: center;
         gap: 0.5em;
+        transition: .3s ease;
 
         &:hover {
             & img {
                 filter: invert(1);
-                transition: .3s ease;
             }
         }
 
         &:active {
             & img {
                 filter: invert(1);
-                transition: .3s ease;
             }
         }
     }
@@ -605,6 +605,13 @@ img:is(.icon_l) {
 
     &>.galery-active {
         height: 450px;
+
+        @media (max-width: 768px) {
+            max-height: 360px;
+        }
+        @media (max-width: 420px) {
+            max-height: 280px;
+        }
     }
 
     &>.galery-group {
