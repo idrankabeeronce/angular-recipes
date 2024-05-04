@@ -2,7 +2,7 @@
     {
         "id": "1",
         "title": "Something_1",
-        "ref": "article-1",
+        "ref": "1",
         "body": {
             "galery": {
                 "videoSrc": "assets/videos/recipes/video.mp4",
@@ -46,37 +46,37 @@
     {
         "id": "2",
         "title": "Something_2",
-        "ref": "article-2",
+        "ref": "2",
         "body": {}
     },
     {
         "id": "3",
         "title": "Something_3",
-        "ref": "article-3",
+        "ref": "3",
         "body": {}
     },
     {
         "id": "4",
         "title": "Something_4",
-        "ref": "article-4",
+        "ref": "4",
         "body": {}
     },
     {
         "id": "5",
         "title": "Something_5",
-        "ref": "article-5",
+        "ref": "5",
         "body": {}
     },
     {
         "id": "6",
         "title": "Something_6",
-        "ref": "article-6",
+        "ref": "6",
         "body": {}
     },
     {
         "id": "7",
         "title": "Something_7",
-        "ref": "article-7",
+        "ref": "7",
         "body": {
             "galery": {
                 "videoSrc": "assets/videos/recipes/video.mp4",
@@ -120,25 +120,25 @@
     {
         "id": "8",
         "title": "Something_8",
-        "ref": "article-8",
+        "ref": "8",
         "body": {}
     },
     {
         "id": "9",
         "title": "Something_9",
-        "ref": "article-9",
+        "ref": "9",
         "body": {}
     },
     {
         "id": "10",
         "title": "Something_10",
-        "ref": "article-10",
+        "ref": "10",
         "body": {}
     },
     {
         "id": "11",
         "title": "Something_11",
-        "ref": "article-11",
+        "ref": "11",
         "body": {}
     }
 ]

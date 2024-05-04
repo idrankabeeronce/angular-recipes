@@ -7,6 +7,8 @@
             "img": "assets/images/profiles/person.jpg"
         },
         "saved": 0,
+        "likes": 4,
+        "dislikes": 1,
         "imgSrc": "assets/images/recipes/recipe-ex.jpg",
         "categories": [
             "breakfast",
@@ -52,7 +54,7 @@
             "minutes": 30
         },
         "desc": "text",
-        "ref": "article-1"
+        "ref": "1"
     },
     {
         "id": "2",
@@ -62,6 +64,8 @@
             "img": "assets/images/profiles/person.jpg"
         },
         "saved": 0,
+        "likes": 0,
+        "dislikes": 0,
         "imgSrc": "assets/images/recipes/recipe-ex.jpg",
         "categories": [
             "breakfast",
@@ -87,7 +91,7 @@
             "minutes": 30
         },
         "desc": "text",
-        "ref": "article-2"
+        "ref": "2"
     },
     {
         "id": "3",
@@ -97,6 +101,8 @@
             "img": "assets/images/profiles/person.jpg"
         },
         "saved": 0,
+        "likes": 0,
+        "dislikes": 0,
         "imgSrc": "assets/images/recipes/recipe-ex.jpg",
         "categories": [
             "british"
@@ -141,7 +147,7 @@
             "minutes": 30
         },
         "desc": "text",
-        "ref": "article-3"
+        "ref": "3"
     },
     {
         "id": "4",
@@ -151,6 +157,8 @@
             "img": "assets/images/profiles/person.jpg"
         },
         "saved": 0,
+        "likes": 0,
+        "dislikes": 0,
         "imgSrc": "assets/images/recipes/recipe-ex.jpg",
         "categories": [
             "dinner",
@@ -191,6 +199,8 @@
             "img": "assets/images/profiles/person.jpg"
         },
         "saved": 0,
+        "likes": 0,
+        "dislikes": 0,
         "imgSrc": "assets/images/recipes/recipe-ex.jpg",
         "categories": [
             "dinner",
@@ -231,6 +241,8 @@
             "img": "assets/images/profiles/person.jpg"
         },
         "saved": 0,
+        "likes": 0,
+        "dislikes": 0,
         "imgSrc": "assets/images/recipes/recipe-ex.jpg",
         "categories": [
             "dinner",
@@ -271,6 +283,8 @@
             "img": "assets/images/profiles/person.jpg"
         },
         "saved": 0,
+        "likes": 0,
+        "dislikes": 0,
         "imgSrc": "assets/images/recipes/recipe-ex.jpg",
         "categories": [
             "breakfast",
@@ -311,6 +325,8 @@
             "img": "assets/images/profiles/person.jpg"
         },
         "saved": 0,
+        "likes": 0,
+        "dislikes": 0,
         "imgSrc": "assets/images/recipes/recipe-ex.jpg",
         "categories": [
             "breakfast",
@@ -351,6 +367,8 @@
             "img": "assets/images/profiles/person.jpg"
         },
         "saved": 0,
+        "likes": 0,
+        "dislikes": 0,
         "imgSrc": "assets/images/recipes/recipe-ex.jpg",
         "categories": [
             "breakfast",
@@ -391,6 +409,8 @@
             "img": "assets/images/profiles/person.jpg"
         },
         "saved": 0,
+        "likes": 0,
+        "dislikes": 0,
         "imgSrc": "assets/images/recipes/recipe-ex.jpg",
         "categories": [
             "breakfast",
@@ -431,6 +451,8 @@
             "img": "assets/images/profiles/person.jpg"
         },
         "saved": 0,
+        "likes": 0,
+        "dislikes": 0,
         "imgSrc": "assets/images/recipes/recipe-ex.jpg",
         "categories": [
             "breakfast",
@@ -461,6 +483,6 @@
             "minutes": 15
         },
         "desc": "text",
-        "ref": "article-11"
+        "ref": "11"
     }
 ]
