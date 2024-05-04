@@ -12,9 +12,8 @@ import jsPDF from 'jspdf';
 import pdfMake from 'pdfmake/build/pdfmake.js';
 import pdfFonts from 'pdfmake/build/vfs_fonts.js';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
-import htmlToPdfmake from 'html-to-pdfmake';
-import html2canvas from 'html2canvas';
 import { PreviewArticleService } from '../preview-article.service';
+import { MetadataService } from '../metadata.service';
 
 @Component({
   selector: 'app-recipe',
