@@ -1,0 +1,375 @@
+<ng-container *ngIf="!firstCompleted">
+    <div class="page-wrapper">
+        <div class="form-wrapper">
+            <form class="form" [formGroup]="firstForm">
+                <h1 class="text-h2">Create new recipe</h1>
+                <label class="text-m_m" for="title">Title:
+                    <input [class]="firstForm.touched? 'as' : ''" class="text-s" type="text" formControlName="title"
+                        placeholder="Enter title of recipe">
+                </label>
+
+                <label class="text-m_m" for="author">Author:
+                    <input class="text-s" type="text" formControlName="author" placeholder="Enter your name">
+                </label>
+                <label class="text-m_m" for="authorImg">Profile image:
+                    <input class="text-s" #inputProfileImg type="file" formControlName="authorImg"
+                        accept="image/png, image/jpeg" (change)="imageReader(inputProfileImg)">
+                </label>
+
+                <label class="text-m_m" for="desc">Description of recipe:
+                    <textarea class="text-s" cols="40" type="text" formControlName="desc" placeholder="Enter description of recipe"></textarea>
+                </label>
+
+                <div class="control-panel">
+
+                    <button type="button" class="button" (click)="cancel()">Cancel</button>
+
+                    <button type="button" class="button button_positive" (click)="setFirstStep(true)">Next</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="firstCompleted && !secondCompleted">
+    <div class="page-wrapper">
+        <div class="form-wrapper">
+            <form class="form" [formGroup]="secondForm">
+                <h1 class="text-h2">Add some extra</h1>
+                <label id="categories" class="text-m_m" for="categories">Categories:
+                    <div class="container-select">
+                        <select #select [class]="onAttempt? 'ng-invalid' : ''" >
+                            <ng-container *ngFor="let category of categoryList">
+                                <option hidden [value]="category">{{category}}</option>
+                            </ng-container>
+                            
+                        </select>
+                        <ng-container *ngIf="categoryList.length > 0">
+                            <div #customSelect [class]="onAttempt? 'ng-invalid' : ''" class="custom-select" [attr.data-value]="categoryList[0]" (click)="getValues()">
+                                <span>{{categoryList[0]}}</span>
+                                <div class="custom-options">
+                                    <ng-container *ngFor="let category of categoryList">
+                                        <div class="custom-option" [attr.data-value]="category" (click)="setValue(customSelect, select, $event)">{{category}}</div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        
+                            <button class="button button_positive-outline" (click)="addCategory(select.value, customSelect, select)">Add</button>
+                        </ng-container>
+                    </div>
+                </label>
+                <table id="table-categories"
+                    [class]="secondForm.value.categories.data.length > 0? 'table_offset-top': ''">
+                    <ng-container *ngFor="let item of secondForm.value.categories.data; let i = index">
+                        <tr>
+                            <td>{{item}}</td>
+                            <td class="td_right"><button class="icon-button" (click)="removeCategory(i)">
+                                    <img class="icon_m" src="assets/icons/close.svg" alt="delete">
+                                </button></td>
+                        </tr>
+                    </ng-container>
+                </table>
+                <label class="text-m_m" for="ingredients">Ingredients:</label>
+                <label class="text-m" id="sub-label">Ingredient:<input [formControl]="nameIngredient" class="text-s"
+                        type="text" placeholder="Ingredient"></label>
+                <label class="text-m" id="sub-label">Amout:<input [formControl]="amountIngredient" class="text-s"
+                        type="number" placeholder="Amount"></label>
+                <label class="text-m" id="sub-label">Unit:<input [formControl]="suffixIngredient" class="text-s"
+                        type="text" placeholder="Suffix"></label>
+                <button class="button button_positive-outline" (click)="addIngredients()">Add</button>
+
+                <table id="table-ingredients"
+                    [class]="secondForm.value.ingredients.data.length > 0? 'table_offset-top': ''">
+                    <ng-container *ngFor="let item of secondForm.value.ingredients.data; let i = index">
+                        <tr>
+                            <td>{{item.name}}</td>
+                            <td class="td_right">{{item.amount}}</td>
+                            <td>{{item.suffix}}</td>
+                            <td class="td_right"><button class="icon-button" (click)="removeIngredients(i)">
+                                    <img class="icon" src="assets/icons/close.svg" alt="delete">
+                                </button></td>
+                        </tr>
+                    </ng-container>
+                </table>
+                <label class="text-m_m" for="portions">Portions:
+                    <input class="text-s" type="number" formControlName="portions" placeholder="Amount">
+                </label>
+
+                <label class="text-m_m" for="timeToDo">Required time:
+                    <input class="text-s" type="time" formControlName="timeToDo" placeholder="Enter title of recipe">
+                </label>
+
+                <div class="control-panel">
+
+                    <button type="button" class="button" (click)="stepBack()">Back</button>
+
+                    <button type="button" class="button button_positive" (click)="setSecondStep(true)">Next</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</ng-container>
+
+<div [class]="secondCompleted? '': 'hidden'" class="container main-container"
+    [id]="secondCompleted? 'create-page-container': ''">
+
+    <div [class]="secondCompleted? '': 'hidden'" class="main-container__aside">
+        <div class="widget-panel">
+            <div class="elements-panel">
+                <div class="group-element">
+                    <button class="button button_positive-outline button-add button_icon"
+                        (click)="showCategoriesForm(true)">
+                        Add Category
+                        <img class="icon_m" src="assets/icons/plus.svg" alt="add">
+                    </button>
+                    <button class="button button_positive-outline button-add button_icon"
+                        (click)="showIngredientsForm(true)">
+                        Add Ingredient
+                        <img class="icon_m" src="assets/icons/plus.svg" alt="add">
+                    </button>
+                </div>
+                <div class="draggable-group" cdkDropList #mainActionList="cdkDropList" [cdkDropListData]="actionList"
+                    [cdkDropListConnectedTo]="mainList">
+                    <div #item [id]="item === 'instruction' || item === 'galery'? 'important' : ''"
+                        class="draggable-card" [class]="item" *ngFor="let item of actionList" cdkDrag
+                        (cdkDragStarted)="dropArea.classList.add('drop-area')"
+                        (cdkDragEnded)="dropArea.classList.remove('drop-area')">
+                        <h2 class="text-h3">Add {{item}}</h2>
+                        <p class="text-m text-grey">Drag me</p>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="widget-panel__control-panel">
+                <button class="button" (click)="cancel()">Cancel</button>
+                <button class="button" (click)="showPreviewOfPage()">Preview</button>
+                <button class="button button_positive" (click)="saveRecipe()">Confirm</button>
+            </div>
+        </div>
+
+
+    </div>
+    <div #dropArea class="create-content" #mainList="cdkDropList" cdkDropList [cdkDropListData]="list"
+        [cdkDropListConnectedTo]="mainActionList" (cdkDropListDropped)="drop($event)">
+        <div class="main-container__header">
+
+            <h1 class="text-h1_bold">{{firstForm.value.title}}</h1>
+            <div class="profile">
+                <div class="profile-image">
+                    <img class="image-wrapper" [src]="profileImg" alt="profile photo">
+                </div>
+                <h2 class="text-h3">Author: {{firstForm.value.author}}</h2>
+            </div>
+
+            <div class="group-container group-container_center">
+                <h4 class="text-h4">Description: <span class="text-h4 text-h4_light">{{firstForm.value.desc}}</span>
+                </h4>
+                <h4 class="text-h4">Portions: <span class="text-h4 text-h4_light">{{secondForm.value.portions}}</span>
+                </h4>
+                <h4 class="text-h4">Required time: <span
+                        class="text-h4 text-h4_light">{{secondForm.value.timeToDo}}</span>
+                </h4>
+            </div>
+            <div class="group-container group-container_vertical group-container_center">
+                <h4 class="text-h4">Categories:</h4>
+                <ul class="group-categories">
+                    <ng-container *ngFor="let category of secondForm.value.categories.data">
+                        <li>{{category}}</li>
+                    </ng-container>
+                </ul>
+            </div>
+        </div>
+        <div class="main-container__body form-container">
+            <div class="group-container group-container_vertical">
+                <h4 class="text-h4">Ingredients:</h4>
+                <ul class="ingredients-list">
+                    <ng-container *ngFor="let ingredient of secondForm.value.ingredients.data">
+
+                        <li>
+                            <span>{{ingredient.name}}</span>
+
+                            <span></span>
+                            <span *ngIf="ingredient.amount > 0">{{ingredient.amount}}</span>
+                            <span> {{ingredient.suffix}}</span>
+                        </li>
+
+                    </ng-container>
+                </ul>
+            </div>
+
+            <ng-container *ngFor="let item of list">
+                <ng-container *ngTemplateOutlet="templateItem; context : {$implicit: item}"></ng-container>
+            </ng-container>
+        </div>
+    </div>
+</div>
+
+<ng-container *ngIf="preview">
+    <div #previewWrapper class="page-wrapper">
+        <div class="preview-control">
+            <button class="icon-button button-absolute" (click)="hidePreviewOfPage(previewWrapper)">
+                <img src="assets/icons/close.svg" alt="close">
+            </button>
+        </div>
+        <div class="preview-container">
+            <div class="preview-content">
+                <app-recipe></app-recipe>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="addNewCategory">
+    <div class="page-wrapper">
+        <div class="form-wrapper">
+            <div class="form">
+                <h1 class="text-h2">Add category:</h1>
+                <div class="categories-list">
+                    <ng-container *ngFor="let category of categoryList">
+                        <button class="button button_positive-outline"
+                            (click)="addCategory(category)">{{category}}</button>
+                    </ng-container>
+                </div>
+                <button class="button button_positive" (click)="showCategoriesForm(false)">Close</button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="addNewIngredient">
+    <div class="page-wrapper">
+        <div class="form-wrapper">
+            <form [class]="invalidIngredients? 'invalid': ''" class="form">
+                <h1 class="text-h2">Add ingredients:</h1>
+                <label class="text-m" id="sub-label">Ingredient:<input [formControl]="nameIngredient" class="text-s"
+                        type="text" placeholder="Ingredient"></label>
+                <label class="text-m" id="sub-label">Amout:<input [formControl]="amountIngredient" class="text-s"
+                        type="number" placeholder="Amount"></label>
+                <label class="text-m" id="sub-label">Unit:<input [formControl]="suffixIngredient" class="text-s"
+                        type="text" placeholder="Suffix"></label>
+                <button class="button button_positive-outline" (click)="addIngredients()">Add</button>
+
+                <table id="table-ingredients"
+                    [class]="secondForm.value.ingredients.data.length > 0? 'table_offset-top': ''">
+                    <ng-container *ngFor="let item of secondForm.value.ingredients.data; let i = index">
+
+                        <tr>
+                            <td>{{item.name}}</td>
+                            <td class="td_right">{{item.amount}}</td>
+                            <td>{{item.suffix}}</td>
+                            <td class="td_right"><button class="icon-button" (click)="removeIngredients(i)">
+                                    <img class="icon" src="assets/icons/close.svg" alt="delete">
+                                </button></td>
+                        </tr>
+                    </ng-container>
+                </table>
+                <button style="margin-top: 40px" class="button button_positive"
+                    (click)="showIngredientsForm(false)">Close</button>
+            </form>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #templateItem let-item>
+    <div [class]="item" class="group-container group-container_vertical">
+        <ng-container [ngSwitch]="item">
+
+            <div *ngSwitchCase="'galery'" class="group-container group-container_vertical galery">
+                <h4 class="text-h4">Galery:</h4>
+                <form class="form edit-form" [formGroup]="galeryForm">
+                    <label class="text-m_m">Images:
+                        <input #inputGaleryImgs class="text-s" type="file" formControlName="imagesForm"
+                            accept="image/png, image/jpeg" multiple
+                            (change)="galeryImagesReader(inputGaleryImgs)"></label>
+
+                </form>
+                <div [class]="galery.imgs.length > 0? 'uploaded-galery': ''" class="galery-group galery-group_2h">
+                    <ng-container *ngFor="let img of galery.imgs">
+                        <div>
+                            <img class="image-wrapper" [src]="img" alt="galery image">
+                        </div>
+                    </ng-container>
+                </div>
+                <form class="form edit-form" [formGroup]="galeryForm">
+                    <label class="text-m_m">Video:
+                        <input #inputGaleryVideo class="text-s" type="file" formControlName="videoForm"
+                            accept="video/mp4" (change)="galeryVideoReader(inputGaleryVideo)"></label>
+
+                </form>
+                <div class="uploaded-galery" *ngIf="galery.video !== ''">
+                    <div>
+                        <video>
+                            <source [src]="galery.video" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngSwitchCase="'nutrition'" class="group-container group-container_vertical">
+                <h4 class="text-h4">Nutrition:</h4>
+                <form action="" class="form edit-form" [formGroup]="nutritionForm">
+                    <table>
+                        <tr>
+                            <th class="text-m_m">Energy</th>
+                            <th class="text-m_m">Protein</th>
+                            <th class="text-m_m">Fat</th>
+                            <th class="text-m_m">Сarbohydrate</th>
+                        </tr>
+                        <tr>
+                            <td class="kcal"><input type="number" formControlName="energy"></td>
+                            <td class="g"><input type="number" formControlName="protein"></td>
+                            <td class="g"><input type="number" formControlName="fat"></td>
+                            <td class="g"><input type="number" formControlName="carbohydrate"></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+
+            <div *ngSwitchCase="'instruction'" class="group-container group-container_vertical">
+                <h4 class="text-h4">Instruction:</h4>
+                <ul [formGroup]="instructionForm" class="instruction-group">
+                    <ng-container formArrayName="instructionArray">
+                        <ng-container *ngFor="let step of instructionArray.controls; let i = index">
+
+                            <li [formGroup]="step">
+                                <h3 class="text-m_m">Step {{i+1}}</h3>
+                                <div class="step-body">
+                                    <div class="image">
+                                        <label class="text-m_m">Image: </label>
+                                        <input #stepImage formControlName="imageSrc" type="file"
+                                            accept="image/png, image/jpeg"
+                                            (change)="imageInstructionReader(stepImage, i)">
+                                        <div *ngIf="step.value.imageSrc !== ''">
+                                            <img class="image-wrapper" [src]="instructionImgsArray[i]" alt="image">
+                                        </div>
+                                    </div>
+                                    <div class="desc">
+                                        <label class="text-m_m">Description: </label>
+                                        <textarea formControlName="text" cols="30" rows="5"
+                                            placeholder="Minimum 10 characters"></textarea>
+                                    </div>
+                                    <button *ngIf="i > 0" class="icon-button" (click)="deleteInstruction(i)">
+                                        <img class="icon_m" src="assets/icons/close.svg" alt="delete">
+                                    </button>
+                                </div>
+                            </li>
+
+                        </ng-container>
+                    </ng-container>
+                </ul>
+                <button class="button" (click)="addInstruction()">Add new step</button>
+            </div>
+
+            <div *ngSwitchCase="'advise'" class="group-container group-container_vertical">
+                <h4 class="text-h4">Advise:</h4>
+                <form class="form edit-form">
+                    <textarea placeholder="Minimum 20 characters" [formControl]="adviseForm" cols="50"
+                        rows="5"></textarea>
+                </form>
+            </div>
+
+        </ng-container>
+    </div>
+</ng-template> 
