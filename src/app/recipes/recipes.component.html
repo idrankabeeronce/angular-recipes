@@ -150,7 +150,7 @@
                 <ng-container *ngFor="let item of displayingList; let indexOfItem = index">
                     <div class="recipe-card">
 
-                        <a class="recipe-image" routerLink="recipe/{{item.ref}}"><img class="image-wrapper"
+                        <a class="recipe-image" routerLink="/recipes/{{item.ref}}"><img class="image-wrapper"
                                 [src]="item.imgSrc" alt="recipe image"></a>
 
                         <div class="recipe-info">

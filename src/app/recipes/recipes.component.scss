@@ -258,3 +258,13 @@
         }
     }
 }
+.icon-button {
+    &#prev,
+    &#next {
+        transition: .3s ease;
+
+        &:hover {
+            scale: 1.1;
+        }
+    }
+}

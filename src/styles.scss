@@ -394,6 +394,16 @@ img:is(.icon_l) {
 
     & input {
         margin-right: 10px;
+        &:focus {
+            background: transparent;
+        }
+    }
+    
+    & input:-webkit-autofill,
+    & input:-webkit-autofill:hover, 
+    & input:-webkit-autofill:focus, 
+    & input:-webkit-autofill:active{
+        -webkit-box-shadow: 0 0 0 30px white inset !important;
     }
 }
 
@@ -525,10 +535,22 @@ img:is(.icon_l) {
             border: 1px solid $text-color;
             border-radius: 50%;
             cursor: pointer;
+            user-select: none;
+            -ms-user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            transition: .3s ease;
 
             &.active {
                 color: #fff;
                 background-color: $text-color;
+                pointer-events: none;
+            }
+            
+            &:hover {
+                color: #fff;
+                background-color: #434343;
+                border-color: #434343;
             }
         }
     }
