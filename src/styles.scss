@@ -80,16 +80,18 @@ input::placeholder {
     box-sizing: border-box;
     margin-right: 1em;
 
-    &:hover {
-        background: #141414;
-        color: #fff;
-        outline-color: #141414;
-    }
+    @media (hover:hover) {
+        &:hover {
+            background: #141414;
+            color: #fff;
+            outline-color: #141414;
+        }
 
-    &:active {
-        background: #2e2e2e;
-        color: #fff;
-        outline-color: #2e2e2e;
+        &:active {
+            background: #2e2e2e;
+            color: #fff;
+            outline-color: #2e2e2e;
+        }
     }
 
 }
@@ -168,7 +170,7 @@ app-root {
 @media screen and (max-width: 365px) {
     .main-container {
 
-        padding: 20px 10px 50px 10px;
+        padding: 20px 20px 50px 20px;
 
     }
 }
@@ -190,14 +192,16 @@ ul:is(.nav-group)>li>a {
     font-weight: 500;
     cursor: pointer;
     color: $text-color;
-    transition: .3s color ease;
+    transition: all .3s ease;
 
-    &:hover {
-        color: $nav-text-hover;
-    }
+    @media (hover:hover) {
+        &:hover {
+            color: $nav-text-hover;
+        }
 
-    &:active {
-        color: $nav-text-active;
+        &:active {
+            color: $nav-text-active;
+        }
     }
 }
 
@@ -244,31 +248,35 @@ ul:is(.ingredients-list)>li {
     transition: .3s ease;
     cursor: pointer;
 
-    &:hover {
-        background: #141414;
-        color: #fff;
-        outline-color: #141414;
-    }
+    @media (hover:hover) {
+        &:hover {
+            background: #141414;
+            color: #fff;
+            outline-color: #141414;
+        }
 
-    &:active {
-        background: #2e2e2e;
-        color: #fff;
-        outline-color: #2e2e2e;
+        &:active {
+            background: #2e2e2e;
+            color: #fff;
+            outline-color: #2e2e2e;
+        }
     }
 
     &_positive-outline {
         outline-color: $primary-color;
 
-        &:hover {
-            background: $primary-color;
-            outline-color: $primary-color;
-            color: #fff;
-        }
+        @media (hover:hover) {
+            &:hover {
+                background: $primary-color;
+                outline-color: $primary-color;
+                color: #fff;
+            }
 
-        &:active {
-            background: $primary-color-outline-active;
-            outline-color: $primary-color-outline-active;
-            color: #fff;
+            &:active {
+                background: $primary-color-outline-active;
+                outline-color: $primary-color-outline-active;
+                color: #fff;
+            }
         }
     }
 
@@ -278,15 +286,16 @@ ul:is(.ingredients-list)>li {
         background-color: $primary-color;
         outline-color: $primary-color;
 
-        &:hover {
-            background-color: $primary-color-hover;
+        @media (hover:hover) {
+            &:hover {
+                background-color: $primary-color-hover;
+                outline-color: $primary-color-hover;
+            }
 
-            outline-color: $primary-color-hover;
-        }
-
-        &:active {
-            background-color: $primary-color-active;
-            outline-color: $primary-color-active;
+            &:active {
+                background-color: $primary-color-active;
+                outline-color: $primary-color-active;
+            }
         }
     }
 
@@ -300,15 +309,17 @@ ul:is(.ingredients-list)>li {
         gap: 0.5em;
         transition: .3s ease;
 
-        &:hover {
-            & img {
-                filter: invert(1);
+        @media (hover:hover) {
+            &:hover {
+                & img {
+                    filter: invert(1);
+                }
             }
-        }
 
-        &:active {
-            & img {
-                filter: invert(1);
+            &:active {
+                & img {
+                    filter: invert(1);
+                }
             }
         }
     }
@@ -335,24 +346,26 @@ ul:is(.ingredients-list)>li {
     padding: 0;
     transition: .3s ease;
 
-    &:hover {
-        background: #141414;
-        color: #fff;
+    @media (hover:hover) {
+        &:hover {
+            background: #141414;
+            color: #fff;
 
-        & img {
-            filter: invert(1);
-            transition: .3s ease;
+            & img {
+                filter: invert(1);
+                transition: .3s ease;
+            }
         }
-    }
 
-    &:active {
-        background: #2e2e2e;
-        border-color: #2e2e2e;
-        color: #fff;
+        &:active {
+            background: #2e2e2e;
+            border-color: #2e2e2e;
+            color: #fff;
 
-        & img {
-            filter: invert(1);
-            transition: .3s ease;
+            & img {
+                filter: invert(1);
+                transition: .3s ease;
+            }
         }
     }
 }
@@ -398,7 +411,7 @@ img:is(.icon_l) {
             background: transparent;
         }
     }
-    
+
     & input:-webkit-autofill,
     & input:-webkit-autofill:hover, 
     & input:-webkit-autofill:focus, 
@@ -547,10 +560,12 @@ img:is(.icon_l) {
                 pointer-events: none;
             }
             
-            &:hover {
-                color: #fff;
-                background-color: #434343;
-                border-color: #434343;
+            @media (hover:hover) {
+                &:hover {
+                    color: #fff;
+                    background-color: #434343;
+                    border-color: #434343;
+                }
             }
         }
     }

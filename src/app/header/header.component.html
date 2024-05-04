@@ -1,27 +1,35 @@
-<div class="container header-container">
-    <div class="header-group">
-        <div class="header-group__sub-group">
-        <a class="logo-container" (click)="goHomePage()">
-            <img class="image-wrapper" src="assets/icons/logo.svg" alt="recipes logo">
-        </a>
-        <nav>
-            <ul class="nav-group">
-                <li><a routerLink="categories">Categories</a></li>
-            </ul>
-        </nav>
-        </div>
-        <div class="header-group__sub-group">
-        <button class="button button_positive-outline button-add" routerLink="/new" [queryParams]="{returnURL : getUrl()}">Add recipe</button>
-        <button class="icon-button header-menu" (click)="openCloseMenu()">
-            <img [src]="buttonIcon" alt="menu button">
-        </button>
+<div class="header" [style]="'top: -'+menuTopOffset+'px'">
+    <div class="container header-container">
+        <div class="header-group">
+            <div class="header-group__sub-group">
+            <a class="logo-container" routerLink="/">
+                <img class="image-wrapper" src="assets/icons/logo.svg" alt="recipes logo">
+            </a>
+            <nav>
+                <ul class="nav-group">
+                    <ng-container *ngFor="let item of headerTopMenu">
+                        <li><a routerLink="{{item.href}}">{{item.title}}</a></li>
+                    </ng-container>
+                </ul>
+            </nav>
+            </div>
+            <div class="header-group__sub-group">
+            <button class="button button_positive-outline button-add" routerLink="/new" [queryParams]="{returnURL : getUrl()}">Add recipe</button>
+            <button class="icon-button header-menu" (click)="triggerMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            </div>
         </div>
     </div>
-</div>
-<div [ngClass]="openMenu? '' : 'hiddenY'" class="main-container menu-container">
-    <nav>
-        <ul class="nav-group">
-            <li><a class="text-h2" routerLink="categories" (click)="openCloseMenu()">Categories</a></li>
-        </ul>
-    </nav>
+    <div [ngClass]="openMenu? '' : 'hiddenY'" class="main-container menu-container">
+        <nav>
+            <ul class="nav-group">
+                <ng-container *ngFor="let item of headerTopMenu">
+                    <li><a class="text-h2" routerLink="{{item.href}}" (click)="triggerMenu()">{{item.title}}</a></li>
+                </ng-container>
+            </ul>
+        </nav>
+    </div>
 </div>
