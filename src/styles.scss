@@ -238,63 +238,115 @@ ul:is(.ingredients-list)>li {
 }
 
 .button {
-    border-color: $text-color;
+    border: 1px solid #141414;
     background: transparent;
     font-size: 16px;
     border-radius: 25px;
-    outline: 2px solid;
-    outline-offset: -2px;
     padding: 14px 20px;
     transition: .3s ease;
     cursor: pointer;
+    user-select: none;
+
+    &[disabled] {
+        pointer-events: none;
+        color: #5d5d5d;
+        border-color: #5d5d5d;
+    }
 
     @media (hover:hover) {
         &:hover {
             background: #141414;
             color: #fff;
-            outline-color: #141414;
+            border-color: #141414;
+            
+            &[disabled] {
+                pointer-events: none;
+                color: #5d5d5d;
+                border-color: #5d5d5d;
+            }
         }
 
         &:active {
             background: #2e2e2e;
             color: #fff;
-            outline-color: #2e2e2e;
+            border-color: #2e2e2e;
+            
+            &[disabled] {
+                pointer-events: none;
+                color: #5d5d5d;
+                border-color: #5d5d5d;
+            }
         }
     }
 
     &_positive-outline {
-        outline-color: $primary-color;
+        border-color: $primary-color;
+
+        &[disabled] {
+            background: transparent;
+            color: #5d5d5d;
+            border-color: $primary-color;
+        }
 
         @media (hover:hover) {
             &:hover {
                 background: $primary-color;
-                outline-color: $primary-color;
+                border-color: $primary-color;
                 color: #fff;
+
+                &[disabled] {
+                    background: transparent;
+                    color: #5d5d5d;
+                    border-color: $primary-color;
+                }
             }
 
             &:active {
                 background: $primary-color-outline-active;
-                outline-color: $primary-color-outline-active;
+                border-color: $primary-color-outline-active;
                 color: #fff;
+
+                &[disabled] {
+                    background: transparent;
+                    color: #5d5d5d;
+                    border-color: $primary-color;
+                }
             }
         }
     }
 
     &_positive {
-        border: none;
         color: #fff;
         background-color: $primary-color;
-        outline-color: $primary-color;
+        border-color: $primary-color;
+
+        &[disabled] {
+            background-color: $primary-color-disabled;
+            color: #fff;
+            border-color: $primary-color-disabled;
+        }
 
         @media (hover:hover) {
             &:hover {
                 background-color: $primary-color-hover;
-                outline-color: $primary-color-hover;
+                border-color: $primary-color-hover;
+                
+                &[disabled] {
+                    background-color: $primary-color-disabled;
+                    color: #fff;
+                    border-color: $primary-color-disabled;
+                }
             }
 
             &:active {
                 background-color: $primary-color-active;
-                outline-color: $primary-color-active;
+                border-color: $primary-color-active;
+
+                &[disabled] {
+                    background-color: $primary-color-disabled;
+                    color: #fff;
+                    border-color: $primary-color-disabled;
+                }
             }
         }
     }
@@ -309,6 +361,13 @@ ul:is(.ingredients-list)>li {
         gap: 0.5em;
         transition: .3s ease;
 
+        & img {
+            transition: filter .3s ease;
+        }
+
+        & img:is(.icon) {
+            transition: transform, filter .3s ease;}
+
         @media (hover:hover) {
             &:hover {
                 & img {
@@ -322,6 +381,40 @@ ul:is(.ingredients-list)>li {
                 }
             }
         }
+    }
+    &_loading {
+        position: relative;
+        color: transparent;
+        cursor: pointer;
+
+        &[disabled] {
+            color: transparent;
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-image: url('assets/icons/loading_v1.svg');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: auto 8px;
+        }
+
+        &.button_positive {
+            &::before {
+                background-image: url('assets/icons/loading_v2.svg');
+            }
+        }
+
+        &.button_positive-outline {
+            &::before {
+                background-image: url('assets/icons/loading_v3.svg');
+            }
+        }        
     }
 }
 
@@ -403,10 +496,12 @@ img:is(.icon_l) {
     display: flex;
     border: 2px solid $text-color;
     border-radius: 30px;
+    gap: 10px;
     padding: 5px 5px 5px 20px;
 
     & input {
-        margin-right: 10px;
+        background: transparent;
+
         &:focus {
             background: transparent;
         }
@@ -417,6 +512,12 @@ img:is(.icon_l) {
     & input:-webkit-autofill:focus, 
     & input:-webkit-autofill:active{
         -webkit-box-shadow: 0 0 0 30px white inset !important;
+    }
+
+    &.subscribe-form {
+        & input {
+            width: 100%;
+        }
     }
 }
 
@@ -439,15 +540,37 @@ img:is(.icon_l) {
 @media screen and (max-width: 365px) {
     .form-button {
         flex-wrap: wrap;
-        row-gap: 10px;
         padding: 5px;
 
         & input {
-            margin: 10px 5px 0 5px;
+            margin: 0;
         }
 
         & button {
             flex: 1;
+        }
+        
+        &.subscribe-form {
+            padding: 0;
+            border-radius: 0;
+            border: none;
+
+            & input {
+                flex: 100%;
+                border-radius: 0;
+                padding-bottom: 4px;
+                border-bottom: 1px solid #5d5d5d;
+
+                &:focus {
+                    
+                    border-bottom: 1px solid #141414;
+                }
+            }
+    
+            & button {
+                flex: 100%;
+            }
+            
         }
     }
 }

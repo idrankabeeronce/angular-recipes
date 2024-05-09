@@ -1,11 +1,22 @@
 <div class="container footer-container">
     <div class="footer-group vert subscribe">
-        <h2 class="text-h2">Ready to cook?</h2>
-        <p class="text-m">Subscribe for our weekly newsletters!</p>
-        <form action="" class="form-button subscribe-form">
-            <input placeholder="Enter your email" type="email" name="email">
-            <button type="submit" class="button button_positive">Subscribe</button>
-        </form>
+        <ng-container *ngIf="!submitSuccess; else subSuccess">
+            <h2 class="text-h2">Ready to cook?</h2>
+            <p class="text-m">Subscribe for our weekly newsletters!</p>
+            <form [formGroup]="subscriptionFormGroup" 
+                (ngSubmit)="submitSubscription()" 
+                class="form-button subscribe-form">
+                <input placeholder="Enter your email" type="email" formControlName="email" name="email">
+                <button [disabled]="subscriptionFormGroup.invalid || submitInProgress" id="submitButton" 
+                    [ngClass]="" 
+                    class="{{submitInProgress ?' button_loading ' :''}} button button_positive">Subscribe
+                </button>
+            </form>
+        </ng-container>
+        <ng-template #subSuccess>
+            <h2 class="text-h2">Thank you</h2>
+            <p class="text-m">We will send you a message!</p>
+        </ng-template>
     </div>
     <div class="footer-group social">
         <ul class="nav-group footer__social-group">
@@ -20,8 +31,8 @@
                 </a>
             </li>
             <li>
-                <a href="mailto:mrhuk06@gmail.com">
-                    <img src="assets/icons/gmail.svg" alt="gmail">
+                <a href="mailto:example@gmail.com">
+                    <img src="assets/icons/mail.svg" alt="mail">
                 </a>
             </li>
         </ul>
