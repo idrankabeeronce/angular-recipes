@@ -16,8 +16,10 @@
                     <img class="icon" src="assets/icons/dish.svg" alt="portions">
                     <span>
                         <ng-container
-                            *ngIf="displayingItem.header.portionsDefault > 1; else portion">{{displayingItem.header.portionsDefault}}
-                            portions</ng-container>
+                            *ngIf="displayingItem.header.portionsDefault > 1; else portion">
+                            {{displayingItem.header.portionsDefault}}
+                            portions
+                        </ng-container>
                         <ng-template #portion>{{displayingItem.header.portionsDefault}} portion</ng-template>
                     </span>
                     <img class="icon" src="assets/icons/time.svg" alt="time">
@@ -49,47 +51,11 @@
                         <div class="galery-active">
                             <ng-container *ngIf="displayingItem.body.galery.videoSrc !== ''; else image">
                                 <div class="video-container">
-                                    <video #video id="video" class="lazyload image-wrapper"  [attr.data-srcset]="displayingItem.body.galery.videoSrc" (timeupdate)="calcTime(video, seekBar)"
-                                        (click)="toggleVideo(video)" (dblclick)="toggleFullScreen(video)">
+                                    <video #video id="video" autoplay muted playsinline class="lazyload image-wrapper"  [attr.data-srcset]="displayingItem.body.galery.videoSrc"
+                                        (click)="toggleVideo(video)" (error)="handleError($event)">
                                         <source type="video/mp4">
                                         <p>Your browser doesn't support video.</p>
                                     </video>
-                                    <div class="video-controls">
-                                        <button class="icon-button" id="play-pause" (click)="toggleVideo(video)">
-                                            <ng-container *ngIf="video.paused; else pause">
-                                                <img class="icon_l" src="assets/icons/play.svg" alt="play">
-                                            </ng-container>
-                                            <ng-template #pause>
-                                                <img class="icon_l" src="assets/icons/pause.svg" alt="pause">
-                                            </ng-template>
-                                        </button>
-
-                                        <button class="icon-button" id="mute" (click)="toggleMute(video, volumeBar)">
-                                            <ng-container *ngIf="!video.muted; else muted">
-                                                <img class="icon_l" src="assets/icons/sound.svg" alt="sound">
-                                            </ng-container>
-                                            <ng-template #muted>
-                                                <img class="icon_l" src="assets/icons/muted.svg" alt="muted">
-                                            </ng-template>
-                                        </button>
-                                        
-                                        <div #customVolumeBar class="input-volume-bar" (click)="setCustomBar(customVolumeBar, $event, 'volume', video)">
-                                            <div class="progress-bar"></div>
-                                        </div>
-                                        
-                                        <div #customVideoBar class="input-video-bar" (click)="setCustomBar(customVideoBar, $event, 'video', video)">
-                                            <div class="progress-bar"></div>
-                                        </div>
-                                        <button class="icon-button" id="full-screen" (click)="toggleFullScreen(video)">
-                                            <img src="assets/icons/fullscreen.svg" alt="full-screen">
-
-                                        </button>
-
-                                        <input #seekBar class="slider-progress" type="range" id="seek-bar" value="0"
-                                            (change)="setTime(video, seekBar)">
-                                            <input #volumeBar type="range" id="volume-bar" min="0" max="1" step="0.05"
-                                            value="1" (change)="volumeOnChange(video, volumeBar)">
-                                    </div>
                                 </div>
                             </ng-container>
                             <ng-template #image>

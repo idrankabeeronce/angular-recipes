@@ -14,9 +14,14 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CategoriesComponent } from './categories/categories.component';
 import { CreateRecipeComponent } from './create-article/create-recipe/create-recipe.component';
 import { CreateArticleComponent } from './create-article/create-article.component';
-import {DragDropModule} from '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ReviewFormComponent } from './review-form/review-form.component';
+import { PopupComponent } from './popup/popup.component';
 
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { AuthPopupComponent } from './auth-popup/auth-popup.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,7 +33,9 @@ import { ReviewFormComponent } from './review-form/review-form.component';
     CategoriesComponent,
     CreateRecipeComponent,
     CreateArticleComponent,
-    ReviewFormComponent
+    ReviewFormComponent,
+    PopupComponent,
+    AuthPopupComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -37,9 +44,21 @@ import { ReviewFormComponent } from './review-form/review-form.component';
     FormsModule,
     ReactiveFormsModule,
     DragDropModule,
-    HttpClientModule
+    HttpClientModule,
+    MatDialogModule,
+    MatInputModule,
+    MatFormFieldModule
   ],
-  providers: [],
+  providers: [PopupComponent,
+    { 
+      provide: MatDialogRef,
+      useValue: []
+    }, 
+    { 
+     provide: MAT_DIALOG_DATA, 
+     useValue: [] 
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

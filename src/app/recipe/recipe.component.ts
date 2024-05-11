@@ -132,7 +132,15 @@ export class RecipeComponent implements OnInit, AfterViewInit {
     console.log('loaded');
     
     let lazyloadModule = new lazyload();
-    lazyloadModule.onDOMchange();         
+    lazyloadModule.onDOMchange(); 
+    let video = document.getElementById("video") as HTMLMediaElement;
+    if (!video) return;
+
+    video.oncanplaythrough = function() {
+      video.muted = true;
+      video.play();
+    }   
+        
   }
   Round(value: number) {
     return Math.round(value * 100) / 100
@@ -141,55 +149,14 @@ export class RecipeComponent implements OnInit, AfterViewInit {
     if (this.displayingItem.header.portions > 1 || value > 0)
       this.displayingItem.header.portions += value;
   }
-  toggleVideo(video: any) {
+  toggleVideo(video: HTMLMediaElement) {
     if (video.paused == true) {
       video.play();
     } else {
       video.pause();
     }
   }
-
-  setCustomBar(el: any, event: any, type:string, video: any) {
-    video.muted = false;
-    let diffXPerc = (event.offsetX)/(el.offsetWidth)  * 100;
-    if (type === "volume")
-      if (diffXPerc >= 95)
-        diffXPerc = 100;
-      else if (diffXPerc <= 5) {
-        video.muted = true;
-        diffXPerc = 0;
-      }
-
-    el.children[0].style.width = `${diffXPerc}%`;
-
-    const inputVolume = document.getElementById("volume-bar") as HTMLInputElement | null;
-    const inputVideo = document.getElementById("seek-bar") as HTMLInputElement | null;
-    if (type === "volume") {
-      inputVolume!.value = String(diffXPerc / 100);
-      this.volumeOnChange(video, inputVolume);
-    } else {
-      inputVideo!.value = String(diffXPerc);
-      this.setTime(video,inputVideo);
-      //this.seekOnChange(videoDiv, inputVideo);
-    }
-  }
-
-
-  toggleMute(video: any, bar: any) {
-    video.muted = !video.muted;
-    const el = document.querySelectorAll<HTMLDivElement>(".input-volume-bar")[0];
-    if (video.muted) {
-      bar.value = 0;
-      (el.children[0] as HTMLElement).style.width = `0%`;
-    }
-    else {     
-      if (video.volume === 0)
-        video.volume = 0.05; 
-      bar.value = video.volume;
-      (el.children[0] as HTMLElement).style.width = `${video.volume * 100}%`;
-    }
-  }
-  toggleFullScreen(video: any) {
+  toggleFullScreen(video: HTMLMediaElement | any) {
     if (video.requestFullscreen) {
       video.requestFullscreen();
     } else if (video.mozRequestFullScreen) {
@@ -198,24 +165,19 @@ export class RecipeComponent implements OnInit, AfterViewInit {
       video.webkitRequestFullscreen(); // Chrome and Safari
     }
   }
-  setTime(video: any, bar: any) {
-    var time = video.duration * (bar.value / 100);
+  handleError(event: Event) {
+    const vidCont = document.querySelector('.video-container') as HTMLElement;
+    var imageElement : HTMLImageElement | string;
 
-    // Update the video time
-    video.currentTime = time;
+    if (this.displayingItem.body.galery.imagesSrc.length) {
+      imageElement = document.createElement('img');
+      imageElement.src = this.displayingItem.body.galery.imagesSrc[0];
+      imageElement.classList.add('image-wrapper');
+    } else {
+      imageElement = '';
+    }
+    vidCont.replaceWith(imageElement);
   }
-  calcTime(video: any, bar: any) {
-    var value = (100 / video.duration) * video.currentTime;
-    const el = document.querySelectorAll<HTMLDivElement>(".input-video-bar")[0];
-    (el.children[0] as HTMLElement).style.width = `${value}%`;
-
-    bar.value = value;
-  }
-  volumeOnChange(video: any, bar: any) {
-    console.log(bar.value);
-    video.volume = bar.value;
-  }
-
   getAllReviews() {
     const maxIndex = 100;
 

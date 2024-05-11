@@ -56,17 +56,19 @@
         transition: .3s ease;
     }
 
-    &:hover {
-        &>.video-controls {
-            opacity: 1;
-        }
+    @media (hover:hover) {
+        &:hover {
+            &>.video-controls {
+                opacity: 1;
+            }
 
-        &::before {
-            opacity: 1;
-        }
+            &::before {
+                opacity: 1;
+            }
 
-        &::after {
-            opacity: 1;
+            &::after {
+                opacity: 1;
+            }
         }
     }
 }
@@ -488,7 +490,7 @@ input[type='range'] {
     height: 40px;
     border-radius: 50%;
     color: #fff;
-    background: rgb(196 185 62);
+    background: #34742E;
     display: flex;
     align-items: center;
     justify-content: center;

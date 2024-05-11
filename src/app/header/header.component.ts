@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HostListener } from '@angular/core';
+import { PopupService } from '../services/popup.service';
 
 @Component({
   selector: 'app-header',
@@ -15,6 +16,10 @@ export class HeaderComponent implements OnInit {
   lastScrollTop = 0;
   menuTopOffset = 0;
   headerMaxHeight = 0;
+  currentUser: boolean;
+  currentUserImg: string;
+  currentUserName: string;
+
   private topStartPoint = 240;
 
   headerTopMenu = [
@@ -29,7 +34,11 @@ export class HeaderComponent implements OnInit {
   ];
 
   constructor(public cdr: ChangeDetectorRef, public breakpointObserver: BreakpointObserver,
-    private router: Router, private acti: ActivatedRoute) { }
+    private router: Router, private acti: ActivatedRoute, private popupService: PopupService) {
+      this.currentUser = false;
+      this.currentUserImg = '';
+      this.currentUserName = '';
+    }
 
   ngOnInit(): void {
     this.breakpointObserver
@@ -61,6 +70,11 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  triggerAuthPopup() {
+    // toDo: if user authorized open prodile page
+    this.popupService.openAuth();
+  }
+
   @HostListener("window:scroll", []) 
   onWindowScroll() {
     const windowWidth = window.innerWidth;
@@ -78,8 +92,6 @@ export class HeaderComponent implements OnInit {
 
       if (this.menuTopOffset < 0)
         this.menuTopOffset = 0;
-
-      console.log(this.menuTopOffset);
     } else {
       
       if (verticalOffset > this.topStartPoint) {
@@ -88,8 +100,6 @@ export class HeaderComponent implements OnInit {
 
         if (this.menuTopOffset > this.headerMaxHeight)
           this.menuTopOffset = this.headerMaxHeight;
-
-        console.log(this.menuTopOffset);
       }
     }
 

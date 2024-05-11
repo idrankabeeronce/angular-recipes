@@ -22,11 +22,18 @@
                     font-weight: 600;
                     text-transform: capitalize;
                 } 
-            
-            &:hover {
-                span {
-                    color: inherit;
-                }   
+                
+            @media (hover:hover) {
+                &:hover {
+                    span {
+                        color: inherit;
+                    }   
+                }
+                &:active {
+                    span {
+                        color: inherit;
+                    }   
+                }
             }
         }
     }
