@@ -12,10 +12,18 @@
             padding: 7px 10px;
             border-width: 1px;
             border-radius: 5px;
-            &:hover {
-                span {
-                    color: inherit;
-                }   
+            
+            @media (hover:hover) {
+                &:hover {
+                    span {
+                        color: inherit;
+                    }   
+                }
+                &:active {
+                    span {
+                        color: inherit;
+                    }   
+                }
             }
         }
     }
@@ -65,7 +73,11 @@
 }
 .search {
     display: flex;
-    gap: 20px;
+    gap: 24px;
+
+    @media screen and (max-width: 520px) {
+        width: 100%;
+    }
 }
 .search-form {
     flex: 1;
@@ -73,7 +85,13 @@
     justify-content: space-between;
     border-radius: 5px;
     & > input {
-        flex: 1;
+        width: 100%;
+    }
+    @media screen and (max-width: 365px) {
+        flex-wrap: nowrap;
+        & > button {
+            flex: unset;
+        }
     }
 }
 .reset-form {
@@ -90,18 +108,44 @@
     align-items: center;
 }
 
-#recipes>* {
-    margin-bottom: 40px;
+#recipes {
+
+    @media (min-width: 366px) and (max-width: 768px) {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 24px;
+    }
+
+    >* {
+        margin-bottom: 40px;
+        
+        @media (max-width: 768px) {
+            margin-bottom: 24px;
+        }
+    }
 }
 
 .recipe-card {
     display: flex;
     gap: 40px;
+    position: relative;
+    width: 100%;
+    
+    @media (min-width: 480px) and (max-width: 768px) {
+        flex: 0 0 calc(50% - 12px);
+    }
+
+    @media screen and (max-width: 768px) {
+        gap: 24px;
+    }
 
     .recipe-info a {
         transition: .3s ease;
-        &:hover {
-            opacity: .5;
+        
+        @media (hover:hover) {
+            &:hover {
+                opacity: .5;
+            }
         }
     }
 }
@@ -109,47 +153,113 @@
 .recipe-image {
     width: 200px;
     height: 200px;
+    position: relative;
+
+    @media screen and (max-width: 768px) {
+        width: 100%;
+    }
 }
 
 .recipe-info {
     margin-bottom: -10px;
+    flex: 1;
+
+    @media screen and (max-width: 768px) {
+        text-align: left;
+        width: 100%;
+    }
 }
 
 .recipe-info>* {
     margin-bottom: 10px;
+    &:last-child {
+        margin-bottom: 0;
+    }
 }
 
 .recipe-extra {
+
     display: flex;
     align-items: center;
-    margin-right: -10px;
-
+    margin-right: 0;
+    width: 100%;
     position: relative;
-}
 
-.recipe-extra>* {
-    margin-right: 10px;
+    @media screen and (max-width: 768px) {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    &__item {
+        margin-right: 10px;
+
+        @media screen and (max-width: 768px) {
+            flex: 100%;
+            margin-right: 0;
+        }
+
+        &:last-child {
+            margin-right: 0;
+        }
+
+        > * {
+            margin-right: 10px;
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
 }
 
 .recipe-group {
     display: flex;
-    gap: 20px;
+    gap: 24px;
     align-items: center;
+
+    &_mobile {
+        position: absolute;
+        display: none;
+        bottom: 0;
+        right: 0;
+        padding: 5px 10px;
+        background: rgb(0 0 0 / 37%);
+        border-radius: 12px 0 0 0;
+
+        ul > li {
+            text-shadow: 1px 1px 1px #000;
+            color: #fff;
+
+            img {
+                filter: drop-shadow(1px 1px 0.5px #000);
+            }
+        }
+    }
 }
 
 .ingredients-label {
     border-right: 1px solid $base-color-04;
-    cursor: default;
+    cursor: pointer;
 
     &>* {
         margin-right: 10px;
+    }
+
+    button {
+        padding: 0 10px 0 0;
+    }
+
+    @media screen and (max-width: 768px) {
+        border-right: none;
     }
 }
 
 .ingredients-container {
     position: absolute;
     padding: 20px 15px;
-    width: 100%;
+    max-width: 520px;
+    left: 0;
+    right: 0;
     z-index: 2;
     top: 1.5em;
     border: 1px solid $base-color-04;
@@ -226,6 +336,48 @@
         border-radius: 5px;
     }
 }
+.button-save {
+    &_mobile {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: rgb(0 0 0 / 37%);
+        border: none;
+        border-radius: 0 0 0 12px;
+        padding: 12px 15px;
+        z-index: 1;
+
+        @media (hover:hover) {
+            filter: invert(0);   
+            background: rgb(0 0 0 / 37%);
+            
+            img {
+                filter: none;
+            }  
+        }
+
+        img {
+            height: 1.5em;
+            width: 1.5em;
+        }
+    }
+}
+@media (min-width: 481px) and (max-width: 768px) {
+    .recipe-card {
+        .ingredients-container {
+            min-width: 320px;
+            right: unset;
+            left: 0;
+        }
+        &:nth-child(2n) {
+            .ingredients-container {
+                right: 0;
+                left: unset;
+            }
+        }
+    }
+}
 @media screen and (max-width: 768px) {
     .recipe-card {
         text-align: center;
@@ -233,21 +385,25 @@
         align-items: center;
 
         & .recipe-info>nav>ul {
-            justify-content: center;
+            justify-content: start;
         }
 
-        & .recipe-extra,
         .recipe-group {
-            flex-wrap: wrap;
-            row-gap: 10px;
-            justify-content: center;
+            display: none;
+            &_mobile {
+                display: block;
+            }
+        }
+
+        .auth-text {
+            display: none;
         }
     }
     #recipes {
-        
+
         & > * {
             position: relative;
-            padding-bottom: 40px;
+            padding-bottom: 24px;
             &::after {
                 content: '';
                 position: absolute;
@@ -257,14 +413,23 @@
             }
         }
     }
+    .button-save {
+        display: none;
+
+        &_mobile {
+            display: block;
+        }
+    }
 }
 .icon-button {
     &#prev,
     &#next {
         transition: .3s ease;
 
-        &:hover {
-            scale: 1.1;
+        @media (hover:hover) {
+            &:hover {
+                scale: 1.1;
+            }
         }
     }
 }

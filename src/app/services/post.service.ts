@@ -35,11 +35,21 @@ export class PostService {
         })
       );
     } else {
-      const tmpArray = ((dataRecipes as any).default).slice(((recipesDataArgs.step - 1) * 10), 10 * recipesDataArgs.step);
+      let tmpArrayOfRecipes = [];
+      
+      for (let item of (dataRecipes as any).default) {
+        if (recipesDataArgs.category ? item.categories.includes(recipesDataArgs.category) : true) {
+          if (recipesDataArgs.searchParam ? item.title.toLowerCase().includes(recipesDataArgs.searchParam) : true) {
+            tmpArrayOfRecipes.push(item);
+          }
+        }
+      }
+
+      const slicedArray = tmpArrayOfRecipes.slice(((recipesDataArgs.step - 1) * 10), 10 * recipesDataArgs.step);
             
       let result = new BehaviorSubject<GetRecipesData>({
-        list: tmpArray, 
-        pagingationLength: Math.floor(((dataRecipes as any).default).length / 10) + 1
+        list: slicedArray, 
+        pagingationLength: Math.floor(tmpArrayOfRecipes.length / 10) + 1
       })
       return result.asObservable();
     }

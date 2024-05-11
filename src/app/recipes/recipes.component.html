@@ -61,79 +61,7 @@
     </div>
     <ng-container *ngIf="loading || catLoading; else done">
         <div class="recipe-skeleton">
-            <div class="recipe-skeleton__card">
-                <div class="recipe-skeleton__card-g-1 sk-ph"></div>
-                <div class="recipe-skeleton__card-g-2">
-                    <div class="recipe-skeleton__card-e-1 sk-ph"></div>
-                    <div class="recipe-skeleton__card-e-2 sk-ph"></div>
-                    <div class="recipe-skeleton__card-e-3 sk-ph"></div>
-                </div>
-            </div>
-            <div class="recipe-skeleton__card">
-                <div class="recipe-skeleton__card-g-1 sk-ph"></div>
-                <div class="recipe-skeleton__card-g-2">
-                    <div class="recipe-skeleton__card-e-1 sk-ph"></div>
-                    <div class="recipe-skeleton__card-e-2 sk-ph"></div>
-                    <div class="recipe-skeleton__card-e-3 sk-ph"></div>
-                </div>
-            </div>
-            <div class="recipe-skeleton__card">
-                <div class="recipe-skeleton__card-g-1 sk-ph"></div>
-                <div class="recipe-skeleton__card-g-2">
-                    <div class="recipe-skeleton__card-e-1 sk-ph"></div>
-                    <div class="recipe-skeleton__card-e-2 sk-ph"></div>
-                    <div class="recipe-skeleton__card-e-3 sk-ph"></div>
-                </div>
-            </div>
-            <div class="recipe-skeleton__card">
-                <div class="recipe-skeleton__card-g-1 sk-ph"></div>
-                <div class="recipe-skeleton__card-g-2">
-                    <div class="recipe-skeleton__card-e-1 sk-ph"></div>
-                    <div class="recipe-skeleton__card-e-2 sk-ph"></div>
-                    <div class="recipe-skeleton__card-e-3 sk-ph"></div>
-                </div>
-            </div>
-            <div class="recipe-skeleton__card">
-                <div class="recipe-skeleton__card-g-1 sk-ph"></div>
-                <div class="recipe-skeleton__card-g-2">
-                    <div class="recipe-skeleton__card-e-1 sk-ph"></div>
-                    <div class="recipe-skeleton__card-e-2 sk-ph"></div>
-                    <div class="recipe-skeleton__card-e-3 sk-ph"></div>
-                </div>
-            </div>
-            <div class="recipe-skeleton__card">
-                <div class="recipe-skeleton__card-g-1 sk-ph"></div>
-                <div class="recipe-skeleton__card-g-2">
-                    <div class="recipe-skeleton__card-e-1 sk-ph"></div>
-                    <div class="recipe-skeleton__card-e-2 sk-ph"></div>
-                    <div class="recipe-skeleton__card-e-3 sk-ph"></div>
-                </div>
-            </div>
-            <div class="recipe-skeleton__card">
-                <div class="recipe-skeleton__card-g-1 sk-ph"></div>
-                <div class="recipe-skeleton__card-g-2">
-                    <div class="recipe-skeleton__card-e-1 sk-ph"></div>
-                    <div class="recipe-skeleton__card-e-2 sk-ph"></div>
-                    <div class="recipe-skeleton__card-e-3 sk-ph"></div>
-                </div>
-            </div>
-            <div class="recipe-skeleton__card">
-                <div class="recipe-skeleton__card-g-1 sk-ph"></div>
-                <div class="recipe-skeleton__card-g-2">
-                    <div class="recipe-skeleton__card-e-1 sk-ph"></div>
-                    <div class="recipe-skeleton__card-e-2 sk-ph"></div>
-                    <div class="recipe-skeleton__card-e-3 sk-ph"></div>
-                </div>
-            </div>
-            <div class="recipe-skeleton__card">
-                <div class="recipe-skeleton__card-g-1 sk-ph"></div>
-                <div class="recipe-skeleton__card-g-2">
-                    <div class="recipe-skeleton__card-e-1 sk-ph"></div>
-                    <div class="recipe-skeleton__card-e-2 sk-ph"></div>
-                    <div class="recipe-skeleton__card-e-3 sk-ph"></div>
-                </div>
-            </div>
-            <div class="recipe-skeleton__card">
+            <div *ngFor="let _ of [].constructor(10)" class="recipe-skeleton__card">
                 <div class="recipe-skeleton__card-g-1 sk-ph"></div>
                 <div class="recipe-skeleton__card-g-2">
                     <div class="recipe-skeleton__card-e-1 sk-ph"></div>
@@ -150,8 +78,22 @@
                 <ng-container *ngFor="let item of displayingList; let indexOfItem = index">
                     <div class="recipe-card">
 
-                        <a class="recipe-image" routerLink="/recipes/{{item.ref}}"><img class="image-wrapper"
-                                [src]="item.imgSrc" alt="recipe image"></a>
+                        <button class="button button_s button_icon button-save button-save_mobile" (click)="triggerSaveHandler()">
+                            <img width="24" height="24" class="icon" src="assets/icons/save_v2.svg" alt="save">
+                        </button>
+
+                        <a class="recipe-image" routerLink="/recipes/{{item.ref}}">
+                            <img class="image-wrapper"
+                                [src]="item.imgSrc" alt="recipe image">
+                            <div class="recipe-group recipe-group_mobile">
+                                <ul class="recipe-stats">
+                                    <li><img class="icon" src="assets/icons/saved_v2.svg" alt="saved">{{item.saved || 0}}</li>
+                                    <li><img class="icon" src="assets/icons/like_v2.svg" alt="likes">{{item.likes || 0}}</li>
+                                    <li><img class="icon" src="assets/icons/dislike_v2.svg" alt="dislikes">{{item.dislikes || 0}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </a>
 
                         <div class="recipe-info">
                             <nav>
@@ -162,11 +104,11 @@
                                     </ng-container>
                                 </ul>
                             </nav>
-                            <h2><a routerLink="/recipes/{{item.ref}}" class="text-h3_bold">{{item.title}}</a></h2>
-                            <p class="text-s_l text-grey">Author: {{item.author.name}}</p>
+                            <div class="recipe-card__title"><a routerLink="/recipes/{{item.ref}}" class="text-h3_bold">{{item.title}}</a></div>
+                            <p class="text-s_l text-grey auth-text">Author: {{item.author.name}}</p>
                             <div class="recipe-extra">
-                                <div class="ingredients-label"><span>ingredients: {{item.ingredients.length}}</span>
-                                    <button id="button-list" class="icon-button" (click)="openList(indexOfItem)"><img
+                                <div class="ingredients-label recipe-extra__item" (click)="openList(indexOfItem)"><span>ingredients: {{item.ingredients.length}}</span>
+                                    <button id="button-list" class="icon-button"><img
                                             [ngClass]="!item.listOpen? '' : 'reverse'" class="icon_s"
                                             src="assets/icons/chevron.svg" alt="chevron"></button>
                                 </div>
@@ -199,23 +141,29 @@
                                         </ul>
                                     </div>
                                 </ng-container>
-                                <img class="icon" src="assets/icons/dish.svg" alt="portions">
-                                <span>
-                                    <ng-container *ngIf="item.portionsDefault > 1; else portion">{{item.portionsDefault}}
-                                        portions</ng-container>
-                                    <ng-template #portion>{{item.portionsDefault}} portion</ng-template>
-                                </span>
-                                <img class="icon" src="assets/icons/time.svg" alt="time">
-                                <span *ngIf="item.timeToDo.hours !== 0">{{item.timeToDo.hours}}
-                                    <ng-container *ngIf="item.timeToDo.hours > 1; else hour"> hours</ng-container>
-                                    <ng-template #hour>hour</ng-template>
-                                </span>
-                                <span *ngIf="item.timeToDo.minutes !== 0">{{item.timeToDo.minutes}} minutes</span>
+                                <div class="recipe-extra__item">
+                                    <img class="icon" src="assets/icons/dish.svg" alt="portions">
+                                    <span>
+                                        <ng-container *ngIf="item.portionsDefault > 1; else portion">{{item.portionsDefault}}
+                                            portions</ng-container>
+                                        <ng-template #portion>{{item.portionsDefault}} portion</ng-template>
+                                    </span>
+                                </div>
+                                <div class="recipe-extra__item">
+                                    <img class="icon" src="assets/icons/time.svg" alt="time">
+                                    <span *ngIf="item.timeToDo.hours !== 0">{{item.timeToDo.hours}}
+                                        <ng-container *ngIf="item.timeToDo.hours > 1; else hour"> hours</ng-container>
+                                        <ng-template #hour>hour</ng-template>
+                                    </span>
+                                    <span *ngIf="item.timeToDo.minutes !== 0">{{item.timeToDo.minutes}} minutes</span>
+                                </div>
 
                             </div>
                             <div class="recipe-group">
-                                <button class="button button_s button_icon">
-                                    <img class="icon" src="assets/icons/save.svg" alt="save">Save this recipe</button>
+                                <button class="button button_s button_icon button-save" (click)="triggerSaveHandler()">
+                                    <img width="16" height="16" class="icon" src="assets/icons/save.svg" alt="save">
+                                    <span>Save this recipe</span>
+                                </button>
                                 <ul class="recipe-stats">
                                     <li><img class="icon" src="assets/icons/saved.svg" alt="saved">{{item.saved || 0}}</li>
                                     <li><img class="icon" src="assets/icons/like.svg" alt="likes">{{item.likes || 0}}</li>

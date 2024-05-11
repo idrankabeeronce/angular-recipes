@@ -1,5 +1,5 @@
 import { query } from '@angular/animations';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Meta } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { PostService } from '../services/post.service';
@@ -8,6 +8,7 @@ import { RecipesGetListParams } from '../interfaces/recipesGetListParams';
 import { RecipeListItem } from '../interfaces/recipeListItem';
 import { GetRecipesData } from '../interfaces/getRecipesData';
 import { CategoriesGetListParams } from '../interfaces/categoriesGetListParams';
+import { PopupService } from '../services/popup.service';
 
 interface extRecipeListItem extends RecipeListItem {
   listOpen: boolean
@@ -40,12 +41,17 @@ export class RecipesComponent implements OnInit {
   paginationLength = 0;
   fakeArray: any = [];
 
+  currentUser: boolean;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private metaService: Meta,
-    private postService: PostService
-  ) { }
+    private postService: PostService,
+    private popupService: PopupService
+  ) { 
+    this.currentUser = false;
+  }
 
   ngOnInit(): void {    
     const baseUrl = window.location.protocol + '//' + window.location.hostname + '/angular-recipes/';
@@ -93,8 +99,8 @@ export class RecipesComponent implements OnInit {
     }
 
     this.updateList();
-    document.addEventListener('click', (event: Event) => {
-      if ((event.target as HTMLElement).closest("#button-list") === null && (event.target as HTMLElement).closest(".ingredients-container") === null) {
+    document.addEventListener('click', (event: Event) => {      
+      if ((event.target as HTMLElement).closest(".ingredients-label") === null && (event.target as HTMLElement).closest(".ingredients-container") === null) {
         this.openList(99)
       }
     });
@@ -109,10 +115,13 @@ export class RecipesComponent implements OnInit {
 
     this.step = step;
     this.loading = true;
-    this.updateList()
+    this.updateList();
+
+    const headerContainer = document.querySelector('.header .header-container');
+    let headerOffset = headerContainer ? headerContainer.clientHeight : 24;
     setTimeout(() => {
       window.scrollTo({
-        top: Number(document.getElementById('recipes')?.offsetTop) - 40,
+        top: Number(document.getElementById('recipes')?.offsetTop) - (headerOffset + 24),
         behavior: 'smooth'
       });
     }, 100)
@@ -159,8 +168,11 @@ export class RecipesComponent implements OnInit {
         item.listOpen = false;
       }
     }
+  }
 
-
+  triggerSaveHandler():void {
+    if (!this.currentUser)
+      this.popupService.openAuth();
   }
 
   changeAmount(index: number, value: number) {
