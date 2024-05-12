@@ -1,2 +1,4 @@
-<app-create-recipe></app-create-recipe>
+<ng-container *ngIf="currentUser">
+    <app-create-recipe></app-create-recipe>
+</ng-container>
 <router-outlet></router-outlet>

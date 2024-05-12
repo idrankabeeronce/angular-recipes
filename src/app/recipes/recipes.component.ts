@@ -9,6 +9,7 @@ import { RecipeListItem } from '../interfaces/recipeListItem';
 import { GetRecipesData } from '../interfaces/getRecipesData';
 import { CategoriesGetListParams } from '../interfaces/categoriesGetListParams';
 import { PopupService } from '../services/popup.service';
+import { UserService } from '../services/user.service';
 
 interface extRecipeListItem extends RecipeListItem {
   listOpen: boolean
@@ -48,9 +49,10 @@ export class RecipesComponent implements OnInit {
     private router: Router,
     private metaService: Meta,
     private postService: PostService,
-    private popupService: PopupService
+    private popupService: PopupService,
+    private userService: UserService
   ) { 
-    this.currentUser = false;
+    this.currentUser = this.userService.isAuth();
   }
 
   ngOnInit(): void {    

@@ -3,6 +3,7 @@ import { PopupComponent } from '../popup/popup.component';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DialogData } from '../interfaces/dialogData';
 import { AuthPopupComponent } from '../auth-popup/auth-popup.component';
+import { ActionData } from '../interfaces/actionData';
 
 interface obKeyMap {
   [key:string] : string;
@@ -30,11 +31,11 @@ export class PopupService {
       title: this.mapObject(this.obTitle, type),
       content: this.mapObject(this.obContent, type),
     }
-    this.dialog.open(PopupComponent, {data: data});
+    this.dialog.open(PopupComponent, {data: data, maxWidth: '520px'});
   }
 
-  openAuth() {
-    this.dialog.open(AuthPopupComponent);
+  openAuth(actionData: ActionData | null = null) {
+    this.dialog.open(AuthPopupComponent,  {data: actionData, maxWidth: '520px'});
   }
   
   mapObject(obKeys:obKeyMap, type:string) {

@@ -1,9 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { HostListener } from '@angular/core';
 import { PopupService } from '../services/popup.service';
+import { UserService } from '../services/user.service';
+import { User } from '../interfaces/user';
 
 @Component({
   selector: 'app-header',
@@ -17,8 +19,7 @@ export class HeaderComponent implements OnInit {
   menuTopOffset = 0;
   headerMaxHeight = 0;
   currentUser: boolean;
-  currentUserImg: string;
-  currentUserName: string;
+  currentObUser: User | null;
 
   private topStartPoint = 240;
 
@@ -33,11 +34,15 @@ export class HeaderComponent implements OnInit {
     }
   ];
 
-  constructor(public cdr: ChangeDetectorRef, public breakpointObserver: BreakpointObserver,
-    private router: Router, private acti: ActivatedRoute, private popupService: PopupService) {
-      this.currentUser = false;
-      this.currentUserImg = '';
-      this.currentUserName = '';
+  constructor(
+    public cdr: ChangeDetectorRef,
+    public breakpointObserver: BreakpointObserver,
+    private router: Router,
+    private popupService: PopupService,
+    private userService: UserService
+  ) {
+      this.currentUser = this.userService.isAuth();
+      this.currentObUser = this.currentUser ? this.userService.getUser() : null;
     }
 
   ngOnInit(): void {
